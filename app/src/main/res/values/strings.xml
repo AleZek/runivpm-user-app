@@ -1,3 +1,17 @@
 <resources>
     <string name="app_name">IDS User App</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="nuova_mappa_nome_hint">Nome Mappa</string>
+    <string name="nuovo_beacon_nome_hint">Nome Beacon</string>
+    <string name="nuovo_beacon_quota_hint">Quota</string>
+    <string name="nuovo_beacon_larghezza_hint">Larghezza</string>
+    <string name="nuovo_beacon_x_hint">x</string>
+    <string name="nuovo_beacon_y_hint">y</string>
+    <string name="nuovo_beacon_x_meter_hint">x_meter</string>
+    <string name="nuovo_beacon_y_meter_hint">y_meter</string>
+    <string name="nuovo_beacon_id_mappa_hint">id_mappa</string>
+    <string name="nuova_mappa_immagine_hint">Immagine Mappa</string>
+    <string name="directory_mappe">/idsAdmin/map_img/</string>
+    <string name="title_activity_modifica_mappa">ModificaMappaActivity</string>
+    <string name="title_activity_beacon_list">BeaconList</string>
 </resources>
