@@ -36,6 +36,8 @@ public interface BeaconDao {
     public void deleteByMap(int mappa);
     @Query("SELECT * FROM beacon WHERE id=:beacon_id")
     public LiveData<Beacon> find(int beacon_id);
+    @Query("DELETE FROM beacon")
+    public void deleteAll();
 
     @Query("SELECT * FROM beacon WHERE id=:beacon_id")
     public Beacon trova(int beacon_id);

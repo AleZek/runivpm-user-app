@@ -44,7 +44,7 @@ public class BeaconRecyclerAdapter extends RecyclerView.Adapter<BeaconRecyclerAd
         mInflater = LayoutInflater.from(context);
         mBeacon = new ArrayList<>();
         mBeaconCercati = new ArrayList<>();
-        beaconUpdater = (BeaconUpdater) context;
+        //beaconUpdater = (BeaconUpdater) context;
     }
 
 

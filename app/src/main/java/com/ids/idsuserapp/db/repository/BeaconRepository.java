@@ -45,7 +45,8 @@ public class BeaconRepository {
         new BeaconRepository.updateAsyncTask(mBeaconDao).execute(beacon);
     }
 
-
+    //corretto questo metodo che prima era uguale a deleAsynkTask, ho creato anche il metodo deleteAll
+    // nel BeaconDao, collegato alla query che elimina tutte le entry nella tabella beacon
     private static class deleteAllAsyncTask extends AsyncTask<Beacon, Void, Void> {
 
         private BeaconDao mAsyncTaskDao;
@@ -56,7 +57,7 @@ public class BeaconRepository {
 
         @Override
         protected Void doInBackground(final Beacon... params) {
-            mAsyncTaskDao.delete(params[0]);
+            mAsyncTaskDao.deleteAll();
             return null;
         }
     }

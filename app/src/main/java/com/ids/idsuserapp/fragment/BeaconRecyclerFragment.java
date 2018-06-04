@@ -50,12 +50,12 @@ public class BeaconRecyclerFragment extends Fragment{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        try{
+        /*try{
             Bundle bundle = getActivity().getIntent().getExtras();
             mappa = ((int) bundle.get("idMappa"));
         }catch(NullPointerException e ){
             e.printStackTrace();
-        }
+        }*/
         mBeaconViewModel = ViewModelProviders.of(this).get(BeaconViewModel.class);
         beaconRecyclerAdapter = new BeaconRecyclerAdapter(getContext());
         mBeaconViewModel.getBeaconByIdMappa(mappa).observe((LifecycleOwner) this, new Observer<List<Beacon>>() {
@@ -65,6 +65,8 @@ public class BeaconRecyclerFragment extends Fragment{
                 beaconRecyclerAdapter.setmBeacon(beacon);
             }
         });
+
+        mBeaconViewModel.getAll();
 
 
     }
