@@ -58,7 +58,9 @@ public class BeaconRecyclerFragment extends Fragment{
         }*/
         mBeaconViewModel = ViewModelProviders.of(this).get(BeaconViewModel.class);
         beaconRecyclerAdapter = new BeaconRecyclerAdapter(getContext());
-        mBeaconViewModel.getBeaconByIdMappa(mappa).observe((LifecycleOwner) this, new Observer<List<Beacon>>() {
+        //qui rispetto al codice admin app ho eliminato la dipendenza dalla mappa in modo che venisse restituita
+        // una lista di tutti i beacon
+        mBeaconViewModel.getAllBeacons().observe((LifecycleOwner) this, new Observer<List<Beacon>>() {
             @Override
             public void onChanged(@Nullable final List<Beacon> beacon) {
                 // Update the cached copy of the words in the adapter.
@@ -66,7 +68,7 @@ public class BeaconRecyclerFragment extends Fragment{
             }
         });
 
-        mBeaconViewModel.getAll();
+        mBeaconViewModel.getAllBeacons();
 
 
     }
@@ -99,14 +101,14 @@ public class BeaconRecyclerFragment extends Fragment{
 
 
     private void setupSearch(View view) {
-        searchView = view.findViewById(R.id.searchView);
+        searchView = view.findViewById(R.id.searchViewBeacon);
         searchView.setQueryHint("Cerca un beacon...");
         searchView.setIconified(false);
         searchView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 switch (v.getId()) {
-                    case R.id.searchView:
+                    case R.id.searchViewBeacon:
                         searchView.onActionViewExpanded();
                         break;
                 }
