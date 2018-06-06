@@ -26,7 +26,8 @@ import java.util.List;
 
 public class BeaconRecyclerFragment extends Fragment{
     private RecyclerView recyclerBeacon;
-    private SearchView searchView;
+    private SearchView searchViewPartenza; //searchview della partenza, presente nel layout del beaconfragment
+    private SearchView searchViewDestinazione; //searchview della destinazione
 
     private BeaconRecyclerAdapter beaconRecyclerAdapter;
     private BeaconViewModel mBeaconViewModel;
@@ -101,21 +102,51 @@ public class BeaconRecyclerFragment extends Fragment{
 
 
     private void setupSearch(View view) {
-        searchView = view.findViewById(R.id.searchViewBeacon);
-        searchView.setQueryHint("Cerca un beacon...");
-        searchView.setIconified(false);
-        searchView.setOnClickListener(new View.OnClickListener() {
+        searchViewPartenza = view.findViewById(R.id.searchViewBeaconPart);
+        searchViewPartenza.setQueryHint("Seleziona il punto di partenza");
+        searchViewPartenza.setIconified(false);
+        searchViewPartenza.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 switch (v.getId()) {
-                    case R.id.searchViewBeacon:
-                        searchView.onActionViewExpanded();
+                    case R.id.searchViewBeaconPart:
+                        searchViewPartenza.onActionViewExpanded();
                         break;
                 }
             }
         });
 
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        searchViewPartenza.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                beaconRecyclerAdapter.getFilter().filter(query);
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                beaconRecyclerAdapter.getFilter().filter(newText);
+                //getActivity().
+                return false;
+            }
+
+        });
+
+        searchViewDestinazione = view.findViewById(R.id.searchViewBeaconDest);
+        searchViewDestinazione.setQueryHint("Seleziona il punto di partenza");
+        searchViewDestinazione.setIconified(false);
+        searchViewDestinazione.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                switch (v.getId()) {
+                    case R.id.searchViewBeaconDest:
+                        searchViewDestinazione.onActionViewExpanded();
+                        break;
+                }
+            }
+        });
+
+        searchViewDestinazione.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 beaconRecyclerAdapter.getFilter().filter(query);
