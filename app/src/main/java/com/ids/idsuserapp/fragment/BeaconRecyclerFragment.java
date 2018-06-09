@@ -25,11 +25,13 @@ import java.util.List;
 
 
 public class BeaconRecyclerFragment extends Fragment{
-    private RecyclerView recyclerBeacon;
+    private RecyclerView recyclerBeaconPartenza; //recyclerview nel xml della partenza
+    private RecyclerView recyclerBeaconDestinazione; // recyclerview della destinazione da collegare nel xml
     private SearchView searchViewPartenza; //searchview della partenza, presente nel layout del beaconfragment
     private SearchView searchViewDestinazione; //searchview della destinazione
 
-    private BeaconRecyclerAdapter beaconRecyclerAdapter;
+    private BeaconRecyclerAdapter beaconRecyclerAdapterPartenza; // recycleradapter della partenza
+    private BeaconRecyclerAdapter beaconRecyclerAdapterDestinazione; // recyclerAdapter della destinazione
     private BeaconViewModel mBeaconViewModel;
     private int mappa;
 
@@ -58,18 +60,20 @@ public class BeaconRecyclerFragment extends Fragment{
             e.printStackTrace();
         }*/
         mBeaconViewModel = ViewModelProviders.of(this).get(BeaconViewModel.class);
-        beaconRecyclerAdapter = new BeaconRecyclerAdapter(getContext());
+        beaconRecyclerAdapterPartenza = new BeaconRecyclerAdapter(getContext()); // i recycleradapter sono istanziati ma devono ancora essere popolati
+        beaconRecyclerAdapterDestinazione = new BeaconRecyclerAdapter(getContext());
         //qui rispetto al codice admin app ho eliminato la dipendenza dalla mappa in modo che venisse restituita
         // una lista di tutti i beacon
         mBeaconViewModel.getAllBeacons().observe((LifecycleOwner) this, new Observer<List<Beacon>>() {
             @Override
             public void onChanged(@Nullable final List<Beacon> beacon) {
                 // Update the cached copy of the words in the adapter.
-                beaconRecyclerAdapter.setmBeacon(beacon);
+                beaconRecyclerAdapterPartenza.setmBeacon(beacon); // i recycleradapter sono popolati
+                beaconRecyclerAdapterDestinazione.setmBeacon(beacon);
             }
         });
 
-        mBeaconViewModel.getAllBeacons();
+        //mBeaconViewModel.getAllBeacons();
 
 
     }
@@ -119,13 +123,13 @@ public class BeaconRecyclerFragment extends Fragment{
         searchViewPartenza.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                beaconRecyclerAdapter.getFilter().filter(query);
+                beaconRecyclerAdapterPartenza.getFilter().filter(query);
                 return true;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                beaconRecyclerAdapter.getFilter().filter(newText);
+                beaconRecyclerAdapterPartenza.getFilter().filter(newText);
                 //getActivity().
                 return false;
             }
@@ -133,7 +137,7 @@ public class BeaconRecyclerFragment extends Fragment{
         });
 
         searchViewDestinazione = view.findViewById(R.id.searchViewBeaconDest);
-        searchViewDestinazione.setQueryHint("Seleziona il punto di partenza");
+        searchViewDestinazione.setQueryHint("Seleziona la destinazione");
         searchViewDestinazione.setIconified(false);
         searchViewDestinazione.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -149,13 +153,13 @@ public class BeaconRecyclerFragment extends Fragment{
         searchViewDestinazione.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                beaconRecyclerAdapter.getFilter().filter(query);
+                beaconRecyclerAdapterDestinazione.getFilter().filter(query);
                 return true;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                beaconRecyclerAdapter.getFilter().filter(newText);
+                beaconRecyclerAdapterDestinazione.getFilter().filter(newText);
                 //getActivity().
                 return false;
             }
@@ -166,10 +170,15 @@ public class BeaconRecyclerFragment extends Fragment{
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     private void setupRecycler(View view) {
-        recyclerBeacon = view.findViewById(R.id.recyclerViewBeacon);
-        recyclerBeacon.setAdapter(beaconRecyclerAdapter);
-        recyclerBeacon.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerBeacon.setHasFixedSize(false);
+        recyclerBeaconPartenza = view.findViewById(R.id.recyclerViewBeaconPart);
+        recyclerBeaconPartenza.setAdapter(beaconRecyclerAdapterPartenza);
+        recyclerBeaconPartenza.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerBeaconPartenza.setHasFixedSize(false);
+
+        recyclerBeaconDestinazione = view.findViewById(R.id.recyclerViewBeaconDest);
+        recyclerBeaconDestinazione.setAdapter(beaconRecyclerAdapterDestinazione);
+        recyclerBeaconDestinazione.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerBeaconDestinazione.setHasFixedSize(false);
     }
 
 

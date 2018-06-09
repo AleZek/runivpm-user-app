@@ -64,7 +64,7 @@ public class BeaconRecyclerAdapter extends RecyclerView.Adapter<BeaconRecyclerAd
 
         @Override
         public void onClick(View view) {
-
+            Toast.makeText(context, "Prova", Toast.LENGTH_LONG).show();
         }
 
         @Override
@@ -77,6 +77,7 @@ public class BeaconRecyclerAdapter extends RecyclerView.Adapter<BeaconRecyclerAd
                 @Override
                 public void onClick(View v) {
 
+
                 }
             });
             itemView.setOnClickListener(this);
@@ -86,7 +87,7 @@ public class BeaconRecyclerAdapter extends RecyclerView.Adapter<BeaconRecyclerAd
     //METODI VIEW
     @Override
     public BeaconViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = mInflater.inflate(R.layout.places_recycler_item, parent, false);
+        View itemView = mInflater.inflate(R.layout.places_recycler_item1, parent, false);
         return new BeaconRecyclerAdapter.BeaconViewHolder(itemView);
     }
 
