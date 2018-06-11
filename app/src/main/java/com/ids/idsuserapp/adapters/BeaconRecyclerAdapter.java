@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
+import android.support.v7.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,6 +33,7 @@ public class BeaconRecyclerAdapter extends RecyclerView.Adapter<BeaconRecyclerAd
     private List<Beacon> mBeaconCercati; // Cached copy
     private String lastFilter = "";
     private BeaconUpdater beaconUpdater;
+    private SearchView searchView; //questa variabile punta alla searchview da aggiornare
 
 
     public BeaconRecyclerAdapter(Context context) {
@@ -60,6 +62,7 @@ public class BeaconRecyclerAdapter extends RecyclerView.Adapter<BeaconRecyclerAd
         @Override
         public void onClick(View view) {
             Toast.makeText(context, mBeacon.get(getAdapterPosition()).getNome(), Toast.LENGTH_LONG).show();
+            searchView.setQuery(mBeaconCercati.get(getAdapterPosition()).getNome(),true);
 
         }
 
@@ -177,5 +180,7 @@ public class BeaconRecyclerAdapter extends RecyclerView.Adapter<BeaconRecyclerAd
 //        public void aggiornaBeacon();
     }
 
-
+    public void setSearchView(SearchView searchView) {
+        this.searchView = searchView;
+    }
 }

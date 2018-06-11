@@ -137,6 +137,8 @@ public class BeaconRecyclerFragment extends Fragment{
 
         });
 
+        beaconRecyclerAdapterPartenza.setSearchView(searchViewPartenza);
+
         searchViewDestinazione = view.findViewById(R.id.searchViewBeaconDest);
         searchViewDestinazione.setQueryHint("Seleziona la destinazione");
         searchViewDestinazione.setIconified(false);
@@ -166,6 +168,8 @@ public class BeaconRecyclerFragment extends Fragment{
             }
 
         });
+
+        beaconRecyclerAdapterDestinazione.setSearchView(searchViewDestinazione);
 
     }
 
