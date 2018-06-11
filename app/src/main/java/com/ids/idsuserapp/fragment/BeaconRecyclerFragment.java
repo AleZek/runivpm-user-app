@@ -76,6 +76,7 @@ public class BeaconRecyclerFragment extends Fragment{
         //mBeaconViewModel.getAllBeacons();
 
 
+
     }
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override

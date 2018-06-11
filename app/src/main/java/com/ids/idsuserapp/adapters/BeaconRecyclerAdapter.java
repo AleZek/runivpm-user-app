@@ -1,21 +1,16 @@
 package com.ids.idsuserapp.adapters;
 
 import android.content.Context;
-import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.ContextMenu;
-import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
-import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.ids.idsuserapp.BeaconList;
 import com.ids.idsuserapp.R;
 import com.ids.idsuserapp.db.dao.BeaconDao;
 import com.ids.idsuserapp.db.entity.Beacon;
@@ -64,7 +59,8 @@ public class BeaconRecyclerAdapter extends RecyclerView.Adapter<BeaconRecyclerAd
 
         @Override
         public void onClick(View view) {
-            Toast.makeText(context, "Prova", Toast.LENGTH_LONG).show();
+            Toast.makeText(context, mBeacon.get(getAdapterPosition()).getNome(), Toast.LENGTH_LONG).show();
+
         }
 
         @Override
@@ -90,7 +86,6 @@ public class BeaconRecyclerAdapter extends RecyclerView.Adapter<BeaconRecyclerAd
         View itemView = mInflater.inflate(R.layout.places_recycler_item1, parent, false);
         return new BeaconRecyclerAdapter.BeaconViewHolder(itemView);
     }
-
     @Override
     public void onBindViewHolder(BeaconRecyclerAdapter.BeaconViewHolder holder, int position) {
         Beacon current = mBeaconCercati.get(position);
@@ -181,4 +176,6 @@ public class BeaconRecyclerAdapter extends RecyclerView.Adapter<BeaconRecyclerAd
         public void eliminaBeacon(int id);
 //        public void aggiornaBeacon();
     }
+
+
 }
