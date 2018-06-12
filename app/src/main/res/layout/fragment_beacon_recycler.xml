@@ -25,26 +25,29 @@
             android:clickable="true"
             android:gravity="end"/>
 
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerViewBeaconPart"
+            android:layout_width="match_parent"
+            android:layout_height="237dp"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/searchViewBeaconPart"/>
+
         <android.support.v7.widget.SearchView
             android:id="@+id/searchViewBeaconDest"
             android:layout_width="match_parent"
             android:layout_height="@dimen/search_bar_height"
-            android:layout_above="@+id/recyclerViewBeaconDest"
-            android:layout_alignParentStart="true" />
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/recyclerViewBeaconPart"/>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recyclerViewBeaconDest"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_alignParentStart="true" />
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/searchViewBeaconDest"/>
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recyclerViewBeaconPart"
-            android:layout_width="match_parent"
-            android:layout_height="237dp"
-            android:layout_above="@+id/searchViewBeaconDest"
-            android:layout_alignParentStart="true" />
+
 
 
     </RelativeLayout>
