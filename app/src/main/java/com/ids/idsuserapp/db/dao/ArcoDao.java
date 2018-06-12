@@ -34,9 +34,6 @@ public interface ArcoDao {
     @Query("SELECT * FROM arco WHERE arco_id=:arco_id")
     public Arco find(int arco_id);
 
-    @Query("SELECT * FROM arco WHERE arco_id=:arco_id")
-    public Arco trova(int arco_id);
-
 
 
 }
