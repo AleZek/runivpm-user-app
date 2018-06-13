@@ -69,11 +69,11 @@ public class ArcoDataHandler {
         }
     }
 
-    private HashMap<String, String> getNuovoArcoDataStrings(JSONObject beacon) {
+    private HashMap<String, String> getNuovoArcoDataStrings(JSONObject arco) {
         HashMap<String, String> datiNuovoArco = new HashMap<>();
-        for (String campo : BeaconViewModel.CAMPI) {
+        for (String campo : ArcoViewModel.CAMPI) {
             try {
-                datiNuovoArco.put(campo, beacon.getString(campo));
+                datiNuovoArco.put(campo, arco.getString(campo));
             } catch (JSONException e) {
                 e.printStackTrace();
             }

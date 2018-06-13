@@ -80,8 +80,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void getDatasetFromServer() {
         cleanBeacon();
-        beaconDataHandler.retrieveBeaconDataset();
         mappaDataHandler.retrieveMappeDataset();
+        beaconDataHandler.retrieveBeaconDataset();
         arcoDataHandler.retrieveArchiDataset();
     }
 

@@ -54,8 +54,8 @@ public class Arco {
 
     public Arco (HashMap<String,String> nuovoArco){
         this.id = Integer.parseInt(nuovoArco.get("id"));
-        this.begin = nuovoArco.get("begin");
-        this.end = nuovoArco.get("end");
+        this.begin = nuovoArco.get("begin").replace("/api/beacons/", "");
+        this.end = nuovoArco.get("end").replace("/api/beacons/", "");
         this.length = Double.parseDouble(nuovoArco.get("length"));
         this.width = Double.parseDouble(nuovoArco.get("width"));
         this.stairs = Boolean.parseBoolean(nuovoArco.get("stairs"));
