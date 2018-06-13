@@ -16,4 +16,5 @@
     <string name="title_activity_beacon_list">BeaconList</string>
     <string name="action_back">Indietro</string>
     <string name="action_confirm">Conferma</string>
+    <string name="title_activity_navigation">Naviga</string>
 </resources>
