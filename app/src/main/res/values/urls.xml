@@ -3,6 +3,7 @@
     <string name="SERVER_ADDR">http://159.89.102.18</string>
     <string name="api_mappas">http://159.89.102.18/api/mappas</string>
     <string name="api_beacons">http://159.89.102.18/api/beacons</string>
+    <string name="api_archi">http://159.89.102.18/api/arcos</string>
     <string name="api_mappa_image">http://159.89.102.18/api/image/map/</string>
     <string name="api_delete_mappa">http://159.89.102.18/api/custom/mappas/</string>
 </resources>

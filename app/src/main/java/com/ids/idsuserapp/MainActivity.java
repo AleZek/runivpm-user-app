@@ -8,19 +8,27 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
+import com.ids.idsuserapp.db.entity.Tronco;
+import com.ids.idsuserapp.entityhandlers.ArcoDataHandler;
 import com.ids.idsuserapp.entityhandlers.BeaconDataHandler;
 import com.ids.idsuserapp.entityhandlers.MappaDataHandler;
 import com.ids.idsuserapp.fragment.BeaconRecyclerFragment;
 import com.ids.idsuserapp.utils.ConnectionChecker;
+import com.ids.idsuserapp.viewmodel.ArcoViewModel;
 import com.ids.idsuserapp.viewmodel.BeaconViewModel;
 import com.ids.idsuserapp.viewmodel.MappaViewModel;
+import com.ids.idsuserapp.wayfinding.Grafo;
+
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private MappaViewModel mappaViewModel;
     private BeaconViewModel beaconViewModel;
+    private ArcoViewModel arcoViewModel;
     private com.android.volley.RequestQueue serverRequestQueue;
     private BeaconDataHandler beaconDataHandler;
     private MappaDataHandler mappaDataHandler;
+    private ArcoDataHandler arcoDataHandler;
     private static final int PICKFILE_REQUEST_CODE = 123;
 
     @Override
@@ -30,16 +38,21 @@ public class MainActivity extends AppCompatActivity {
 
         beaconViewModel = new BeaconViewModel(getApplication());
         mappaViewModel = new MappaViewModel(getApplication());
+        arcoViewModel = new ArcoViewModel(getApplication());
 
         beaconDataHandler = new BeaconDataHandler(this, beaconViewModel);
         mappaDataHandler = new MappaDataHandler(this, mappaViewModel,beaconViewModel);
-
+        arcoDataHandler = new ArcoDataHandler(this, arcoViewModel, beaconViewModel);
         handleFilePermissions();
 
         //controlla se la connessione ad internet è attiva dato l application context,
         //se si allora viene pulita la lista dei beacon e viene aggiornato il dataset
         if (ConnectionChecker.getInstance().isNetworkAvailable(getApplicationContext()))
             getDatasetFromServer();
+
+        List<Tronco> tronchi = arcoViewModel.getTronchi();
+
+        Grafo grafo = new Grafo(tronchi);
 
         //inizializza il fragment dei beacon
         setupBeaconFragment();
@@ -69,6 +82,7 @@ public class MainActivity extends AppCompatActivity {
         cleanBeacon();
         beaconDataHandler.retrieveBeaconDataset();
         mappaDataHandler.retrieveMappeDataset();
+        arcoDataHandler.retrieveArchiDataset();
     }
 
     private void cleanBeacon() {

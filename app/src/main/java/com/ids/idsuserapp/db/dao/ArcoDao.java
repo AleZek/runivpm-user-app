@@ -11,6 +11,8 @@ import android.arch.persistence.room.Update;
 import com.ids.idsuserapp.db.entity.Arco;
 import com.ids.idsuserapp.db.entity.Tronco;
 
+import java.util.List;
+
 @Dao
 public interface ArcoDao {
 
@@ -33,7 +35,6 @@ public interface ArcoDao {
 
     @Query("SELECT * FROM arco WHERE arco_id=:arco_id")
     public Arco find(int arco_id);
-
-
-
+    @Query("SELECT Arco.*, Beacon.* FROM arco Arco JOIN  beacon Beacon on Arco.`begin`=Beacon.id JOIN beacon B2 ON Arco.`end`=B2.id")
+    List<Tronco> getTronchi();
 }

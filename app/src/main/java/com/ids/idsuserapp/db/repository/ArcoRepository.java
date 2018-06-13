@@ -8,6 +8,8 @@ import com.ids.idsuserapp.db.dao.ArcoDao;
 import com.ids.idsuserapp.db.entity.Arco;
 import com.ids.idsuserapp.db.entity.Tronco;
 
+import java.util.List;
+
 public class ArcoRepository {
     private ArcoDao mArcoDao;
 
@@ -82,6 +84,8 @@ public class ArcoRepository {
     public Tronco findTronco(int arco_id){
         return mArcoDao.findTronco(arco_id);
     }
+
+    public List<Tronco> getTronchi() { return mArcoDao.getTronchi(); }
 
     public void insert (Arco arco) {
         new ArcoRepository.insertAsyncTask(mArcoDao).execute(arco);

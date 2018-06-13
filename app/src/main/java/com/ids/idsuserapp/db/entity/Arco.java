@@ -5,18 +5,21 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.PrimaryKey;
 
+import com.ids.idsuserapp.db.entity.Beacon;
+
+import java.util.HashMap;
+
 import static android.arch.persistence.room.ForeignKey.CASCADE;
 
 @Entity(foreignKeys = {
         @ForeignKey(entity = Beacon.class,
-        parentColumns = "id",
-        childColumns = "begin",
-        onDelete = CASCADE),
-         @ForeignKey(entity = Beacon.class,
-        parentColumns = "id",
-        childColumns = "end",
-        onDelete = CASCADE)})
-
+                parentColumns = "id",
+                childColumns = "begin",
+                onDelete = CASCADE),
+        @ForeignKey(entity = Beacon.class,
+                parentColumns = "id",
+                childColumns = "end",
+                onDelete = CASCADE)})
 public class Arco {
 
     @PrimaryKey(autoGenerate = true)
@@ -37,8 +40,7 @@ public class Arco {
 
     public Arco(){}
 
-    public Arco(int id, String begin, String end, double length, double width, boolean stairs, double v, double i, double los, double c) {
-        this.id = id;
+    public Arco(String begin, String end, double length, double width, boolean stairs, double v, double i, double los, double c) {
         this.begin = begin;
         this.end = end;
         this.length = length;
@@ -48,6 +50,19 @@ public class Arco {
         this.i = i;
         this.los = los;
         this.c = c;
+    }
+
+    public Arco (HashMap<String,String> nuovoArco){
+        this.id = Integer.parseInt(nuovoArco.get("id"));
+        this.begin = nuovoArco.get("begin");
+        this.end = nuovoArco.get("end");
+        this.length = Double.parseDouble(nuovoArco.get("length"));
+        this.width = Double.parseDouble(nuovoArco.get("width"));
+        this.stairs = Boolean.parseBoolean(nuovoArco.get("stairs"));
+        this.v = Double.parseDouble(nuovoArco.get("v"));
+        this.i = Double.parseDouble(nuovoArco.get("i"));
+        this.c = Double.parseDouble(nuovoArco.get("c"));
+        this.los = Double.parseDouble(nuovoArco.get("los"));
     }
 
     public int getId() {
