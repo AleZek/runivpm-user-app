@@ -17,4 +17,5 @@
     <string name="action_back">Indietro</string>
     <string name="action_confirm">Conferma</string>
     <string name="title_activity_navigation">Naviga</string>
+    <string name="title_activity_home">HomeActivity</string>
 </resources>

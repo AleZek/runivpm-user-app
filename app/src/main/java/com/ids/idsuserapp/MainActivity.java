@@ -89,6 +89,10 @@ public class MainActivity extends AppCompatActivity {
         beaconViewModel.deleteAll();
     }
 
+    private void setupHomeFragment(){
+
+    }
+
     private void setupBeaconFragment() {
         BeaconRecyclerFragment fragment = new BeaconRecyclerFragment();
         android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
