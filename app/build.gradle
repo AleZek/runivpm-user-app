@@ -43,7 +43,8 @@ dependencies {
     implementation 'com.android.support:design:26.1.0'
     // Hipster
     implementation 'es.usc.citius.hipster:hipster-core:1.0.1'
-    compile 'com.google.firebase:firebase-core:16.0.0'
+    implementation 'com.google.firebase:firebase-core:16.0.0'
+    implementation 'com.google.firebase:firebase-messaging:17.0.0'
 
 }
 
