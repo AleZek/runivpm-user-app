@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">IDS User App</string>
+    <string name="app_name">RUNIVPM</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="nuova_mappa_nome_hint">Nome Mappa</string>
     <string name="nuovo_beacon_nome_hint">Nome Beacon</string>
@@ -18,4 +18,8 @@
     <string name="action_confirm">Conferma</string>
     <string name="title_activity_navigation">Naviga</string>
     <string name="title_activity_home">HomeActivity</string>
+
+    <string name="title_activity_logow">LogowActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
 </resources>
