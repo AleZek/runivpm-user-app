@@ -1,6 +1,7 @@
 package com.ids.idsuserapp;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -44,6 +45,10 @@ public class MainActivity extends AppCompatActivity {
         mappaDataHandler = new MappaDataHandler(this, mappaViewModel,beaconViewModel);
         arcoDataHandler = new ArcoDataHandler(this, arcoViewModel, beaconViewModel);
         handleFilePermissions();
+
+        Intent homeintent = new Intent(MainActivity.this,HomeActivity.class);
+        startActivity(homeintent);
+
 
         //controlla se la connessione ad internet è attiva dato l application context,
         //se si allora viene pulita la lista dei beacon e viene aggiornato il dataset
@@ -92,11 +97,15 @@ public class MainActivity extends AppCompatActivity {
     private void setupHomeFragment(){
 
     }
-
-    private void setupBeaconFragment() {
+   private void setupBeaconFragment() {
         BeaconRecyclerFragment fragment = new BeaconRecyclerFragment();
         android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
         android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.add(R.id.beaconfragmentcontainer, fragment).commit();
     }
+
+
+
+
+
 }

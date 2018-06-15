@@ -18,16 +18,12 @@
               tools:layout_editor_absoluteX="0dp"
               tools:layout_editor_absoluteY="0dp" />-->
 
+
         <LinearLayout
             android:id="@+id/beaconfragmentcontainer"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical" />
-
-
-
-
-
     </RelativeLayout>
 
 </android.support.constraint.ConstraintLayout>
