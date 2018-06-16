@@ -37,7 +37,7 @@
 
             <android.support.design.widget.AppBarLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_marginEnd="-4dp"
                 android:layout_marginStart="-4dp"
                 android:background="@android:color/transparent"
@@ -48,7 +48,6 @@
                     android:id="@+id/navigation_toolbar"
                     android:layout_width="match_parent"
                     android:layout_height="?attr/actionBarSize"
-                    android:background="@android:color/transparent"
                     android:gravity="top"
                     android:title="@string/title_activity_navigation">
 
@@ -58,7 +57,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/title_activity_navigation"
-                        android:textColor="@android:color/white"/>
+                        android:textColor="@android:color/black" />
 
                 </android.support.v7.widget.Toolbar>
 
@@ -68,7 +67,7 @@
 
                 <include
                     android:id="@+id/scegli_da_beacon"
-                    layout="@layout/scegli_da_beacon"/>
+                    layout="@layout/scegli_da_beacon" />
 
             </android.support.design.widget.AppBarLayout>
         </FrameLayout>
