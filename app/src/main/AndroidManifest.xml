@@ -26,6 +26,10 @@
             android:label="@string/title_activity_beacon_list"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".HomeActivity" />
+        <activity
+            android:name=".LogoActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity android:name=".MapNavigationActivity"></activity>
     </application>
 
 </manifest>

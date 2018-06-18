@@ -1,38 +1,43 @@
 package com.ids.idsuserapp;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 
-import com.ids.idsuserapp.db.entity.Beacon;
+import com.ids.idsuserapp.fragment.MapNavigationFragment;
 
 public class HomeActivity extends AppCompatActivity {
+
+    private Button button;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
+
+        button = findViewById(R.id.scegli_da_mappa_button);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(HomeActivity.this, MapNavigationActivity.class);
+                startActivity(intent);
+            }
+        });
+
     }
 
 
-    private void openSelectionPath(View v) {
-        SelectionFragment selectionFragment;
-        Beacon alreadySelectedNode = null;
 
-        int code = 1;
-        switch (v.getId()) {
-            case R.id.scegli_da_mappa:
-                code = ORIGIN_SELECTION_REQUEST_CODE;
-                alreadySelectedNode = destination;
-                break;
-            case R.id.navigation_input_destination:
-                code = DESTINATION_SELECTION_REQUEST_CODE;
-                alreadySelectedNode = origin;
-                break;
-        }
 
-        selectionFragment = SelectionFragment.newInstance(code, alreadySelectedNode, offline);
-        selectionFragment.setTargetFragment(this, code);
-        ((NavigationActivity) getActivity()).changeFragment(selectionFragment);
-    }
+
 }
+
+
+
+
+
+
+

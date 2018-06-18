@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -32,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
     private ArcoDataHandler arcoDataHandler;
     private static final int PICKFILE_REQUEST_CODE = 123;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,13 +46,18 @@ public class MainActivity extends AppCompatActivity {
         beaconDataHandler = new BeaconDataHandler(this, beaconViewModel);
         mappaDataHandler = new MappaDataHandler(this, mappaViewModel,beaconViewModel);
         arcoDataHandler = new ArcoDataHandler(this, arcoViewModel, beaconViewModel);
-        handleFilePermissions();
-
-        Intent homeintent = new Intent(MainActivity.this,HomeActivity.class);
-        startActivity(homeintent);
+       // handleFilePermissions();
 
 
-        //controlla se la connessione ad internet è attiva dato l application context,
+
+
+        Intent logoIntent = new Intent(MainActivity.this,LogoActivity.class);
+        startActivity(logoIntent);
+
+
+
+
+       /* //controlla se la connessione ad internet è attiva dato l application context,
         //se si allora viene pulita la lista dei beacon e viene aggiornato il dataset
         if (ConnectionChecker.getInstance().isNetworkAvailable(getApplicationContext()))
             getDatasetFromServer();
@@ -61,12 +68,12 @@ public class MainActivity extends AppCompatActivity {
 
         //inizializza il fragment dei beacon
         setupBeaconFragment();
-    }
+    }*/
 
 
     //gestisce i permessi dei file , con output nel log se sono  stati garantiti. Altrimenti vengono effettutate le richieste
     // in app. Questo metodo è chiamato in onCreate.
-    private void handleFilePermissions(){
+   /* private void handleFilePermissions(){
         if (isFilePermissionGranted()) {
             Log.v("File Permission", "Permission is granted");
         } else {
@@ -97,15 +104,15 @@ public class MainActivity extends AppCompatActivity {
     private void setupHomeFragment(){
 
     }
-   private void setupBeaconFragment() {
+   /*private void setupBeaconFragment() {
         BeaconRecyclerFragment fragment = new BeaconRecyclerFragment();
         android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
         android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.add(R.id.beaconfragmentcontainer, fragment).commit();
     }
+*/
 
 
 
 
-
-}
+}}
