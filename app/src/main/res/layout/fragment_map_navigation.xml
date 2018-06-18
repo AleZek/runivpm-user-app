@@ -2,6 +2,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fragment_place"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".fragment.MapNavigationFragment">
@@ -97,47 +98,17 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <Button
-                    android:id="@+id/floor_button_155"
-                    android:layout_width="55dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="@drawable/borderless_white_button"
-                    android:elevation="0dp"
-                    android:stateListAnimator="@null"
-                    android:text="155"/>
-
                 <!-- Divider -->
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     />
 
-                <Button
-                    android:id="@+id/floor_button_150"
-                    android:layout_width="55dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="@drawable/borderless_white_button"
-                    android:elevation="0dp"
-                    android:stateListAnimator="@null"
-                    android:text="150"/>
-
                 <!-- Divider -->
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     />
-
-                <Button
-                    android:id="@+id/floor_button_145"
-                    android:layout_width="55dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="@drawable/borderless_white_button"
-                    android:elevation="0dp"
-                    android:stateListAnimator="@null"
-                    android:text="145"/>
 
             </LinearLayout>
 

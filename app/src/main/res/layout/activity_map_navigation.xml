@@ -6,4 +6,12 @@
     android:layout_height="match_parent"
     tools:context=".MapNavigationActivity">
 
+
+
+    <FrameLayout
+        android:id="@+id/fragment_place"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    </FrameLayout>
+
 </android.support.constraint.ConstraintLayout>
