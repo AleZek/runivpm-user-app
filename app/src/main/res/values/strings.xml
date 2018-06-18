@@ -18,6 +18,7 @@
     <string name="action_confirm">Conferma</string>
     <string name="title_activity_navigation">Naviga</string>
     <string name="title_activity_home">HomeActivity</string>
+    <string name="search_hint">Inserisci beacon di partenza</string>
 
     <string name="title_activity_logow">LogowActivity</string>
     <string name="dummy_button">Dummy Button</string>

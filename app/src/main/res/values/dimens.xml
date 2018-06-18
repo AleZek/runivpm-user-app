@@ -23,5 +23,5 @@
     <dimen name="ic_album_overflow_margin_top">10dp</dimen>
     <dimen name="status_bar_height">24dp</dimen>
     <dimen name="standard_elevation">4dp</dimen>
-
+    <dimen name="selection_list_cell_height">46dp</dimen>
 </resources>

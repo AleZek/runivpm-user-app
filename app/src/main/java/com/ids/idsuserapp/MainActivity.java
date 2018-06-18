@@ -102,9 +102,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupHomeFragment(){
-
-    }
-   /*private void setupBeaconFragment() {
+    }*/
+   /*private void setupBeaconFragment(){
         BeaconRecyclerFragment fragment = new BeaconRecyclerFragment();
         android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
         android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();

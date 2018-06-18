@@ -29,7 +29,8 @@
         <activity
             android:name=".LogoActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
-        <activity android:name=".MapNavigationActivity"></activity>
+        <activity android:name=".MapNavigationActivity" />
+        <activity android:name=".BeaconNavigationActivity"></activity>
     </application>
 
 </manifest>

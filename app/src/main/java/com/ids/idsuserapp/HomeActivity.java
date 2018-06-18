@@ -27,6 +27,16 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
+
+        findViewById(R.id.button2).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent Intent = new Intent(HomeActivity.this, BeaconNavigationActivity.class);
+                startActivity(Intent);
+            }
+        });
+
+
     }
 
 

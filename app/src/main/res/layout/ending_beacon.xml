@@ -9,8 +9,8 @@
     android:orientation="horizontal">
 
     <ImageView
-        android:id="@+id/icon"
-        android:src="@drawable/beacon"
+        android:id="@+id/img"
+        android:src="@drawable/flag"
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_marginEnd="16dp"
@@ -18,13 +18,11 @@
         />
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/ending_beacon_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:backgroundTint="#ffffff"
-        android:text="Scegli da beacon " />
+        android:text="Scegli il beacon d'arrivo "
+        android:backgroundTint="#ffffff"/>
 
 </LinearLayout>
-
-
