@@ -49,6 +49,9 @@ public interface BeaconDao {
     @Query("SELECT * FROM beacon WHERE mappa=:mappa ORDER BY nome ASC")
     public LiveData<List<Beacon>> getBeaconByIdMappa(int mappa);
 
+    @Query("SELECT * FROM beacon WHERE floor=:floor AND x>(:x0-:radius) AND x<(:x0+:radius) AND y<(:y0+:radius) ORDER BY nome ASC")
+    public List<Beacon> ottieniBeacon(int floor, int x0, int y0, int radius);
+
 
 
     public class BeaconWithMap {

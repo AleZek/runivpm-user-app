@@ -18,4 +18,5 @@
     <string name="action_confirm">Conferma</string>
     <string name="title_activity_navigation">Naviga</string>
     <string name="title_activity_home">HomeActivity</string>
+    <string name="selected_node">Hai selezionato: </string>
 </resources>

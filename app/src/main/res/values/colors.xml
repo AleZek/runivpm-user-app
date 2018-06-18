@@ -5,4 +5,10 @@
     <color name="colorAccent">#2fb66e</color>
     <color name="colorBlack">#000</color>
     <color name="colorWhite">#fff</color>
+    <color name="lightGrey">#EEEEEE</color>
+    <color name="dividerGrey">#DDDDDD</color>
+    <color name="linkText">@android:color/holo_blue_light</color>
+    <color name="disabledText">#40000000</color>
+
+
 </resources>

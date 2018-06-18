@@ -125,6 +125,15 @@ public class BeaconRepository {
     public LiveData<List<Beacon>> getBeaconByIdMappa(int mappa)
     {return mBeaconDao.getBeaconByIdMappa(mappa);}
 
+    public static class getBeaconFloor {
+
+        public static BeaconDao mAsyncTaskDao;
+
+        public static List<Beacon> getBeaconsByFloor(int floor, int x0, int y0, int radius) {
+            return mAsyncTaskDao.ottieniBeacon(floor, x0, y0, radius);
+        }
+    }
+
     public void delete (Beacon beacon){
         new BeaconRepository.deleteAsyncTask(mBeaconDao).execute(beacon);
     }

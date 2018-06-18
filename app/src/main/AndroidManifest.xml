@@ -25,7 +25,7 @@
             android:name=".BeaconList"
             android:label="@string/title_activity_beacon_list"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".HomeActivity"></activity>
+        <activity android:name=".HomeActivity" />
     </application>
 
 </manifest>

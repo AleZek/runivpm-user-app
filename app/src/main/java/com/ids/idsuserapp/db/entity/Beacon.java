@@ -29,6 +29,7 @@ public class Beacon implements Checkpoint{
     //private int x_meter;
     //private int y_meter;
     private int mappa;
+    private  int floor;
 
 
     public Beacon(){}
@@ -61,6 +62,8 @@ public class Beacon implements Checkpoint{
         return id;
     }
 
+    public int getFloor() {return floor;}
+
     public String getNome() {
         return nome;
     }
@@ -85,6 +88,10 @@ public class Beacon implements Checkpoint{
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public void setFloor(int floor) {
+        this.floor = floor;
     }
 
     public void setNome(String name) {

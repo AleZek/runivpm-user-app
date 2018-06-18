@@ -30,7 +30,7 @@ public class BeaconList extends FragmentActivity {
         idMappa = getIntent().getIntExtra("idMappa",0);
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_beacon_list);
+        setContentView(R.layout.activity_beac1on_list);
         beaconViewModel = new BeaconViewModel(getApplication());
         serverRequestQueue = Volley.newRequestQueue(this);
         beaconDataHandler = new BeaconDataHandler(this, beaconViewModel);
