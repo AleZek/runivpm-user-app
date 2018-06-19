@@ -31,8 +31,11 @@
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity android:name=".MapNavigationActivity" />
         <activity android:name=".BeaconNavigationActivity" />
-        <activity android:name=".autenticazione.AutenticationActivity"
-            android:theme="@style/AppTheme.NoActionBar" ></activity>
+        <activity
+            android:name=".autenticazione.AutenticationActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".autenticazione.LoginActivity" />
+        <activity android:name=".autenticazione.RegistrationActivity"></activity>
     </application>
 
 </manifest>
