@@ -26,7 +26,7 @@ public class BeaconNavigationActivity extends AppCompatActivity {
                 new SimpleSearchDialogCompat(BeaconNavigationActivity.this, "Cerca", "Seleziona beacon", null, initData(), new SearchResultListener<Searchable>() {
                     @Override
                     public void onSelected(BaseSearchDialogCompat baseSearchDialogCompat, Searchable searchable, int i) {
-                        Toast.makeText(BeaconNavigationActivity.this,""+searchable.getTitle(),Toast.LENGTH_SHORT).show();
+                        Toast.makeText(BeaconNavigationActivity.this,"Hai selezionato il "+searchable.getTitle(),Toast.LENGTH_SHORT).show();
                         baseSearchDialogCompat.dismiss();
 
                     }
@@ -45,7 +45,7 @@ public class BeaconNavigationActivity extends AppCompatActivity {
                 new SimpleSearchDialogCompat(BeaconNavigationActivity.this, "Cerca", "Seleziona beacon", null, initData(), new SearchResultListener<Searchable>() {
                     @Override
                     public void onSelected(BaseSearchDialogCompat baseSearchDialogCompat, Searchable searchable, int i) {
-                        Toast.makeText(BeaconNavigationActivity.this,""+searchable.getTitle(),Toast.LENGTH_SHORT).show();
+                        Toast.makeText(BeaconNavigationActivity.this,"Hai selezionato il "+searchable.getTitle(),Toast.LENGTH_SHORT).show();
                         baseSearchDialogCompat.dismiss();
 
                     }

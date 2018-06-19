@@ -44,4 +44,4 @@ dependencies {
     // Hipster
     implementation 'es.usc.citius.hipster:hipster-core:1.0.1'
     implementation 'com.github.mirrajabi:search-dialog:1.2.2'
-    }
+}

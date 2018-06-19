@@ -30,7 +30,9 @@
             android:name=".LogoActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity android:name=".MapNavigationActivity" />
-        <activity android:name=".BeaconNavigationActivity"></activity>
+        <activity android:name=".BeaconNavigationActivity" />
+        <activity android:name=".autenticazione.AutenticationActivity"
+            android:theme="@style/AppTheme.NoActionBar" ></activity>
     </application>
 
 </manifest>

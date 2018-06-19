@@ -23,7 +23,8 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:backgroundTint="#ffffff"
-        android:text="Scegli da beacon " />
+        android:text="Scegli da beacon "
+        android:textColor="#B30000"/>
 
 </LinearLayout>
 
