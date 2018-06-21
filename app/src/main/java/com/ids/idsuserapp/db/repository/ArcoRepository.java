@@ -38,13 +38,27 @@ public class ArcoRepository {
     }
 
     public void deleteAll() {
-        new ArcoRepository.deleteAsyncTask(mArcoDao).execute();
+        new ArcoRepository.deleteAllAsyncTask(mArcoDao).execute();
     }
     public void update(Arco arco){
         new ArcoRepository.updateAsyncTask(mArcoDao).execute(arco);
     }
 
 
+    private static class deleteAllAsyncTask extends AsyncTask<Arco, Void, Void> {
+
+        private ArcoDao mAsyncTaskDao;
+
+        deleteAllAsyncTask(ArcoDao dao) {
+            mAsyncTaskDao = dao;
+        }
+
+        @Override
+        protected Void doInBackground(final Arco... params) {
+            mAsyncTaskDao.deleteAll();
+            return null;
+        }
+    }
 
     private static class deleteAsyncTask extends AsyncTask<Arco, Void, Void> {
 

@@ -49,7 +49,8 @@ public class MainActivity extends AppCompatActivity implements DataRetriever {
         mappaDataHandler = new MappaDataHandler(this, mappaViewModel,beaconViewModel);
         arcoDataHandler = new ArcoDataHandler(this, arcoViewModel, beaconViewModel);
 
-        mappaDataHandler.retrieveMappeDataset();
+        if (ConnectionChecker.getInstance().isNetworkAvailable(getApplicationContext()))
+            getDatasetFromServer();
 
         // handleFilePermissions();
 
@@ -120,6 +121,25 @@ public class MainActivity extends AppCompatActivity implements DataRetriever {
 
 
 }
+
+
+    private void getDatasetFromServer() {
+        cleanArchi();
+        cleanBeacon();
+        cleanMappe();
+        mappaDataHandler.retrieveMappeDataset();
+    }
+
+    private void cleanBeacon() {
+        beaconViewModel.deleteAll();
+    }
+    private void cleanArchi(){
+        arcoViewModel.deleteAll();
+    }
+    private void cleanMappe(){
+        mappaViewModel.deleteAll();
+    }
+
     @Override
     public void retrieveBeacons() {
         beaconDataHandler.retrieveBeaconDataset();

@@ -37,4 +37,6 @@ public interface ArcoDao {
     public Arco find(int arco_id);
     @Query("SELECT Arco.*, Beacon.* FROM arco Arco JOIN  beacon Beacon on Arco.`begin`=Beacon.id JOIN beacon B2 ON Arco.`end`=B2.id")
     List<Tronco> getTronchi();
+    @Query("DELETE FROM arco")
+    void deleteAll();
 }
