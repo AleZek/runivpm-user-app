@@ -28,10 +28,7 @@ public interface BeaconDao {
     public void delete(Beacon beacon);
     @Update
     public void update(Beacon beacon);
-    @Query("SELECT * FROM beacon B JOIN mappa M on B.mappa=m.id")
-    public LiveData<List<BeaconWithMap>> getAll();
-    @Query("SELECT Beacon.*, Mappa.* FROM beacon Beacon JOIN  mappa Mappa on Beacon.mappa=Mappa.id WHERE mappa=:mappa")
-    public LiveData<List<BeaconWithMap>> getMapBeacons(int mappa);
+
     @Query("DELETE FROM beacon WHERE mappa=:mappa")
     public void deleteByMap(int mappa);
     @Query("SELECT * FROM beacon WHERE id=:beacon_id")
@@ -48,34 +45,14 @@ public interface BeaconDao {
     public LiveData<List<Beacon>> getAllBeacons();
     @Query("SELECT * FROM beacon WHERE mappa=:mappa ORDER BY nome ASC")
     public LiveData<List<Beacon>> getBeaconByIdMappa(int mappa);
-
-    @Query("SELECT * FROM beacon WHERE floor=:floor AND x>(:x0-:radius) AND x<(:x0+:radius) AND y<(:y0+:radius) ORDER BY nome ASC")
+    @Query("SELECT * FROM beacon WHERE nome=:name")
+    public Beacon findByName(String name);
+    @Query("SELECT * FROM beacon WHERE device=:device")
+    Beacon findByDevice(String device);
+    @Query("SELECT * FROM beacon")
+    List<Beacon> getAllSynchronously();
+    @Query("SELECT * FROM beacon WHERE floor=:floor AND x>(:x0-:radius) AND x<(:x0+:radius) AND y<(:y0+:radius) AND y>(:y0-:radius)")
     public List<Beacon> ottieniBeacon(int floor, int x0, int y0, int radius);
 
 
-
-    public class BeaconWithMap {
-        @Embedded
-        Beacon beacon;
-        @Relation(parentColumn = "mappa", entityColumn = "id", entity = Mappa.class)
-        List<Mappa> mappa;
-
-        public Beacon getBeacon() {
-            return beacon;
-        }
-
-        public List<Mappa> getMappa() {
-            return mappa;
-        }
-
-        public void setBeacon(Beacon beacon) {
-            this.beacon = beacon;
-        }
-
-        public void setMappa(List<Mappa> mappa) {
-            this.mappa = mappa;
-        }
-
-
-    }
 }

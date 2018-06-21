@@ -1,6 +1,7 @@
 package com.ids.idsuserapp;
 
 import android.Manifest;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -13,6 +14,7 @@ import android.util.Log;
 import com.ids.idsuserapp.db.entity.Tronco;
 import com.ids.idsuserapp.entityhandlers.ArcoDataHandler;
 import com.ids.idsuserapp.entityhandlers.BeaconDataHandler;
+import com.ids.idsuserapp.entityhandlers.DataRetriever;
 import com.ids.idsuserapp.entityhandlers.MappaDataHandler;
 import com.ids.idsuserapp.fragment.BeaconRecyclerFragment;
 import com.ids.idsuserapp.utils.ConnectionChecker;
@@ -23,7 +25,7 @@ import com.ids.idsuserapp.wayfinding.Grafo;
 
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements DataRetriever {
     private MappaViewModel mappaViewModel;
     private BeaconViewModel beaconViewModel;
     private ArcoViewModel arcoViewModel;
@@ -46,8 +48,10 @@ public class MainActivity extends AppCompatActivity {
         beaconDataHandler = new BeaconDataHandler(this, beaconViewModel);
         mappaDataHandler = new MappaDataHandler(this, mappaViewModel,beaconViewModel);
         arcoDataHandler = new ArcoDataHandler(this, arcoViewModel, beaconViewModel);
-       // handleFilePermissions();
 
+        mappaDataHandler.retrieveMappeDataset();
+
+        // handleFilePermissions();
 
 
 
@@ -115,4 +119,15 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-}}
+}
+    @Override
+    public void retrieveBeacons() {
+        beaconDataHandler.retrieveBeaconDataset();
+    }
+
+    @Override
+    public void retrieveArchi() {
+        arcoDataHandler.retrieveArchiDataset();
+    }
+
+}

@@ -2,9 +2,9 @@ package com.ids.idsuserapp.wayfinding;
 
 
 public interface Checkpoint {
-    String getQuota();
+    String getFloor();
 
-    int getQuotaInt();
+    int getFloorInt();
 
 //    boolean isGeneral();
 //

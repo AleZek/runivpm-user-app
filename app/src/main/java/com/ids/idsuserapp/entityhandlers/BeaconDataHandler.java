@@ -12,6 +12,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.ids.idsuserapp.R;
 import com.ids.idsuserapp.db.entity.Beacon;
+import com.ids.idsuserapp.viewmodel.ArcoViewModel;
 import com.ids.idsuserapp.viewmodel.BeaconViewModel;
 
 import org.json.JSONArray;
@@ -27,12 +28,14 @@ import java.util.ArrayList;
 public class BeaconDataHandler {
     private Context context;
     private BeaconViewModel beaconViewModel;
+    private DataRetriever dataRetriever;
     private com.android.volley.RequestQueue serverRequestQueue;
 
 
     public BeaconDataHandler(Context context, BeaconViewModel beaconViewModel) {
         this.context = context;
         this.beaconViewModel = beaconViewModel;
+        dataRetriever = (DataRetriever) context;
         serverRequestQueue = Volley.newRequestQueue(context);
     }
 
@@ -41,9 +44,9 @@ public class BeaconDataHandler {
         serverRequestQueue.add(beaconRequest);
     }
 
-    public void creaBeacon(String nome, String quota, double larghezza, int x, int y, /*int x_meter, int y_meter,*/ int mappa) {
+    public void creaBeacon(String nome, String quota, double larghezza, int x, int y, /*int x_meter, int y_meter,*/ int mappa, String device) {
         //Beacon beacon = new Beacon(nome, quota,larghezza,x,y,x_meter,y_meter,mappa);
-        Beacon beacon = new Beacon(nome, quota,larghezza,x,y,mappa);
+        Beacon beacon = new Beacon(nome, quota, larghezza,x,y,mappa, device);
         beaconViewModel.insert(beacon);
     }
 
@@ -62,6 +65,7 @@ public class BeaconDataHandler {
                     public void onResponse(JSONObject response) {
                         try {
                             persistBeaconCollection(response.getJSONArray("hydra:member"));
+                            dataRetriever.retrieveArchi();
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -77,7 +81,7 @@ public class BeaconDataHandler {
 
     public JsonObjectRequest preparePostBeaconRequest(String nome, String quota, double larghezza, int x, int y, /*int x_meter, int y_meter,*/ String mappa) {
         String beacons_url = context.getString(R.string.api_beacons);
-       // JSONObject newBeacon = createNewBeaconJson(nome,quota,larghezza,x,y,x_meter,y_meter,mappa);
+        // JSONObject newBeacon = createNewBeaconJson(nome,quota,larghezza,x,y,x_meter,y_meter,mappa);
         JSONObject newBeacon = createNewBeaconJson(nome,quota,larghezza,x,y,mappa);
         return new JsonObjectRequest(Request.Method.POST, beacons_url, newBeacon,
                 new Response.Listener<JSONObject>() {
@@ -136,8 +140,8 @@ public class BeaconDataHandler {
             newBeacon.put("width", larghezza);
             newBeacon.put("x", x);
             newBeacon.put("y", y);
-          //  newBeacon.put("x_meter", x_meter);
-           // newBeacon.put("y_meter", y_meter);
+            //  newBeacon.put("x_meter", x_meter);
+            // newBeacon.put("y_meter", y_meter);
             newBeacon.put("mappa", mappa);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -227,8 +231,8 @@ public class BeaconDataHandler {
         Double bcn_larghezza = Double.parseDouble(datiBeacon.get(6));
         int bcn_x = Integer.parseInt(datiBeacon.get(2));
         int bcn_y = Integer.parseInt(datiBeacon.get(3));
-       // int bcn_x_meter = Integer.parseInt(datiBeacon.get(6));
-       // int bcn_y_meter = Integer.parseInt(datiBeacon.get(7));
+        // int bcn_x_meter = Integer.parseInt(datiBeacon.get(6));
+        // int bcn_y_meter = Integer.parseInt(datiBeacon.get(7));
         beaconViewModel.update(beacon);
 
 

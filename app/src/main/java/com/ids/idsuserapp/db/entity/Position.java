@@ -16,7 +16,7 @@ public class Position implements Serializable {
     public Position(Beacon node) {
         this.x = node.getX();
         this.y = node.getY();
-        this.floor = node.getFloor();
+        this.floor = node.getFloorInt();
     }
 
     public double distance(Position p) {

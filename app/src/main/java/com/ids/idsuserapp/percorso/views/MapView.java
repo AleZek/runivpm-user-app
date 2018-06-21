@@ -73,7 +73,7 @@ public class MapView extends LinearLayout {
      */
     public MapView setOrigin(Beacon origin) {
         this.origin = origin;
-        this.currentFloor = origin.getFloor();
+        this.currentFloor = origin.getFloorInt();
         changeImage(String.valueOf(currentFloor));
         drawPins(currentFloor);
         return this;
@@ -116,10 +116,10 @@ public class MapView extends LinearLayout {
     private void drawPins(int floor) {
         ArrayList<MapPin> pins = new ArrayList<>();
 
-        if (origin != null && origin.getFloor() == floor) {
+        if (origin != null && origin.getFloorInt() == floor) {
             pins.add(new MapPin(origin.toPointF(), MapPin.Colors.RED));
         }
-        if (destination != null && destination.getFloor() == floor) {
+        if (destination != null && destination.getFloorInt() == floor) {
             pins.add(new MapPin(destination.toPointF(), MapPin.Colors.BLUE));
         }
 
@@ -134,7 +134,7 @@ public class MapView extends LinearLayout {
      */
     public MapView setDestination(Beacon destination) {
         this.destination = destination;
-        this.currentFloor = destination.getFloor();
+        this.currentFloor = destination.getFloorInt();
         changeImage(String.valueOf(currentFloor));
         drawPins(currentFloor);
         return this;
@@ -161,7 +161,7 @@ public class MapView extends LinearLayout {
             throw new DestinationNotSettedException();
         }
 
-        currentFloor = origin.getFloor();
+        currentFloor = origin.getFloorInt();
 
         changeImage(String.valueOf(currentFloor));
         drawPath(String.valueOf(currentFloor));

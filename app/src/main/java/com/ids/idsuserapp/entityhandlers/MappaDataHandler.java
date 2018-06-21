@@ -28,6 +28,7 @@ public class MappaDataHandler {
     private Context context;
     private MappaViewModel mappaViewModel;
     private BeaconViewModel beaconViewModel;
+    private DataRetriever dataRetriever;
     private com.android.volley.RequestQueue serverRequestQueue;
     private Uri nuovaMappaFilePath;
 
@@ -36,6 +37,7 @@ public class MappaDataHandler {
         this.context = context;
         this.mappaViewModel = mappaViewModel;
         this.beaconViewModel = beaconViewModel;
+        dataRetriever = (DataRetriever) context;
         serverRequestQueue = Volley.newRequestQueue(context);
     }
 
@@ -66,6 +68,7 @@ public class MappaDataHandler {
                         try {
                             persistMappeCollectionLocally(response.getJSONArray("hydra:member"));
                             downloadMapImages(response.getJSONArray("hydra:member"));
+                            dataRetriever.retrieveBeacons();
                             //persistCollection(response.get("hydra:member"));
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -360,28 +363,6 @@ public class MappaDataHandler {
             }
         });
     }
-
-   /* public JsonObjectRequest preparePutMappaImageRequest(String mappa_id) {
-        String maps_url = context.getString(R.string.api_mappa_image) + mappa_id;
-        JSONObject newMappaImage = createNewMapImageJson();
-        return new JsonObjectRequest(Request.Method.PUT, maps_url, newMappaImage,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        Toast toast = Toast.makeText(context, "Mappa modificata con successo.", Toast.LENGTH_SHORT);
-                        toast.show();
-                        modificaMappaLocale(parseMappaToStringArray(response));
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-
-                Toast toast = Toast.makeText(context, "Errore durante la modifica dell'immagine Mappa.", Toast.LENGTH_SHORT);
-                toast.show();
-            }
-        });
-    }*/
-
 
     //metodo per modificare la mappa in locale
     public void modificaMappaLocale(ArrayList<String> datiMappa) {

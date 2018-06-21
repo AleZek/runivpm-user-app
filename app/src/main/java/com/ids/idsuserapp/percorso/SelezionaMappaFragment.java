@@ -1,5 +1,6 @@
 package com.ids.idsuserapp.percorso;
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -25,7 +26,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.davemorrissey.labs.subscaleview.ImageSource;
+import com.ids.idsuserapp.MapNavigationActivity;
 import com.ids.idsuserapp.R;
+import com.ids.idsuserapp.adapters.BeaconRecyclerAdapter;
 import com.ids.idsuserapp.db.entity.Beacon;
 import com.ids.idsuserapp.db.entity.Mappa;
 import com.ids.idsuserapp.db.entity.Position;
@@ -35,6 +38,7 @@ import com.ids.idsuserapp.percorso.Tasks.TaskListener;
 import com.ids.idsuserapp.percorso.views.MapPin;
 import com.ids.idsuserapp.percorso.views.PinView;
 import com.ids.idsuserapp.utils.UnitConverter;
+import com.ids.idsuserapp.viewmodel.BeaconViewModel;
 
 
 public class SelezionaMappaFragment extends Fragment {
@@ -55,6 +59,8 @@ public class SelezionaMappaFragment extends Fragment {
     private int currentFloor = STARTING_FLOOR;
     private Beacon selectedNode = null;
     private boolean offline;
+    private BeaconViewModel mBeaconViewModel;
+    private BeaconRecyclerAdapter beaconRecyclerAdapter;
 
     /**
      * Use this factory method to create a new instance of this fragment using the provided parameters.
@@ -62,10 +68,13 @@ public class SelezionaMappaFragment extends Fragment {
      * @return A new instance of fragment ResetPasswordFragment.
      */
     public static SelezionaMappaFragment newInstance(boolean offline) {
+
         SelezionaMappaFragment fragment = new SelezionaMappaFragment();
         Bundle args = new Bundle();
         args.putSerializable(OFFLINE_USAGE, offline);
         fragment.setArguments(args);
+
+
         return fragment;
     }
 
@@ -209,10 +218,11 @@ public class SelezionaMappaFragment extends Fragment {
                 if (holder.mapView.isReady()) {
                     PointF tappedCoordinates = holder.mapView.viewToSourceCoord(e.getX(), e.getY());
                     Position tappedPosition = new Position(tappedCoordinates.x, tappedCoordinates.y, currentFloor);
+                    mBeaconViewModel = ViewModelProviders.of(SelezionaMappaFragment.this).get(BeaconViewModel.class);
 
                     SelectablePointsTask selectablePointsTask = new SelectablePointsTask(
                             new SelectablePointsListener(),
-                            (int) UnitConverter.convertDpToPixel(SEARCH_RADIUS_IN_DP, getContext()));
+                            (int) UnitConverter.convertDpToPixel(SEARCH_RADIUS_IN_DP, getContext()), mBeaconViewModel);
                     selectablePointsTask.execute(tappedPosition);
                 } else {
                     Toast.makeText(getActivity().getApplicationContext(), "Image is not ready",
