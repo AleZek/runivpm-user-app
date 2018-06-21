@@ -2,6 +2,9 @@ package com.ids.idsuserapp.percorso;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.PointF;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -15,6 +18,8 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -141,11 +146,11 @@ public class SelezionaMappaFragment extends Fragment {
         @Override
         public void onClick(View v) {
             Button button = (Button) v;
-            holder.floor155Button.setTextColor(color(R.color.colorBlack));
-            holder.floor150Button.setTextColor(color(R.color.colorBlack));
-            holder.floor145Button.setTextColor(color(R.color.colorBlack));
+            holder.floor155Button.setTextColor(color(R.color.colorWhite));
+            holder.floor150Button.setTextColor(color(R.color.colorWhite));
+            holder.floor145Button.setTextColor(color(R.color.colorWhite));
             button.setTextColor(color(R.color.linkText));
-            int floor = Integer.parseInt(button.getText().toString());
+            int floor = Integer.parseInt(button.getText().toString().substring(6));
 
             currentFloor = floor;
 
@@ -164,19 +169,38 @@ public class SelezionaMappaFragment extends Fragment {
 
         @Override
         public void onTaskSuccess(Mappa map) {
-            holder.mapView.setImage(ImageSource.asset(map.getImmagine()));
+            int floor = Integer.parseInt(map.getName().substring(6));
+            Bitmap bitmap;
+            switch (floor) {
+                case 145:
+                    bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.floor_145);
+                    break;
+                case 150:
+                    bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.floor_150);
+                    break;
+                case 155:
+                    bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.floor_155);
+                    break;
+                default:
+                    bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.floor_155);
+                    break;
+            }
+
+            holder.mapView.setImage(bitmap);
             holder.mapView.setMinimumDpi(40);
             holder.mapView.resetPins();
             disableConfirmButtonState();
 
             final GestureDetector gestureDetector = new GestureDetector(getActivity(), new MapGestureDetector());
 
-            holder.mapView.setOnTouchListener(new View.OnTouchListener() {
+            holder.mapView.setOnTouchListener(new View.OnTouchListener()
+            {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
                     return gestureDetector.onTouchEvent(event);
                 }
             });
+
         }
 
         private class MapGestureDetector extends GestureDetector.SimpleOnGestureListener {
@@ -235,6 +259,7 @@ public class SelezionaMappaFragment extends Fragment {
         @Override
         public void onTaskError(Exception e) {
             Toast.makeText(getContext(), "Ci sono stati degli errori nel download dell'immagine", Toast.LENGTH_LONG).show();
+            e.printStackTrace();
         }
 
         @Override
@@ -280,6 +305,9 @@ public class SelezionaMappaFragment extends Fragment {
             confirmButton = find(v, R.id.confirm_button);
             toolbarTitle = find(v, R.id.toolbar_title);
             selectedNode = find(v, R.id.node);
+
+
+
         }
     }
 

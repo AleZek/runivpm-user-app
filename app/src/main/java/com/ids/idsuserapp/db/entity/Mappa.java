@@ -3,6 +3,7 @@ package com.ids.idsuserapp.db.entity;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 import android.graphics.Bitmap;
+import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -18,14 +19,11 @@ public class Mappa {
     private String immagine;
 
 
+
     public Mappa(){}
 
     public Mappa(String name) {
         this.name = name;
-    }
-    public Mappa(String floor, Bitmap immagine) {
-        floor = name.substring(6);
-        this.immagine = String.valueOf(immagine);
     }
 
     public Mappa(ArrayList<String> fields) {

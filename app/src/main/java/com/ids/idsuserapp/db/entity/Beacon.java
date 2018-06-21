@@ -3,6 +3,7 @@ package com.ids.idsuserapp.db.entity;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.PrimaryKey;
+import android.graphics.PointF;
 
 import com.ids.idsuserapp.wayfinding.Checkpoint;
 
@@ -139,6 +140,10 @@ public class Beacon implements Checkpoint{
     public int hashCode() {
 
         return Objects.hash(id, nome, quota, larghezza, x, y, mappa);
+    }
+
+    public PointF toPointF() {
+        return new PointF(x, y);
     }
 
     @Override

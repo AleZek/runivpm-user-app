@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import com.ids.idsuserapp.fragment.MapNavigationFragment;
+import com.ids.idsuserapp.percorso.SelezionaMappaFragment;
 
 import java.io.FileDescriptor;
 import java.io.PrintWriter;
@@ -19,26 +20,20 @@ public class MapNavigationActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map_navigation);
+        setupMapNavigationFragment();
 
-                    /*
-                    Fragment fr = new FirstFragment();
-fr.setArguments(args);
-FragmentManager fm = getFragmentManager();
-FragmentTransaction fragmentTransaction = fm.beginTransaction();
-fragmentTransaction.replace(R.id.fragment_place, fr);
-fragmentTransaction.commit();
-                     */
     }
-}
 
 
 
 
-  /*  private void setupMapNavigationFragment() {
-        MapNavigationFragment fragment = new MapNavigationFragment();
+
+    private void setupMapNavigationFragment() {
+        SelezionaMappaFragment fragment = new SelezionaMappaFragment();
         android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
         android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.add(R.id.mapnavigationcontainer, fragment).commit();
-    }*/
+        fragmentTransaction.add(R.id.fragment_place, fragment).commit();
+    }
 
 
+}

@@ -10,17 +10,18 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
-import com.dii.ids.application.R;
-import com.dii.ids.application.animations.ShowProgressAnimation;
-import com.dii.ids.application.entity.Map;
-import com.dii.ids.application.entity.Node;
-import com.dii.ids.application.listener.TaskListener;
-import com.dii.ids.application.main.navigation.tasks.MapsDownloaderTask;
-import com.dii.ids.application.main.navigation.tasks.MapsStaticLoaderTask;
-import com.dii.ids.application.navigation.MultiFloorPath;
-import com.dii.ids.application.navigation.Path;
-import com.dii.ids.application.views.exceptions.DestinationNotSettedException;
-import com.dii.ids.application.views.exceptions.OriginNotSettedException;
+
+import com.davemorrissey.labs.subscaleview.ImageSource;
+import com.ids.idsuserapp.R;
+import com.ids.idsuserapp.db.entity.Beacon;
+import com.ids.idsuserapp.db.entity.Mappa;
+import com.ids.idsuserapp.percorso.MultiFloorPath;
+import com.ids.idsuserapp.percorso.Path;
+import com.ids.idsuserapp.percorso.Tasks.MappaStaticaTask;
+import com.ids.idsuserapp.percorso.Tasks.TaskListener;
+import com.ids.idsuserapp.percorso.animation.ShowProgressAnimation;
+import com.ids.idsuserapp.percorso.views.exceptions.DestinationNotSettedException;
+import com.ids.idsuserapp.percorso.views.exceptions.OriginNotSettedException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,8 +30,8 @@ import java.util.Set;
 public class MapView extends LinearLayout {
     private static final String TAG = MapView.class.getName();
     private ViewHolder holder;
-    private String currentFloor;
-    private Node origin, destination;
+    private int currentFloor;
+    private Beacon origin, destination;
     private MultiFloorPath route;
     private boolean offline;
 
@@ -70,10 +71,10 @@ public class MapView extends LinearLayout {
      * @param origin Nodo di origine
      * @return Istanza di MapView
      */
-    public MapView setOrigin(Node origin) {
+    public MapView setOrigin(Beacon origin) {
         this.origin = origin;
         this.currentFloor = origin.getFloor();
-        changeImage(currentFloor);
+        changeImage(String.valueOf(currentFloor));
         drawPins(currentFloor);
         return this;
     }
@@ -96,9 +97,9 @@ public class MapView extends LinearLayout {
         holder.progressAnimation.showProgress(true);
         AsyncTask<Integer, Void, Boolean> mapLoader;
         if(offline) {
-            mapLoader = new MapsStaticLoaderTask(getContext(), new MapListener());
+            mapLoader = new MappaStaticaTask(getContext(), new MapListener());
         } else {
-            mapLoader = new MapsDownloaderTask(getContext(), new MapListener());
+            mapLoader = new MappaStaticaTask(getContext(), new MapListener()); //new MapsDownloaderTask(getContext(), new MapListener());
         }
         mapLoader.execute(Integer.valueOf(floor));
     }
@@ -112,13 +113,13 @@ public class MapView extends LinearLayout {
      *
      * @param floor Piano
      */
-    private void drawPins(String floor) {
+    private void drawPins(int floor) {
         ArrayList<MapPin> pins = new ArrayList<>();
 
-        if (origin != null && origin.getFloor().equals(floor)) {
+        if (origin != null && origin.getFloor() == floor) {
             pins.add(new MapPin(origin.toPointF(), MapPin.Colors.RED));
         }
-        if (destination != null && destination.getFloor().equals(floor)) {
+        if (destination != null && destination.getFloor() == floor) {
             pins.add(new MapPin(destination.toPointF(), MapPin.Colors.BLUE));
         }
 
@@ -131,10 +132,10 @@ public class MapView extends LinearLayout {
      * @param destination Nodo destinazione
      * @return MapView
      */
-    public MapView setDestination(Node destination) {
+    public MapView setDestination(Beacon destination) {
         this.destination = destination;
         this.currentFloor = destination.getFloor();
-        changeImage(currentFloor);
+        changeImage(String.valueOf(currentFloor));
         drawPins(currentFloor);
         return this;
     }
@@ -150,8 +151,8 @@ public class MapView extends LinearLayout {
     public MapView drawRoute(MultiFloorPath route)
             throws OriginNotSettedException, DestinationNotSettedException {
         this.route = route;
-        this.origin = (Node) route.getOrigin();
-        this.destination = (Node) route.getDestination();
+        this.origin = (Beacon) route.getOrigin();
+        this.destination = (Beacon) route.getDestination();
 
         if (origin == null) {
             throw new OriginNotSettedException();
@@ -162,8 +163,8 @@ public class MapView extends LinearLayout {
 
         currentFloor = origin.getFloor();
 
-        changeImage(currentFloor);
-        drawPath(currentFloor);
+        changeImage(String.valueOf(currentFloor));
+        drawPath(String.valueOf(currentFloor));
         drawPins(currentFloor);
         setupFloorButtons();
 
@@ -195,7 +196,7 @@ public class MapView extends LinearLayout {
     private void setupFloorButtons() {
         // UI operations
         holder.hideFloorButtons()
-                .setupFloorButtonsUI(currentFloor);
+                .setupFloorButtonsUI(String.valueOf(currentFloor));
 
         // Soluzione per piano non vuota -> visualizzare il piano
         // Soluzione per piano con un solo punto
@@ -227,11 +228,11 @@ public class MapView extends LinearLayout {
     private class FloorButtonListener implements OnClickListener {
         @Override
         public void onClick(View v) {
-            currentFloor = ((Button) v).getText().toString();
-            holder.setupFloorButtonsUI(currentFloor);
+            currentFloor = Integer.parseInt(((Button) v).getText().toString());
+            holder.setupFloorButtonsUI(String.valueOf(currentFloor));
 
-            changeImage(currentFloor);
-            drawPath(currentFloor);
+            changeImage(String.valueOf(currentFloor));
+            drawPath(String.valueOf(currentFloor));
             drawPins(currentFloor);
         }
     }
@@ -239,11 +240,11 @@ public class MapView extends LinearLayout {
     /**
      * Callback del MapDownloaderTask
      */
-    private class MapListener implements TaskListener<Map> {
+    private class MapListener implements TaskListener<Mappa> {
 
         @Override
-        public void onTaskSuccess(Map map) {
-            holder.pinView.setImage(map.getImage());
+        public void onTaskSuccess(Mappa map) {
+            holder.pinView.setImage(ImageSource.asset(map.getImmagine()));
         }
 
         @Override
@@ -321,7 +322,7 @@ public class MapView extends LinearLayout {
          */
         private ViewHolder setupFloorButtonsUI(String floor) {
             for (String key : floorButtons.keySet()) {
-                floorButtons.get(key).setTextColor(getResources().getColor(R.color.black));
+                floorButtons.get(key).setTextColor(getResources().getColor(R.color.colorBlack));
             }
             floorButtons.get(floor).setTextColor(getResources().getColor(R.color.linkText));
 
