@@ -22,32 +22,34 @@ public class Beacon implements Checkpoint{
     @PrimaryKey(autoGenerate = true)
     private int id;
     private String nome;
-    private String quota;
+    private String floor;
     private double larghezza;
     private int x;
     private int y;
     //private int x_meter;
     //private int y_meter;
     private int mappa;
+    private String device = "";
 
 
     public Beacon(){}
 
-    public Beacon(String nome, String quota, double larghezza, int x, int y, /*int x_meter, int y_meter,*/ int mappa) {
+    public Beacon(String nome, String floor, double larghezza, int x, int y, /*int x_meter, int y_meter,*/ int mappa, String device) {
         this.nome = nome;
-        this.quota = quota;
+        this.floor = floor;
         this.larghezza = larghezza;
         this.x = x;
         this.y = y;
       //  this.x_meter = x_meter;
        // this.y_meter = y_meter;
         this.mappa = mappa;
+        this.device = device;
     }
 
     public Beacon(ArrayList<String> fields) {
         this.id = Integer.parseInt(fields.get(0));
         this.nome = fields.get(1);
-        this.quota = fields.get(4);
+        this.floor = fields.get(4);
         this.larghezza = Double.parseDouble(fields.get(5));
         this.x = Integer.parseInt(fields.get(2));
         this.y = Integer.parseInt(fields.get(3));
@@ -55,6 +57,7 @@ public class Beacon implements Checkpoint{
      //   this.y_meter = Integer.parseInt(fields.get(7));
         String apimappa = fields.get(6).substring(12);
         this.mappa = Integer.parseInt(apimappa);
+        this.device = fields.get(7);
     }
 
     public int getId() {
@@ -65,9 +68,9 @@ public class Beacon implements Checkpoint{
         return nome;
     }
 
-    public String getQuota() { return quota; }
+    public String getFloor() { return floor; }
 
-    public int getQuotaInt() { return Integer.parseInt(quota); }
+    public int getQuotaInt() { return Integer.parseInt(floor); }
 
     public Double getLarghezza() {return larghezza; }
 
@@ -83,6 +86,8 @@ public class Beacon implements Checkpoint{
         return mappa;
     }
 
+    public String getDevice() { return device; }
+
     public void setId(int id) {
         this.id = id;
     }
@@ -91,7 +96,7 @@ public class Beacon implements Checkpoint{
         this.nome = name;
     }
 
-    public void setQuota (String quota) {this.quota=quota;}
+    public void setFloor(String floor) {this.floor = floor;}
 
     public void setLarghezza(Double larghezza){this.larghezza = larghezza;}
 
@@ -125,13 +130,18 @@ public class Beacon implements Checkpoint{
                 y == beacon.y &&
                 mappa == beacon.mappa &&
                 Objects.equals(nome, beacon.nome) &&
-                Objects.equals(quota, beacon.quota);
+                Objects.equals(floor, beacon.floor);
+    }
+
+
+    public void setDevice(String device) {
+        this.device = device;
     }
 
     @Override
     public int hashCode() {
 
-        return Objects.hash(id, nome, quota, larghezza, x, y, mappa);
+        return Objects.hash(id, nome, floor, larghezza, x, y, mappa);
     }
 
     @Override
@@ -139,7 +149,7 @@ public class Beacon implements Checkpoint{
         return "Beacon{" +
                 "id=" + id +
                 ", nome='" + nome + '\'' +
-                ", quota='" + quota + '\'' +
+                ", floor='" + floor + '\'' +
                 ", x=" + x +
                 ", y=" + y +
                 '}';

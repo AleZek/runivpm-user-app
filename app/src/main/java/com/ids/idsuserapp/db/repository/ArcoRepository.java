@@ -5,7 +5,9 @@ import android.os.AsyncTask;
 
 import com.ids.idsuserapp.db.AppRoomDatabase;
 import com.ids.idsuserapp.db.dao.ArcoDao;
+import com.ids.idsuserapp.db.dao.BeaconDao;
 import com.ids.idsuserapp.db.entity.Arco;
+import com.ids.idsuserapp.db.entity.Beacon;
 import com.ids.idsuserapp.db.entity.Tronco;
 
 import java.util.List;
@@ -38,7 +40,7 @@ public class ArcoRepository {
     }
 
     public void deleteAll() {
-        new ArcoRepository.deleteAsyncTask(mArcoDao).execute();
+        new ArcoRepository.deleteAllAsyncTask(mArcoDao).execute();
     }
     public void update(Arco arco){
         new ArcoRepository.updateAsyncTask(mArcoDao).execute(arco);
@@ -57,6 +59,21 @@ public class ArcoRepository {
         @Override
         protected Void doInBackground(final Arco... params) {
             mAsyncTaskDao.delete(params[0]);
+            return null;
+        }
+    }
+
+    private static class deleteAllAsyncTask extends AsyncTask<Arco, Void, Void> {
+
+        private ArcoDao mAsyncTaskDao;
+
+        deleteAllAsyncTask(ArcoDao dao) {
+            mAsyncTaskDao = dao;
+        }
+
+        @Override
+        protected Void doInBackground(final Arco... params) {
+            mAsyncTaskDao.deleteAll();
             return null;
         }
     }

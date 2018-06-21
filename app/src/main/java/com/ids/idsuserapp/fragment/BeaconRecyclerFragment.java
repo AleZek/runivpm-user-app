@@ -4,10 +4,12 @@ import android.arch.lifecycle.LifecycleOwner;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -16,6 +18,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.ids.idsuserapp.MainActivity;
+import com.ids.idsuserapp.PercorsoActivity;
 import com.ids.idsuserapp.R;
 import com.ids.idsuserapp.adapters.BeaconRecyclerAdapter;
 import com.ids.idsuserapp.db.entity.Beacon;
@@ -29,6 +33,7 @@ public class BeaconRecyclerFragment extends Fragment{
     private RecyclerView recyclerBeaconDestinazione; // recyclerview della destinazione da collegare nel xml
     private SearchView searchViewPartenza; //searchview della partenza, presente nel layout del beaconfragment
     private SearchView searchViewDestinazione; //searchview della destinazione
+    private FloatingActionButton goFAB;
 
     private BeaconRecyclerAdapter beaconRecyclerAdapterPartenza; // recycleradapter della partenza
     private BeaconRecyclerAdapter beaconRecyclerAdapterDestinazione; // recyclerAdapter della destinazione
@@ -86,7 +91,7 @@ public class BeaconRecyclerFragment extends Fragment{
         View view = inflater.inflate(R.layout.fragment_beacon_recycler, container, false);
         setupRecycler(view);
         setupSearch(view);
-
+        setupGoFAB(view);
         return view;
     }
 
@@ -187,5 +192,24 @@ public class BeaconRecyclerFragment extends Fragment{
     }
 
 
+    public SearchView getSearchViewPartenza() {
+        return searchViewPartenza;
+    }
 
+    public SearchView getSearchViewDestinazione() {
+        return searchViewDestinazione;
+    }
+
+    private void setupGoFAB(View view) {
+        goFAB = view.findViewById(R.id.goFAB);
+        goFAB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent percorsoIntent = new Intent(getContext(),PercorsoActivity.class);
+                percorsoIntent.putExtra("origine", searchViewPartenza.getQuery().toString());
+                percorsoIntent.putExtra("destinazione", (String) searchViewDestinazione.getQuery().toString());
+                startActivity(percorsoIntent);
+            }
+        });
+    }
 }

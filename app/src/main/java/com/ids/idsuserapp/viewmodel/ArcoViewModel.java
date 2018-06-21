@@ -22,4 +22,7 @@ public class ArcoViewModel extends AndroidViewModel {
 
     public List<Tronco> getTronchi() { return mArcoRepository.getTronchi(); }
 
+    public void deleteAll() {
+        mArcoRepository.deleteAll();
+    }
 }

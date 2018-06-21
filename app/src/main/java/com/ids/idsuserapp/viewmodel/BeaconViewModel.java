@@ -14,7 +14,7 @@ import java.util.List;
 public class BeaconViewModel extends AndroidViewModel {
 
     private BeaconRepository mBeaconRepository;
-    public static String[] CAMPI = {"id","name","x","y","floor", "width","mappa"};
+    public static String[] CAMPI = {"id","name","x","y","floor", "width","mappa","device"};
     //public static String[] CAMPI = {"id","name","floor", "width","x","y","x_meter","y_meter","mappa"};
 
     public BeaconViewModel(Application application) {
@@ -35,14 +35,15 @@ public class BeaconViewModel extends AndroidViewModel {
     }
 
 
-    public LiveData<List<BeaconDao.BeaconWithMap>> getAll() { return mBeaconRepository.getAll(); }
+//    public LiveData<List<BeaconDao.BeaconWithMap>> getAll() { return mBeaconRepository.getAll(); }
     public LiveData<List<Beacon>> getAllBeacons() { return mBeaconRepository.getAllBeacons(); }
+    public List<Beacon> getAllSynchronous() { return mBeaconRepository.getAllSynchronously(); }
     public LiveData<List<Beacon>> getBeaconByIdMappa(int mappa)
     {return mBeaconRepository.getBeaconByIdMappa(mappa);}
     public void delete(Beacon beacon){ mBeaconRepository.delete(beacon); }
     public void update(Beacon beacon) {mBeaconRepository.update(beacon);}
-
-
+    public Beacon findByName(String name){ return mBeaconRepository.findByName(name); }
+    public Beacon findByDevice(String device){ return mBeaconRepository.findByDevice(device); }
     public void deleteByMappa(int mappa_id) {
         mBeaconRepository.deleteByMappa(mappa_id);
     }
