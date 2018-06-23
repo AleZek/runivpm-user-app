@@ -5,13 +5,17 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.FirebaseInstanceIdService;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.ids.idsuserapp.entityhandlers.BeaconDataHandler;
 import com.ids.idsuserapp.entityhandlers.MappaDataHandler;
 import com.ids.idsuserapp.fragment.BeaconRecyclerFragment;
@@ -57,7 +61,8 @@ public class MainActivity extends AppCompatActivity {
         setupBeaconFragment();
 
         String token  = FirebaseInstanceId.getInstance().getToken(); //token utile alla comunicazione con device singolo per firebase
-        Log.d(TAG, "token firebase: " + token); // output nel log debug
+        Log.d(TAG, "token firebase: " + token); // output nel log debug del token
+        subscribeTopic("emergenza"); //il client viene iscritto al topic emergenza
     }
 
 
@@ -69,12 +74,16 @@ public class MainActivity extends AppCompatActivity {
         } else {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 2);
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WAKE_LOCK}, 3);
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.DISABLE_KEYGUARD}, 4);
         }
     }
 
     private boolean isFilePermissionGranted(){
         if (Build.VERSION.SDK_INT >= 23) {
-            return checkSelfPermission(android.Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
+            return (checkSelfPermission(android.Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED &&
+                    checkSelfPermission(Manifest.permission.WAKE_LOCK) == PackageManager.PERMISSION_GRANTED &&
+                    checkSelfPermission(Manifest.permission.DISABLE_KEYGUARD) == PackageManager.PERMISSION_GRANTED);
         }
         else
             return false;
@@ -95,5 +104,24 @@ public class MainActivity extends AppCompatActivity {
         android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
         android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.add(R.id.beaconfragmentcontainer, fragment).commit();
+    }
+
+    //questo metodo permette alla app di sottoscriversi al topic emergenza, questo permette a firebase
+    // di mandare messaggi broadcast alle istanze della app
+    private void subscribeTopic(final String topic){
+        FirebaseMessaging.getInstance().subscribeToTopic(topic)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        String msg = "Sottoscrizione avvenuta a ";
+                        if (!task.isSuccessful()) {
+                            msg = "sottoscrizione fallita a ";
+                        }
+                        Log.d(TAG, msg + topic); // sono mostrati dei messaggi nel log e nella app se la sottoscrizione avviene o meno
+                        Toast.makeText(MainActivity.this, msg + topic, Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+
     }
 }
