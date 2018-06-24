@@ -9,6 +9,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -63,6 +64,11 @@ public class MainActivity extends AppCompatActivity {
         String token  = FirebaseInstanceId.getInstance().getToken(); //token utile alla comunicazione con device singolo per firebase
         Log.d(TAG, "token firebase: " + token); // output nel log debug del token
         subscribeTopic("emergenza"); //il client viene iscritto al topic emergenza
+        //segmento di codice utile all unlock automaitico
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
+                + WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD|
+                + WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED|
+                + WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
     }
 
 
