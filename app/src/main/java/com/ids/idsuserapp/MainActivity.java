@@ -1,27 +1,43 @@
 package com.ids.idsuserapp;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.WindowManager;
+import android.widget.Toast;
 
 import com.ids.idsuserapp.db.entity.Tronco;
 import com.ids.idsuserapp.entityhandlers.ArcoDataHandler;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.FirebaseInstanceIdService;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.ids.idsuserapp.entityhandlers.BeaconDataHandler;
 import com.ids.idsuserapp.entityhandlers.MappaDataHandler;
 import com.ids.idsuserapp.fragment.BeaconRecyclerFragment;
 import com.ids.idsuserapp.utils.ConnectionChecker;
 import com.ids.idsuserapp.viewmodel.ArcoViewModel;
+import com.ids.idsuserapp.utils.MyFirebaseInstanceIdService;
+import com.ids.idsuserapp.utils.MyFirebaseMessagingService;
 import com.ids.idsuserapp.viewmodel.BeaconViewModel;
 import com.ids.idsuserapp.viewmodel.MappaViewModel;
 import com.ids.idsuserapp.wayfinding.Grafo;
 
 import java.util.List;
 
+/**
+ * è stato inserto un file json all'interno del package utile a firebase per comunicare con le app.
+ */
+
 public class MainActivity extends AppCompatActivity {
+    private static final String TAG = "MainActivity"; //variabile di TAG da usare nelle operazioni di logcat
     private MappaViewModel mappaViewModel;
     private BeaconViewModel beaconViewModel;
     private ArcoViewModel arcoViewModel;
@@ -30,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
     private MappaDataHandler mappaDataHandler;
     private ArcoDataHandler arcoDataHandler;
     private static final int PICKFILE_REQUEST_CODE = 123;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +73,15 @@ public class MainActivity extends AppCompatActivity {
 
         //inizializza il fragment dei beacon
         setupBeaconFragment();
+
+        String token  = FirebaseInstanceId.getInstance().getToken(); //token utile alla comunicazione con device singolo per firebase
+        Log.d(TAG, "token firebase: " + token); // output nel log debug del token
+        subscribeTopic("emergenza"); //il client viene iscritto al topic emergenza
+        //segmento di codice utile all unlock automaitico
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
+                + WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD|
+                + WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED|
+                + WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
     }
 
 
@@ -67,12 +93,16 @@ public class MainActivity extends AppCompatActivity {
         } else {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 2);
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WAKE_LOCK}, 3);
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.DISABLE_KEYGUARD}, 4);
         }
     }
 
     private boolean isFilePermissionGranted(){
         if (Build.VERSION.SDK_INT >= 23) {
-            return checkSelfPermission(android.Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
+            return (checkSelfPermission(android.Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED &&
+                    checkSelfPermission(Manifest.permission.WAKE_LOCK) == PackageManager.PERMISSION_GRANTED &&
+                    checkSelfPermission(Manifest.permission.DISABLE_KEYGUARD) == PackageManager.PERMISSION_GRANTED);
         }
         else
             return false;
@@ -80,6 +110,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void getDatasetFromServer() {
         cleanBeacon();
+        beaconDataHandler.retrieveBeaconDataset();
         mappaDataHandler.retrieveMappeDataset();
         beaconDataHandler.retrieveBeaconDataset();
         arcoDataHandler.retrieveArchiDataset();
@@ -94,5 +125,24 @@ public class MainActivity extends AppCompatActivity {
         android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
         android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.add(R.id.beaconfragmentcontainer, fragment).commit();
+    }
+
+    //questo metodo permette alla app di sottoscriversi al topic emergenza, questo permette a firebase
+    // di mandare messaggi broadcast alle istanze della app
+    private void subscribeTopic(final String topic){
+        FirebaseMessaging.getInstance().subscribeToTopic(topic)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        String msg = "Sottoscrizione avvenuta a ";
+                        if (!task.isSuccessful()) {
+                            msg = "sottoscrizione fallita a ";
+                        }
+                        Log.d(TAG, msg + topic); // sono mostrati dei messaggi nel log e nella app se la sottoscrizione avviene o meno
+                        Toast.makeText(MainActivity.this, msg + topic, Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+
     }
 }
