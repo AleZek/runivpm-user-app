@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import com.ids.idsuserapp.db.entity.Beacon;
 import com.ids.idsuserapp.db.entity.Tronco;
+import com.ids.idsuserapp.threads.LocatorThread;
 import com.ids.idsuserapp.utils.BluetoothLocator;
 import com.ids.idsuserapp.viewmodel.ArcoViewModel;
 import com.ids.idsuserapp.viewmodel.BeaconViewModel;
@@ -21,18 +22,17 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class PercorsoActivity extends AppCompatActivity implements BluetoothLocator.NavigationCallbacks {
+public class PercorsoActivity extends AppCompatActivity implements  BluetoothLocator.LocatorCallbacks {
 
     TextView locationText;
     BluetoothLocator bluetoothLocator;
-    ArrayList<String> beaconDeviceList;
+    LocatorThread locatorThread;
     Percorso percorso;
     Dijkstra dijkstra;
     Beacon origine;
     Beacon destinazione;
     ArcoViewModel arcoViewModel;
     BeaconViewModel beaconViewModel;
-    HashMap strongestBeacon;
     String userPosition = "";
     Beacon userPositionBeacon;
     int count = 0;
@@ -47,11 +47,10 @@ public class PercorsoActivity extends AppCompatActivity implements BluetoothLoca
         beaconViewModel = new BeaconViewModel(getApplication());
         arcoViewModel = new ArcoViewModel(getApplication());
 
-        setBeaconDeviceList();
         setOrigineDestinazione();
         setSupportActionBar(toolbar);
 
-        initializeStrongestBeacon();
+        startLocatorThread();
         setBluetoothLocator();
 
         setDijkstra();
@@ -59,27 +58,20 @@ public class PercorsoActivity extends AppCompatActivity implements BluetoothLoca
         Log.v("percorso", percorso.toString());
     }
 
-    private void setBtAdapter() {
-    }
-
     @Override
-    protected void onResume() {
-        super.onResume();
+    protected void onDestroy() {
+        super.onDestroy();
+        locatorThread.interrupt();
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
+    private void startLocatorThread() {
+        locatorThread = new LocatorThread(this, LocatorThread.NAVIGATION_MODE);
+        locatorThread.start();
     }
 
-    private void setBeaconDeviceList() {
-        beaconDeviceList = new ArrayList<String>();
-        List<Beacon> beacons = beaconViewModel.getAllSynchronous();
-        for(Beacon beacon : beacons){
-            String currDevice = beacon.getDevice();
-            if (!currDevice.equals("null"))
-                beaconDeviceList.add(currDevice);
-        }
+    private void setBeaconWhiteList() {
+        List<Beacon> beaconList = beaconViewModel.getAllSynchronous();
+        bluetoothLocator.setBeaconWhiteList(beaconList);
     }
 
     private void setOrigineDestinazione() {
@@ -100,55 +92,34 @@ public class PercorsoActivity extends AppCompatActivity implements BluetoothLoca
     }
 
     private void setBluetoothLocator() {
-        bluetoothLocator = new BluetoothLocator(this);
-        bluetoothLocator.setupNavigationScanner();
+        bluetoothLocator = locatorThread.getBluetoothLocator();
+        setBeaconWhiteList();
     }
-
-    private void initializeStrongestBeacon() {
-        strongestBeacon = new HashMap<>();
-        strongestBeacon.put("nome", "");
-        strongestBeacon.put("rssi", -200);
-        strongestBeacon.put("scanNumber", 0);
-    }
-
-    @Override
-    public void readScannedDevice(ScanResult result) {
-        int resultRssi = result.getRssi();
-        String resultDevice = result.getDevice().toString();
-        if(isBeacon(resultDevice)) {
-            bluetoothLocator.setStrongestBeacon(resultDevice,resultRssi);
-            if(bluetoothLocator.positionChanged())
-                setCurrentPosition();
-        }
-    }
-
-    private boolean isBeacon(String resultDevice) {
-            return beaconDeviceList.indexOf(resultDevice) != -1;
-    }
-
 
     private void setUserBeacon() {
         userPositionBeacon = beaconViewModel.findByDevice(userPosition);
     }
 
     // index = -1 indica che il beacon non era nel percorso indicato e che ho sbagliato strada, quindi ricalcolo
-    @Override
+
     public void nextStep() {
         int index = percorso.indexOf(userPositionBeacon);
-        if (userPositionBeacon!= null && userPositionBeacon.equals(destinazione)) {
-            Toast.makeText(this, "Sei giunto a destinazione", Toast.LENGTH_LONG).show();
-            bluetoothLocator.stopScan();
-        }
-        else if (index != -1) {
+        if(userPositionBeacon!= null) {
+            if (userPositionBeacon.equals(destinazione)) {
+                Toast.makeText(this, "Sei giunto a destinazione", Toast.LENGTH_LONG).show();
+                locatorThread.interrupt();
+                bluetoothLocator.stopScan();
+            } else if (index != -1) {
                 Beacon nextBeacon = percorso.get(index + 1);
-                Toast.makeText(this,"Prosegui verso " + nextBeacon.getNome(), Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Prosegui verso " + nextBeacon.getNome(), Toast.LENGTH_LONG).show();
 //                getIndicazioni(userPositionBeacon, nextBeacon);
-        } else {
-            dijkstra.inizio(userPositionBeacon);
-            dijkstra.ricerca(destinazione);
-            Beacon nextBeacon = percorso.get(1);
-            Toast.makeText(this,"Prosegui verso " + nextBeacon.getNome(), Toast.LENGTH_LONG).show();
+            } else {
+                dijkstra.inizio(userPositionBeacon);
+                dijkstra.ricerca(destinazione);
+                Beacon nextBeacon = percorso.get(1);
+                Toast.makeText(this, "Prosegui verso " + nextBeacon.getNome(), Toast.LENGTH_LONG).show();
 //            getIndicazioni(userPositionBeacon, nextBeacon);
+            }
         }
     }
 
@@ -156,9 +127,13 @@ public class PercorsoActivity extends AppCompatActivity implements BluetoothLoca
         userPosition = (String) bluetoothLocator.getStrongestBeacon().get("nome");
         setUserBeacon();
         locationText.setText(userPosition);
-//        locationText.
     }
 
-
-
+    @Override
+    public void sendCurrentPosition(String device) {
+        if(bluetoothLocator.isBeacon(device)) {
+            setCurrentPosition();
+            nextStep();
+        }
+    }
 }

@@ -9,7 +9,11 @@ import android.bluetooth.le.ScanSettings;
 import android.content.Context;
 import android.util.Log;
 
+import com.ids.idsuserapp.db.entity.Beacon;
+
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import static android.bluetooth.le.ScanSettings.SCAN_MODE_LOW_POWER;
 
@@ -17,10 +21,10 @@ public class BluetoothLocator {
     private Context context;
     private BluetoothAdapter mBluetoothAdapter;
     private BluetoothLeScanner scanner;
-    private NavigationCallbacks positionUpdaters;
     private LocatorCallbacks locatorCallbacks;
     private ScanCallback scanCallback;
     private HashMap strongestBeacon;
+    private ArrayList<String> beaconWhiteList;
 
     public BluetoothLocator(Context context) {
         this.context = context;
@@ -40,34 +44,43 @@ public class BluetoothLocator {
         return new ScanSettings.Builder().setScanMode(SCAN_MODE_LOW_POWER).build();
     }
 
-    private void generateNavigationScanCallback() {
-        scanCallback = new ScanCallback() {
-            @Override
-            public void onScanResult(int callbackType, ScanResult result) {
-                super.onScanResult(callbackType, result);
-                if (result.getDevice() != null) {
-                    positionUpdaters.readScannedDevice(result);
-                    if (positionChanged())
-                        positionUpdaters.nextStep();
-                }
-            }
-
-            @Override
-            public void onScanFailed(int errorCode) {
-                super.onScanFailed(errorCode);
-            }
-        };
+    public void setBeaconWhiteList(List<Beacon> beacons) {
+        beaconWhiteList = new ArrayList<>();
+        for(Beacon beacon : beacons){
+            String currDevice = beacon.getDevice();
+            if (!currDevice.equals("null"))
+                beaconWhiteList.add(currDevice);
+        }
     }
 
-
-    public void setupNavigationScanner() {
-        positionUpdaters = (NavigationCallbacks) context;
-        ScanSettings scanSettings = generateNavigationScanSettings();
-
-        scanner = mBluetoothAdapter.getBluetoothLeScanner();
-
-        scanner.startScan(null, scanSettings, scanCallback);
-    }
+    //    private void generateNavigationScanCallback() {
+//        scanCallback = new ScanCallback() {
+//            @Override
+//            public void onScanResult(int callbackType, ScanResult result) {
+//                super.onScanResult(callbackType, result);
+//                if (result.getDevice() != null) {
+//                    positionUpdaters.readScannedDevice(result);
+//                    if (positionChanged())
+//                        positionUpdaters.nextStep();
+//                }
+//            }
+//
+//            @Override
+//            public void onScanFailed(int errorCode) {
+//                super.onScanFailed(errorCode);
+//            }
+//        };
+//    }
+//
+//
+//    public void setupNavigationScanner() {
+//        positionUpdaters = (NavigationCallbacks) context;
+//        ScanSettings scanSettings = generateNavigationScanSettings();
+//
+//        scanner = mBluetoothAdapter.getBluetoothLeScanner();
+//
+//        startScan();
+//    }
 
     public void stopScan(){
         scanner.stopScan(scanCallback);
@@ -80,8 +93,6 @@ public class BluetoothLocator {
     public void setupLocatorScanner(){
         locatorCallbacks = (LocatorCallbacks) context;
         setupLocatorScanCallBack();
-
-        startScan();
     }
 
     private void setupLocatorScanCallBack() {
@@ -91,7 +102,7 @@ public class BluetoothLocator {
                 super.onScanResult(callbackType, result);
                 setStrongestBeacon(result.getDevice().toString(), result.getRssi());
                 if(positionChanged()) {
-                    locatorCallbacks.sendCurrentPosition();
+                    locatorCallbacks.sendCurrentPosition(result.getDevice().toString());
                     scanner.flushPendingScanResults(scanCallback);
                     stopScan();
                 }
@@ -99,16 +110,8 @@ public class BluetoothLocator {
         };
     }
 
-
-    public interface NavigationCallbacks {
-
-        void readScannedDevice(ScanResult result);
-
-        void nextStep();
-    }
-
     public interface LocatorCallbacks {
-        void sendCurrentPosition();
+        void sendCurrentPosition(String device);
     }
 
     private void initializeStrongestBeacon() {
@@ -137,5 +140,9 @@ public class BluetoothLocator {
 
     public HashMap getStrongestBeacon() {
         return strongestBeacon;
+    }
+
+    public boolean isBeacon(String resultDevice) {
+        return beaconWhiteList.indexOf(resultDevice) != -1;
     }
 }

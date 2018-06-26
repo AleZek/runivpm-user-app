@@ -96,7 +96,7 @@ public class MainActivity extends AppCompatActivity implements DataRetriever, Bl
     }
 
     private void startLocatorThread() {
-        locatorThread = new LocatorThread(this);
+        locatorThread = new LocatorThread(this, LocatorThread.STANDARD_MODE);
         locatorThread.start();
     }
 
@@ -139,18 +139,14 @@ public class MainActivity extends AppCompatActivity implements DataRetriever, Bl
         cleanBeacon();
         cleanMappe();
         mappaDataHandler.retrieveMappeDataset();
-
-
     }
 
     private void cleanBeacon() {
         beaconViewModel.deleteAll();
     }
-
     private void cleanArchi(){
         arcoViewModel.deleteAll();
     }
-
     private void cleanMappe(){
         mappaViewModel.deleteAll();
     }
@@ -194,7 +190,7 @@ public class MainActivity extends AppCompatActivity implements DataRetriever, Bl
     }
 
     @Override
-    public void sendCurrentPosition() {
+    public void sendCurrentPosition(String device) {
         //TODO MANDARE AL SERVER UNA TUPLA UTENTE-POSIZIONE
         Log.v("locator", "callback chiamata");
     }
