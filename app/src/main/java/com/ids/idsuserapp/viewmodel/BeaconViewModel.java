@@ -14,8 +14,7 @@ import java.util.List;
 public class BeaconViewModel extends AndroidViewModel {
 
     private BeaconRepository mBeaconRepository;
-    public static String[] CAMPI = {"id","name","x","y","floor", "width","mappa", "device"};
-    //public static String[] CAMPI = {"id","name","floor", "width","x","y","x_meter","y_meter","mappa"};
+    public static String[] CAMPI = {"id","name","x","y","floor","width","mappa","device", "type", "meterx","metery"};
 
     public BeaconViewModel(Application application) {
         super(application);

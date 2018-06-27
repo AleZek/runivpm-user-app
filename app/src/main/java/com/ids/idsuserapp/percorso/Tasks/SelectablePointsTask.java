@@ -1,19 +1,11 @@
 package com.ids.idsuserapp.percorso.Tasks;
 
-import android.app.Application;
-import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
 import android.os.AsyncTask;
 
 
-import com.ids.idsuserapp.MainActivity;
-import com.ids.idsuserapp.MapNavigationActivity;
-import com.ids.idsuserapp.adapters.BeaconRecyclerAdapter;
-import com.ids.idsuserapp.db.AppRoomDatabase;
-import com.ids.idsuserapp.db.dao.BeaconDao;
 import com.ids.idsuserapp.db.entity.Beacon;
 import com.ids.idsuserapp.db.entity.Position;
-import com.ids.idsuserapp.db.repository.BeaconRepository;
-import com.ids.idsuserapp.percorso.SelezionaMappaFragment;
 import com.ids.idsuserapp.viewmodel.BeaconViewModel;
 
 import java.util.List;
@@ -25,13 +17,17 @@ public class SelectablePointsTask extends AsyncTask<Position, Void, Boolean> {
     private Beacon selectedNode = null;
     private int radius;
     private BeaconViewModel mBeaconViewModel;
+    private Context context;
 
     public SelectablePointsTask(TaskListener<Beacon> listener,
-                                int radius, BeaconViewModel beaconViewModel) {
+                                int radius, BeaconViewModel beaconViewModel, Context context) {
         this.listener = listener;
         this.radius = radius;
         this.mBeaconViewModel = beaconViewModel;
+        this.context = context;
     }
+
+
 
     @Override
     protected Boolean doInBackground(Position... params) {

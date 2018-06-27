@@ -31,9 +31,6 @@
             android:name=".LogoActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
 
-        <activity android:name=".MapNavigationActivity">
-
-        </activity>
     </application>
 
 </manifest>

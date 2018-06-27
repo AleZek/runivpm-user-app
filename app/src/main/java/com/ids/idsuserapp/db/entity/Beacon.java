@@ -8,6 +8,7 @@ import android.graphics.PointF;
 
 import com.ids.idsuserapp.wayfinding.Checkpoint;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -19,7 +20,7 @@ import static android.arch.persistence.room.ForeignKey.CASCADE;
         childColumns = "mappa",
         onDelete = CASCADE))
 
-public class Beacon implements Checkpoint{
+public class Beacon implements Checkpoint, Serializable {
 
     @PrimaryKey(autoGenerate = true)
     private int id;
@@ -28,22 +29,23 @@ public class Beacon implements Checkpoint{
     private double larghezza;
     private int x;
     private int y;
-    //private int x_meter;
-    //private int y_meter;
+    private int x_meter;
+    private int y_meter;
     private int mappa;
     private String device = "";
-
+    private String type;
 
     public Beacon(){}
 
-    public Beacon(String nome, String quota, double larghezza, int x, int y, /*int x_meter, int y_meter,*/ int mappa, String device) {
+    public Beacon(String nome, String quota, double larghezza, int x, int y, int x_meter, int y_meter, int mappa, String device, String type) {
         this.nome = nome;
         this.floor = quota;
         this.larghezza = larghezza;
         this.x = x;
         this.y = y;
-        //  this.x_meter = x_meter;
-        // this.y_meter = y_meter;
+        this.x_meter = x_meter;
+        this.y_meter = y_meter;
+        this.type = type;
         this.mappa = mappa;
         this.device = device;
     }
@@ -55,8 +57,9 @@ public class Beacon implements Checkpoint{
         this.larghezza = Double.parseDouble(fields.get(5));
         this.x = Integer.parseInt(fields.get(2));
         this.y = Integer.parseInt(fields.get(3));
-        //  this.x_meter = Integer.parseInt(fields.get(6));
-        //   this.y_meter = Integer.parseInt(fields.get(7));
+        this.x_meter = Integer.parseInt(fields.get(9));
+        this.y_meter = Integer.parseInt(fields.get(10));
+        this.type = fields.get(8);
         String apimappa = fields.get(6).substring(12);
         this.mappa = Integer.parseInt(apimappa);
         this.device = fields.get(7);
@@ -79,11 +82,13 @@ public class Beacon implements Checkpoint{
     public int getX() {return x;}
 
     public int getY() {return y;}
-    /*
-        public Integer getX_meter() {return x_meter;}
 
-        public Integer getY_meter() {return y_meter;}
-    */
+    public Integer getX_meter() {return x_meter;}
+
+    public Integer getY_meter() {return y_meter;}
+
+    public String getType(){return type;}
+
     public int getMappa() {
         return mappa;
     }
@@ -105,18 +110,22 @@ public class Beacon implements Checkpoint{
     public void setX(int x) {
         this.x = x;
     }
-    /*
-        public void setX_meter(int x_meter) {
+
+    public void setX_meter(int x_meter) {
             this.x_meter = x_meter;
-        }*/
+    }
+
     public void setY(int y) {
         this.y = y;
     }
-    /*
-        public void setY_meter(int y_meter) {
+
+    public void setY_meter(int y_meter) {
             this.y_meter = y_meter;
-        }
-    */
+    }
+
+    public void setType(String type){
+        this.type = type;
+    }
     public void setMappa(int mappa) {
         this.mappa = mappa;
     }

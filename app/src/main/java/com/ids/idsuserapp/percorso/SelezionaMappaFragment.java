@@ -1,16 +1,12 @@
 package com.ids.idsuserapp.percorso;
 
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.graphics.PointF;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
@@ -19,14 +15,11 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.davemorrissey.labs.subscaleview.ImageSource;
-import com.ids.idsuserapp.MapNavigationActivity;
+import com.ids.idsuserapp.HomeActivity;
 import com.ids.idsuserapp.R;
 import com.ids.idsuserapp.adapters.BeaconRecyclerAdapter;
 import com.ids.idsuserapp.db.entity.Beacon;
@@ -40,12 +33,12 @@ import com.ids.idsuserapp.percorso.views.PinView;
 import com.ids.idsuserapp.utils.UnitConverter;
 import com.ids.idsuserapp.viewmodel.BeaconViewModel;
 
+import org.apache.commons.lang3.SerializationUtils;
 
-public class SelezionaMappaFragment extends Fragment {
+
+public class SelezionaMappaFragment extends BaseFragment {
 
     public static final int STARTING_FLOOR = 155;
-    public static final int QR_READER_ORIGIN_REQUEST_CODE = 100;
-    public static final int QR_READER_DESTINATION_REQUEST_CODE = 101;
     public static final int ORIGIN_SELECTION_REQUEST_CODE = 200;
     public static final int DESTINATION_SELECTION_REQUEST_CODE = 201;
 
@@ -113,7 +106,8 @@ public class SelezionaMappaFragment extends Fragment {
         holder.backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getActivity().getSupportFragmentManager().popBackStack();
+                Intent intent = new Intent(getContext(), HomeActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -137,13 +131,12 @@ public class SelezionaMappaFragment extends Fragment {
     }
 
     public void onPositionConfirm(Beacon node) {
-       /* Intent data = new Intent();
+        Intent data = new Intent(getContext(), HomeActivity.class);
         data.putExtra(HomeFragment.INTENT_KEY_POSITION, SerializationUtils.serialize(node));
         getTargetFragment().onActivityResult(getTargetRequestCode(), POSITION_ACQUIRED, data);
         FragmentManager fm = getActivity().getSupportFragmentManager();
         fm.popBackStack();
-        fm.popBackStack();*/
-    }
+        }
 
     private void disableConfirmButtonState() {
         holder.confirmButton.setEnabled(false);
@@ -222,7 +215,7 @@ public class SelezionaMappaFragment extends Fragment {
 
                     SelectablePointsTask selectablePointsTask = new SelectablePointsTask(
                             new SelectablePointsListener(),
-                            (int) UnitConverter.convertDpToPixel(SEARCH_RADIUS_IN_DP, getContext()), mBeaconViewModel);
+                            (int) UnitConverter.convertDpToPixel(SEARCH_RADIUS_IN_DP, getContext()), mBeaconViewModel, getContext());
                     selectablePointsTask.execute(tappedPosition);
                 } else {
                     Toast.makeText(getActivity().getApplicationContext(), "Image is not ready",

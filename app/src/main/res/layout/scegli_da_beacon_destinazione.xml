@@ -18,7 +18,7 @@
         />
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/scegli_da_beacon_destinazione_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"

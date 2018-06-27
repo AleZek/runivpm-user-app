@@ -18,11 +18,11 @@
         />
 
     <Button
-        android:id="@+id/scegli_da_mappa_button"
+        android:id="@+id/scegli_da_mappa_destinazione_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="Scegli sulla mappa "
+        android:text="Scegli sulla mappa"
         android:backgroundTint="#ffffff"/>
 
 </LinearLayout>
