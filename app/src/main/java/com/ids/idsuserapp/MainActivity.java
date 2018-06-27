@@ -22,6 +22,7 @@ import com.ids.idsuserapp.entityhandlers.ArcoDataHandler;
 import com.ids.idsuserapp.entityhandlers.BeaconDataHandler;
 import com.ids.idsuserapp.entityhandlers.DataRetriever;
 import com.ids.idsuserapp.entityhandlers.MappaDataHandler;
+import com.ids.idsuserapp.entityhandlers.ServerUserLocator;
 import com.ids.idsuserapp.fragment.BeaconRecyclerFragment;
 import com.ids.idsuserapp.threads.LocatorThread;
 import com.ids.idsuserapp.utils.BluetoothLocator;
@@ -40,13 +41,11 @@ public class MainActivity extends AppCompatActivity implements DataRetriever, Bl
     private MappaViewModel mappaViewModel;
     private BeaconViewModel beaconViewModel;
     private ArcoViewModel arcoViewModel;
-    private com.android.volley.RequestQueue serverRequestQueue;
     private BeaconDataHandler beaconDataHandler;
     private MappaDataHandler mappaDataHandler;
     private ArcoDataHandler arcoDataHandler;
-    private Thread locatorThread;
-    private HashMap strongestBeacon;
-    private static final int PICKFILE_REQUEST_CODE = 123;
+    private ServerUserLocator serverUserLocator;
+    private LocatorThread locatorThread;
     private static final int PERMISSION_REQUEST_COARSE_LOCATION = 124;
     private static final int REQUEST_ENABLE_BT = 125;
 
@@ -98,6 +97,10 @@ public class MainActivity extends AppCompatActivity implements DataRetriever, Bl
     private void startLocatorThread() {
         locatorThread = new LocatorThread(this, LocatorThread.STANDARD_MODE);
         locatorThread.start();
+        BluetoothLocator threadBtLocator =locatorThread.getBluetoothLocator();
+        threadBtLocator.setBeaconWhiteList(beaconViewModel.getAllSynchronous());
+        serverUserLocator = new ServerUserLocator(getApplication(),beaconViewModel);
+
     }
 
 
@@ -191,7 +194,7 @@ public class MainActivity extends AppCompatActivity implements DataRetriever, Bl
 
     @Override
     public void sendCurrentPosition(String device) {
-        //TODO MANDARE AL SERVER UNA TUPLA UTENTE-POSIZIONE
+        serverUserLocator.sendPosition(device);
         Log.v("locator", "callback chiamata");
     }
 }

@@ -1,6 +1,7 @@
 package com.ids.idsuserapp.utils;
 
 import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothManager;
 import android.bluetooth.le.BluetoothLeScanner;
 import android.bluetooth.le.ScanCallback;
@@ -100,11 +101,14 @@ public class BluetoothLocator {
             @Override
             public void onScanResult(int callbackType, ScanResult result) {
                 super.onScanResult(callbackType, result);
-                setStrongestBeacon(result.getDevice().toString(), result.getRssi());
+                BluetoothDevice scannedDevice = result.getDevice();
+                setStrongestBeacon(scannedDevice.toString(), result.getRssi());
                 if(positionChanged()) {
-                    locatorCallbacks.sendCurrentPosition(result.getDevice().toString());
-                    scanner.flushPendingScanResults(scanCallback);
-                    stopScan();
+                    if(isBeacon(scannedDevice.toString())) {
+                        locatorCallbacks.sendCurrentPosition(scannedDevice.toString());
+                        scanner.flushPendingScanResults(scanCallback);
+                        stopScan();
+                    }
                 }
             }
         };
