@@ -38,11 +38,11 @@ public class Percorso extends ArrayList<Beacon> {
         multiFloorPath.setDestinazione(getDestinazione());
 
         for (Beacon checkpoint : this) {
-            if (!checkpoint.getQuota().equals(floor)) {
-                floor = checkpoint.getQuota();
+            if (!checkpoint.getFloor().equals(floor)) {
+                floor = checkpoint.getFloor();
                 multiFloorPath.put(floor, new Percorso());
             }
-            multiFloorPath.get(checkpoint.getQuota()).add(checkpoint);
+            multiFloorPath.get(checkpoint.getFloor()).add(checkpoint);
         }
 
         return multiFloorPath;

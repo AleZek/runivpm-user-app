@@ -16,7 +16,7 @@ import com.ids.idsuserapp.db.entity.Beacon;
 import com.ids.idsuserapp.db.entity.Mappa;
 
 
-@Database(entities = {Mappa.class, Beacon.class, Arco.class}, version = 4)
+@Database(entities = {Mappa.class, Beacon.class, Arco.class}, version = 11)
 public abstract class AppRoomDatabase extends RoomDatabase {
 
     public abstract MappaDao mappaDao();

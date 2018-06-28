@@ -29,7 +29,7 @@ public class BeaconRecyclerAdapter extends RecyclerView.Adapter<BeaconRecyclerAd
     private Context context;
     private final LayoutInflater mInflater;
     private List<Beacon> mBeacon; // Cached copy
-    private List<BeaconDao.BeaconWithMap> beaconWithMap; // Cached copy
+    //private List<BeaconDao.BeaconWithMap> beaconWithMap; // Cached copy
     private List<Beacon> mBeaconCercati; // Cached copy
     private String lastFilter = "";
     private BeaconUpdater beaconUpdater;
@@ -119,12 +119,12 @@ public class BeaconRecyclerAdapter extends RecyclerView.Adapter<BeaconRecyclerAd
         notifyDataSetChanged();
     }
 
-    public void setmBeaconWithMap(List<BeaconDao.BeaconWithMap> mBeacon) {
+    /*public void setmBeaconWithMap(List<BeaconDao.BeaconWithMap> mBeacon) {
         this.beaconWithMap = mBeacon;
         notifyDataSetChanged();
         getFilter().filter(lastFilter);
         notifyDataSetChanged();
-    }
+    }*/
 
     public List<Beacon> getmBeaconCercati() {
         return mBeaconCercati;

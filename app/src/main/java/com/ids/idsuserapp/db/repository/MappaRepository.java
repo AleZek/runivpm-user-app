@@ -99,6 +99,10 @@ public class MappaRepository {
         return mMappaDao.find(mappa_id);
     }
 
+    public Mappa findByNome(String mappa_nome){
+        return mMappaDao.findByNome(mappa_nome);
+    }
+
     public void insert (Mappa mappa) {
         new MappaRepository.insertAsyncTask(mMappaDao).execute(mappa);
     }

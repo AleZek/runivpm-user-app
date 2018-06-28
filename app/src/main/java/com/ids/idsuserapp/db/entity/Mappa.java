@@ -2,6 +2,8 @@ package com.ids.idsuserapp.db.entity;
 
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
+import android.graphics.Bitmap;
+import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -15,6 +17,7 @@ public class Mappa {
     private String name;
 
     private String immagine;
+
 
 
     public Mappa(){}

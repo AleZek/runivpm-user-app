@@ -35,6 +35,12 @@ public class MappaViewModel extends AppViewModel<Mappa> {
         return mMappaRepository.find(mappa_id);
     }
 
+    public Mappa findByNome(String mappa_nome) {
+        return mMappaRepository.findByNome(mappa_nome);
+    }
+
+
+
     public LiveData<List<Mappa>> getAll() { return mMappaRepository.getAll(); }
 
     public String[] getCAMPI() {

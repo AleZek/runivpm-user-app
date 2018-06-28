@@ -19,8 +19,8 @@ public class PercorsoMultipiano extends HashMap<String, Percorso> {
     }
 
     public Percorso toPath(Beacon origine, Beacon destinazione) {
-        int pianoOrigine = origine.getQuotaInt();
-        int pianoDestinazione = destinazione.getQuotaInt();
+        int pianoOrigine = origine.getFloorInt();
+        int pianoDestinazione = destinazione.getFloorInt();
         boolean ascesa = pianoOrigine <= pianoDestinazione;
 
         Set<String> floorSet = keySet();

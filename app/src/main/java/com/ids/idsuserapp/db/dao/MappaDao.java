@@ -28,6 +28,11 @@ public interface MappaDao {
     public LiveData<List<Mappa>> getAll();
     @Query("SELECT * FROM mappa WHERE id=:mappa_id")
     public Mappa find(int mappa_id);
+
+    @Query("SELECT * FROM mappa WHERE name=:mappa_nome")
+    public Mappa findByNome(String mappa_nome);
+
+
     @Query("DELETE FROM mappa")
     public void deleteAll();
 

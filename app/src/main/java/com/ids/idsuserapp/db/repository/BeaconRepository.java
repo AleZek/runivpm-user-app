@@ -23,6 +23,17 @@ public class BeaconRepository {
         new DeleteByMappaAsyncTask(mBeaconDao).execute(mappa_id);
     }
 
+    public Beacon findByName(String name) {
+        return mBeaconDao.findByName(name);
+    }
+
+    public Beacon findByDevice(String device) {
+        return mBeaconDao.findByDevice(device);
+    }
+
+    public List<Beacon> getAllSynchronously() { return mBeaconDao.getAllSynchronously();
+    }
+
     private static class insertAsyncTask extends AsyncTask<Beacon, Void, Void> {
 
         private BeaconDao mAsyncTaskDao;
@@ -119,13 +130,15 @@ public class BeaconRepository {
     public void insert (Beacon beacon) {
         new BeaconRepository.insertAsyncTask(mBeaconDao).execute(beacon);
     }
-
-    public LiveData<List<BeaconDao.BeaconWithMap>> getAll() {return mBeaconDao.getAll();}
     public LiveData<List<Beacon>> getAllBeacons() {return mBeaconDao.getAllBeacons();}
     public LiveData<List<Beacon>> getBeaconByIdMappa(int mappa)
     {return mBeaconDao.getBeaconByIdMappa(mappa);}
 
     public void delete (Beacon beacon){
         new BeaconRepository.deleteAsyncTask(mBeaconDao).execute(beacon);
+    }
+
+    public List<Beacon> getBeaconsByFloor(int floor, int x0, int y0, int radius) {
+        return mBeaconDao.ottieniBeacon(floor, x0, y0, radius);
     }
 }
