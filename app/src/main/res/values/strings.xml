@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">IDS User App</string>
+    <string name="app_name">RUNIVPM</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="nuova_mappa_nome_hint">Nome Mappa</string>
     <string name="nuovo_beacon_nome_hint">Nome Beacon</string>
@@ -20,8 +20,6 @@
     <string name="title_activity_home">HomeActivity</string>
     <string name="selected_node">Hai selezionato: </string>
     <string name="error_connection_failed">Errore di connessione, controlla la tua connessione internet</string>
-
-
     <string name="title_activity_logow">LogowActivity</string>
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
