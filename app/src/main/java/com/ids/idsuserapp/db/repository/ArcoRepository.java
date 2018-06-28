@@ -47,6 +47,20 @@ public class ArcoRepository {
     }
 
 
+    private static class deleteAllAsyncTask extends AsyncTask<Arco, Void, Void> {
+
+        private ArcoDao mAsyncTaskDao;
+
+        deleteAllAsyncTask(ArcoDao dao) {
+            mAsyncTaskDao = dao;
+        }
+
+        @Override
+        protected Void doInBackground(final Arco... params) {
+            mAsyncTaskDao.deleteAll();
+            return null;
+        }
+    }
 
     private static class deleteAsyncTask extends AsyncTask<Arco, Void, Void> {
 

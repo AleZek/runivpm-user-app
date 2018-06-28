@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".percorso.SelezionaMappaFragment">
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/toolbar_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:paddingTop="@dimen/status_bar_height">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/floor_button_145"
+                android:layout_width="55dp"
+                android:layout_height="51dp"
+                android:layout_weight="1"
+                android:background="@color/colorPrimary"
+                android:textColor="@color/colorWhite"
+                android:text="Quota 145" />
+
+            <Button
+                android:id="@+id/floor_button_150"
+                android:layout_width="55dp"
+                android:layout_height="51dp"
+                android:layout_weight="1"
+                android:background="@color/colorPrimary"
+                android:textColor="@color/colorWhite"
+                android:text="Quota 150" />
+
+            <Button
+                android:id="@+id/floor_button_155"
+                android:layout_width="55dp"
+                android:layout_height="51dp"
+                android:layout_weight="1"
+                android:background="@color/colorPrimary"
+                android:textColor="@color/colorWhite"
+                android:text="Quota 155" />
+        </LinearLayout>
+
+        <android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/navigation_standard_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:elevation="@dimen/standard_elevation"
+            android:gravity="top"
+            android:title="@string/title_activity_navigation">
+
+            <TextView
+                android:id="@+id/toolbar_title"
+                style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Scegli punto di partenza"
+                android:textColor="@android:color/white" />
+
+        </android.support.v7.widget.Toolbar>
+
+        <LinearLayout
+            android:id="@+id/toolbar_description"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:paddingBottom="16dp"
+            android:paddingEnd="16dp"
+            android:paddingStart="16dp">
+
+            <TextView
+                android:id="@+id/placeholder"
+                style="@style/TextAppearance.AppCompat.Widget.ActionBar.Subtitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/selected_node"
+                android:textColor="@color/lightGrey" />
+
+            <TextView
+                android:id="@+id/node"
+                style="@style/TextAppearance.AppCompat.Widget.ActionBar.Subtitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:textColor="@color/colorWhite" />
+
+        </LinearLayout>
+
+    </android.support.design.widget.AppBarLayout>
+
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/action_buttons_container"
+        android:layout_below="@+id/toolbar_container">
+
+        <com.ids.idsuserapp.percorso.views.PinView
+            android:id="@+id/navigation_map_image"
+            android:layout_width="match_parent"
+            android:layout_height="346dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true"
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/ic_place_blue_48dp" />
+
+
+    </RelativeLayout>
+
+
+
+
+
+    <!-- Buttons container -->
+    <RelativeLayout
+        android:id="@+id/action_buttons_container"
+        android:layout_width="match_parent"
+        android:layout_height="46dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/colorWhite"
+        android:elevation="@dimen/standard_elevation"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipChildren="true"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/back_button"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/borderless_white_button"
+                android:text="@string/action_back"
+                android:textAllCaps="true"/>
+
+            <!-- Divider -->
+            <View
+                android:layout_width="1dp"
+                android:layout_height="fill_parent"
+                android:background="@color/dividerGrey"/>
+
+            <Button
+                android:id="@+id/confirm_button"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/borderless_white_button"
+                android:text="@string/action_confirm"
+                android:textAllCaps="true"/>
+        </LinearLayout>
+
+
+    </RelativeLayout>
+
+
+</RelativeLayout>

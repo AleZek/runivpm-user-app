@@ -21,5 +21,7 @@
     <dimen name="ic_album_overflow_width">20dp</dimen>
     <dimen name="ic_album_overflow_height">30dp</dimen>
     <dimen name="ic_album_overflow_margin_top">10dp</dimen>
+    <dimen name="status_bar_height">24dp</dimen>
+    <dimen name="standard_elevation">4dp</dimen>
 
 </resources>

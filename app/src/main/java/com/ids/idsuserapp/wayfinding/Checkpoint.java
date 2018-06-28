@@ -4,7 +4,7 @@ package com.ids.idsuserapp.wayfinding;
 public interface Checkpoint {
     String getFloor();
 
-    int getQuotaInt();
+    int getFloorInt();
 
 //    boolean isGeneral();
 //

@@ -130,7 +130,6 @@ public class BeaconRepository {
     public void insert (Beacon beacon) {
         new BeaconRepository.insertAsyncTask(mBeaconDao).execute(beacon);
     }
-
     public LiveData<List<Beacon>> getAllBeacons() {return mBeaconDao.getAllBeacons();}
     public LiveData<List<Beacon>> getBeaconByIdMappa(int mappa)
     {return mBeaconDao.getBeaconByIdMappa(mappa);}

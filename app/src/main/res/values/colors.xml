@@ -1,8 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3f51b5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorPrimary">#B10400</color>
+    <color name="colorPrimaryDark">#8f0300</color>
     <color name="colorAccent">#2fb66e</color>
     <color name="colorBlack">#000</color>
     <color name="colorWhite">#fff</color>
+    <color name="lightGrey">#EEEEEE</color>
+    <color name="dividerGrey">#DDDDDD</color>
+    <color name="linkText">#FF9C00</color>
+    <color name="disabledText">#40000000</color>
+    <color name="grey">#9E9E9E</color>
+    <color name="black_overlay">#66000000</color>
 </resources>
