@@ -104,7 +104,7 @@ public class BluetoothLocator {
                 BluetoothDevice scannedDevice = result.getDevice();
                 setStrongestBeacon(scannedDevice.toString(), result.getRssi());
                 if(positionChanged()) {
-                    if(isBeacon(scannedDevice.toString())) {
+                    if(isBeacon(scannedDevice.getName())) {
                         locatorCallbacks.sendCurrentPosition(scannedDevice.toString());
                         scanner.flushPendingScanResults(scanCallback);
                         stopScan();
@@ -147,6 +147,6 @@ public class BluetoothLocator {
     }
 
     public boolean isBeacon(String resultDevice) {
-        return beaconWhiteList.indexOf(resultDevice) != -1;
+        return resultDevice.equals("CC2650 SensorTag");
     }
 }

@@ -1,5 +1,6 @@
 package com.ids.idsuserapp.entityhandlers;
 
+import android.app.Application;
 import android.content.Context;
 import android.widget.Toast;
 
@@ -20,10 +21,10 @@ public class ServerUserLocator {
     private BeaconViewModel beaconViewModel;
     private com.android.volley.RequestQueue serverRequestQueue;
 
-    public ServerUserLocator(Context context, BeaconViewModel beaconViewModel) {
+    public ServerUserLocator(Context context) {
         this.context = context;
 
-        this.beaconViewModel = beaconViewModel;
+        this.beaconViewModel = new BeaconViewModel( (Application) context);
         serverRequestQueue = Volley.newRequestQueue(context);
     }
 

@@ -9,21 +9,18 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.View;
-import android.widget.SearchView;
 
 import com.ids.idsuserapp.db.entity.Tronco;
 import com.ids.idsuserapp.entityhandlers.ArcoDataHandler;
 import com.ids.idsuserapp.entityhandlers.BeaconDataHandler;
 import com.ids.idsuserapp.entityhandlers.DataRetriever;
 import com.ids.idsuserapp.entityhandlers.MappaDataHandler;
-import com.ids.idsuserapp.entityhandlers.ServerUserLocator;
 import com.ids.idsuserapp.fragment.BeaconRecyclerFragment;
+import com.ids.idsuserapp.services.LocatorService;
 import com.ids.idsuserapp.threads.LocatorThread;
 import com.ids.idsuserapp.utils.BluetoothLocator;
 import com.ids.idsuserapp.utils.ConnectionChecker;
@@ -32,10 +29,9 @@ import com.ids.idsuserapp.viewmodel.BeaconViewModel;
 import com.ids.idsuserapp.viewmodel.MappaViewModel;
 import com.ids.idsuserapp.wayfinding.Grafo;
 
-import java.util.HashMap;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements DataRetriever, BluetoothLocator.LocatorCallbacks{
+public class MainActivity extends AppCompatActivity implements DataRetriever{
     private android.support.v7.widget.SearchView origineSearchView;
     private android.support.v7.widget.SearchView destinazioneSearchView;
     private MappaViewModel mappaViewModel;
@@ -44,7 +40,6 @@ public class MainActivity extends AppCompatActivity implements DataRetriever, Bl
     private BeaconDataHandler beaconDataHandler;
     private MappaDataHandler mappaDataHandler;
     private ArcoDataHandler arcoDataHandler;
-    private ServerUserLocator serverUserLocator;
     private LocatorThread locatorThread;
     private static final int PERMISSION_REQUEST_COARSE_LOCATION = 124;
     private static final int REQUEST_ENABLE_BT = 125;
@@ -60,7 +55,7 @@ public class MainActivity extends AppCompatActivity implements DataRetriever, Bl
         handleFilePermissions();
         handleLocationPermissions();
         handleBtAdapter();
-        startLocatorThread();
+//        startLocatorThread();
 
         //controlla se la connessione ad internet è attiva dato l application context,
         //se si allora viene pulita la lista dei beacon e viene aggiornato il dataset
@@ -73,7 +68,13 @@ public class MainActivity extends AppCompatActivity implements DataRetriever, Bl
 
         //inizializza il fragment dei beacon
         setupBeaconFragment();
+//        startLocatorService();
 
+    }
+
+    private void startLocatorService() {
+        Intent serviceIntent = new Intent(this, LocatorService.class);
+        startService(serviceIntent);
     }
 
     private void setupDataHandlers() {
@@ -91,7 +92,7 @@ public class MainActivity extends AppCompatActivity implements DataRetriever, Bl
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        locatorThread.interrupt();
+//        locatorThread.interrupt();
     }
 
     private void startLocatorThread() {
@@ -99,7 +100,6 @@ public class MainActivity extends AppCompatActivity implements DataRetriever, Bl
         locatorThread.start();
         BluetoothLocator threadBtLocator =locatorThread.getBluetoothLocator();
         threadBtLocator.setBeaconWhiteList(beaconViewModel.getAllSynchronous());
-        serverUserLocator = new ServerUserLocator(getApplication(),beaconViewModel);
 
     }
 
@@ -192,9 +192,5 @@ public class MainActivity extends AppCompatActivity implements DataRetriever, Bl
         arcoDataHandler.retrieveArchiDataset();
     }
 
-    @Override
-    public void sendCurrentPosition(String device) {
-        serverUserLocator.sendPosition(device);
-        Log.v("locator", "callback chiamata");
-    }
+
 }
