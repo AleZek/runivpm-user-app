@@ -13,13 +13,22 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ids.idsuserapp.HomeActivity;
 import com.ids.idsuserapp.R;
+import com.ids.idsuserapp.SearchModel;
 import com.ids.idsuserapp.db.entity.Beacon;
 import com.ids.idsuserapp.viewmodel.BeaconViewModel;
 
 import org.apache.commons.lang3.SerializationUtils;
+
+import java.util.ArrayList;
+
+import ir.mirrajabi.searchdialog.SimpleSearchDialogCompat;
+import ir.mirrajabi.searchdialog.core.BaseSearchDialogCompat;
+import ir.mirrajabi.searchdialog.core.SearchResultListener;
+import ir.mirrajabi.searchdialog.core.Searchable;
 
 
 public class HomeFragment extends Fragment {
@@ -119,6 +128,8 @@ public class HomeFragment extends Fragment {
             offline = getArguments().getBoolean(OFFLINE);
         }
 
+        setText();
+
         /*if(!offline) {
             NodesDownloaderTask nodesDownloaderTask = new NodesDownloaderTask(
                     getContext(), new NodesDownloaderTaskListener());
@@ -127,6 +138,38 @@ public class HomeFragment extends Fragment {
                     getContext(), new EdgesDownloaderTaskListener());
             task.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR);
         }*/
+    }
+
+    public void setText(){
+        holder.infoTextView.setText("Seleziona origine e destinazione per visualizzare il percorso");
+        if(choosenOrigin && !choosenDestination) {
+            holder.infoTextView.setText("Origine selezionata: " +
+                    "\n Piano:" + origin.getFloor().toString() +
+                    "\n Beacon: " + origin.getNome().toString()+
+                    "\n Seleziona destinazione per poter visualizzare il percorso di uscita.");
+        } else if(choosenOrigin && choosenDestination){
+            holder.infoTextView.setText(
+                    "Origine selezionata: " +
+                            "\n Piano:" + origin.getFloor().toString() +
+                            "\n Beacon scelto: " + origin.getNome().toString()+
+                            "\n\n Destinazione selezionata: " +
+                            "\n Piano: " + destination.getFloor().toString() +
+                            "\n Beacon scelto: " + destination.getNome().toString());
+        } else if(choosenDestination && !choosenOrigin) {
+            holder.infoTextView.setText("Destinazione selezionata: " +
+                    "\n Piano:" + destination.getFloor().toString() +
+                    "\n Beacon: " + destination.getNome().toString()+
+                    "\n Seleziona origine per poter visualizzare il percorso di uscita.");
+        } else if(choosenOrigin && choosenDestination){
+            holder.infoTextView.setText(
+                    "Origine selezionata: " +
+                            "\n Piano:" + origin.getFloor().toString() +
+                            "\n Beacon scelto: " + origin.getNome().toString()+
+                            "\n\n Destinazione selezionata: " +
+                            "\n Piano: " + destination.getFloor().toString() +
+                            "\n Beacon scelto: " + destination.getNome().toString());
+        }
+
     }
 
     @Override
@@ -214,7 +257,67 @@ public class HomeFragment extends Fragment {
                 }
             });
 
+            selezionaMappaDestinazioneButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    openSelezionaMappaFragment(v);
+                }
+            });
+
+            selezionaBeaconOrigineButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    new SimpleSearchDialogCompat(getActivity(), "Cerca", "Seleziona beacon", null, initData(), new SearchResultListener<Searchable>() {
+                        @Override
+                        public void onSelected(BaseSearchDialogCompat baseSearchDialogCompat, Searchable searchable, int i) {
+                            Toast.makeText(getActivity(),"Hai selezionato il "+searchable.getTitle(),Toast.LENGTH_SHORT).show();
+                            baseSearchDialogCompat.dismiss();
+
+                        }
+                    }).show();
+
+
+                }
+
+
+
+            });
+
+            selezionaBeaconDestinazioneButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    new SimpleSearchDialogCompat(getActivity(), "Cerca", "Seleziona beacon", null, initData(), new SearchResultListener<Searchable>() {
+                        @Override
+                        public void onSelected(BaseSearchDialogCompat baseSearchDialogCompat, Searchable searchable, int i) {
+                            Toast.makeText(getActivity(),"Hai selezionato il "+searchable.getTitle(),Toast.LENGTH_SHORT).show();
+                            baseSearchDialogCompat.dismiss();
+
+                        }
+                    }).show();
+
+
+                }
+
+
+
+            });
+
         }
+
+        private ArrayList<SearchModel> initData(){
+            ArrayList<SearchModel> items = new ArrayList<>();
+            items.add(new SearchModel("beacon1"));
+            items.add(new SearchModel("beacon2"));
+            items.add(new SearchModel("beacon3"));
+            items.add(new SearchModel("beacon4"));
+            items.add(new SearchModel("beacon5"));
+            items.add(new SearchModel("beacon6"));
+            items.add(new SearchModel("beacon7"));
+
+            return items;
+        }
+
+
 
         @SuppressWarnings("unchecked")
         public <T extends View> T find(View view, int id) {
@@ -254,8 +357,10 @@ public class HomeFragment extends Fragment {
             }
         }
 
-
     }
+
+
+
 
     private void disableVisualizzaPercorsoButtonState() {
         holder.visualizzaPercorsoButton.setEnabled(false);
