@@ -1,22 +1,13 @@
 package com.ids.idsuserapp;
 
-import android.content.Intent;
+import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.text.Layout;
 import android.util.Log;
-import android.view.View;
-import android.widget.Button;
 
-import com.ids.idsuserapp.db.entity.Beacon;
 import com.ids.idsuserapp.percorso.BaseFragment;
 import com.ids.idsuserapp.percorso.HomeFragment;
-import com.ids.idsuserapp.percorso.Tasks.TaskListener;
-import com.ids.idsuserapp.viewmodel.BeaconViewModel;
-
-import org.apache.commons.lang3.SerializationUtils;
 
 public class HomeActivity extends AppCompatActivity {
     public static final String TAG = HomeActivity.class.getSimpleName();
