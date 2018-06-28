@@ -1,24 +1,17 @@
 package com.ids.idsuserapp.adapters;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
-import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.ContextMenu;
-import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
-import android.widget.PopupMenu;
 import android.widget.TextView;
 
-import com.ids.idsuserapp.BeaconList;
-import com.ids.idsuserapp.MainActivity;
 import com.ids.idsuserapp.R;
 import com.ids.idsuserapp.db.entity.Mappa;
 import com.ids.idsuserapp.utils.FileHelper;
