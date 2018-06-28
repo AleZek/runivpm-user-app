@@ -154,7 +154,7 @@ public class BeaconRecyclerAdapter extends RecyclerView.Adapter<BeaconRecyclerAd
                 results.count = mBeaconCercati.size();
                 return results;
             }
-        }; 
+        };
     }
 
     protected List<Beacon> getFilteredResults(String constraint) {

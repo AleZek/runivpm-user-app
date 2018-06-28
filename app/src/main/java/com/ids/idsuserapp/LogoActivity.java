@@ -1,10 +1,11 @@
 package com.ids.idsuserapp;
 
-import android.app.ActionBar;
 import android.content.Intent;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
+import com.ids.idsuserapp.autenticazione.AutenticationActivity;
 
 public class LogoActivity extends AppCompatActivity {
 
@@ -18,7 +19,7 @@ public class LogoActivity extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                Intent intent = new Intent(LogoActivity.this, HomeActivity.class);
+                Intent intent = new Intent(LogoActivity.this, AutenticationActivity.class);
                 LogoActivity.this.startActivity(intent);
                 finish();
             }
