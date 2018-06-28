@@ -93,7 +93,6 @@ public class BeaconRecyclerFragment extends Fragment{
         View view = inflater.inflate(R.layout.fragment_beacon_recycler, container, false);
         setupRecycler(view);
         setupSearch(view);
-        setupGoFAB(view);
         return view;
     }
 
@@ -202,16 +201,4 @@ public class BeaconRecyclerFragment extends Fragment{
         return searchViewDestinazione;
     }
 
-    private void setupGoFAB(View view) {
-        goFAB = view.findViewById(R.id.goFAB);
-        goFAB.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent percorsoIntent = new Intent(getContext(),PercorsoActivity.class);
-                percorsoIntent.putExtra("origine", searchViewPartenza.getQuery().toString());
-                percorsoIntent.putExtra("destinazione", (String) searchViewDestinazione.getQuery().toString());
-                startActivity(percorsoIntent);
-            }
-        });
-    }
 }

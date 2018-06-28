@@ -1,10 +1,9 @@
 package com.ids.idsuserapp;
 
 import android.content.Intent;
-
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
-
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -14,19 +13,13 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.messaging.FirebaseMessaging;
-import com.ids.idsuserapp.db.entity.Tronco;
 import com.ids.idsuserapp.entityhandlers.ArcoDataHandler;
 import com.ids.idsuserapp.entityhandlers.BeaconDataHandler;
 import com.ids.idsuserapp.entityhandlers.MappaDataHandler;
-import com.ids.idsuserapp.fragment.BeaconRecyclerFragment;
-import com.ids.idsuserapp.entityhandlers.DataRetriever;
 import com.ids.idsuserapp.utils.ConnectionChecker;
 import com.ids.idsuserapp.viewmodel.ArcoViewModel;
 import com.ids.idsuserapp.viewmodel.BeaconViewModel;
 import com.ids.idsuserapp.viewmodel.MappaViewModel;
-import com.ids.idsuserapp.wayfinding.Grafo;
-
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     final String TAG = this.getClass().getSimpleName();
@@ -48,10 +41,10 @@ public class MainActivity extends AppCompatActivity {
         beaconViewModel = new BeaconViewModel(getApplication());
         mappaViewModel = new MappaViewModel(getApplication());
         arcoViewModel = new ArcoViewModel(getApplication());
-
-        beaconDataHandler = new BeaconDataHandler(this, beaconViewModel);
-        mappaDataHandler = new MappaDataHandler(this, mappaViewModel,beaconViewModel);
-        arcoDataHandler = new ArcoDataHandler(this, arcoViewModel, beaconViewModel);
+//
+//        beaconDataHandler = new BeaconDataHandler(this, beaconViewModel);
+//        mappaDataHandler = new MappaDataHandler(this, mappaViewModel,beaconViewModel);
+//        arcoDataHandler = new ArcoDataHandler(this, arcoViewModel, beaconViewModel);
         handleFilePermissions();
 
         //controlla se la connessione ad internet è attiva dato l application context,
@@ -59,12 +52,12 @@ public class MainActivity extends AppCompatActivity {
         if (ConnectionChecker.getInstance().isNetworkAvailable(getApplicationContext()))
             getDatasetFromServer();
 
-        List<Tronco> tronchi = arcoViewModel.getTronchi();
+        Intent logoIntent = new Intent(MainActivity.this,LogoActivity.class);
+        startActivity(logoIntent);
+//        List<Tronco> tronchi = arcoViewModel.getTronchi();
 
-        Grafo grafo = new Grafo(tronchi);
+//        Grafo grafo = new Grafo(tronchi);
 
-        //inizializza il fragment dei beacon
-        setupBeaconFragment();
 
         //segmento di codice utile all unlock automaitico
 //        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
@@ -81,8 +74,8 @@ public class MainActivity extends AppCompatActivity {
         if (isFilePermissionGranted()) {
             Log.v("File Permission", "Permission is granted");
         } else {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 2);
+            ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+            ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE}, 2);
         }
     }
 
@@ -95,22 +88,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void getDatasetFromServer() {
-        cleanBeacon();
-        mappaDataHandler.retrieveMappeDataset();
-        beaconDataHandler.retrieveBeaconDataset();
-        arcoDataHandler.retrieveArchiDataset();
+//        cleanBeacon();
+//        mappaDataHandler.retrieveMappeDataset();
+//        beaconDataHandler.retrieveBeaconDataset();
+//        arcoDataHandler.retrieveArchiDataset();
     }
 
     private void cleanBeacon() {
         beaconViewModel.deleteAll();
     }
 
-    private void setupBeaconFragment() {
-        BeaconRecyclerFragment fragment = new BeaconRecyclerFragment();
-        android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
-        android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.add(R.id.beaconfragmentcontainer, fragment).commit();
-    }
 
     //questo metodo permette alla app di sottoscriversi al topic emergenza, questo permette a firebase
     // di mandare messaggi broadcast alle istanze della app

@@ -37,9 +37,9 @@ public class Beacon implements Checkpoint, Serializable {
 
     public Beacon(){}
 
-    public Beacon(String nome, String floor, double larghezza, int x, int y, /*int x_meter, int y_meter,*/ int mappa, String device) {
+    public Beacon(String nome, String quota, double larghezza, int x, int y, int x_meter, int y_meter, int mappa, String device, String type) {
         this.nome = nome;
-        this.floor = floor;
+        this.floor = quota;
         this.larghezza = larghezza;
         this.x = x;
         this.y = y;
@@ -75,7 +75,7 @@ public class Beacon implements Checkpoint, Serializable {
 
     public String getFloor() { return floor; }
 
-    public int getQuotaInt() { return Integer.parseInt(floor); }
+    public int getFloorInt() { return Integer.parseInt(floor); }
 
     public Double getLarghezza() {return larghezza; }
 
@@ -112,7 +112,7 @@ public class Beacon implements Checkpoint, Serializable {
     }
 
     public void setX_meter(int x_meter) {
-            this.x_meter = x_meter;
+        this.x_meter = x_meter;
     }
 
     public void setY(int y) {
@@ -120,7 +120,7 @@ public class Beacon implements Checkpoint, Serializable {
     }
 
     public void setY_meter(int y_meter) {
-            this.y_meter = y_meter;
+        this.y_meter = y_meter;
     }
 
     public void setType(String type){
@@ -154,7 +154,6 @@ public class Beacon implements Checkpoint, Serializable {
 
         return Objects.hash(id, nome, floor, larghezza, x, y, mappa);
     }
-
     public PointF toPointF() {
         return new PointF(x, y);
     }

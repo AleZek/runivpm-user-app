@@ -9,27 +9,19 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.os.Bundle;
-import android.text.Layout;
-import android.util.Log;
-import android.view.View;
-import android.widget.Button;
-
-import org.apache.commons.lang3.SerializationUtils;
-
 
 import com.ids.idsuserapp.db.entity.Tronco;
 import com.ids.idsuserapp.entityhandlers.ArcoDataHandler;
 import com.ids.idsuserapp.entityhandlers.BeaconDataHandler;
 import com.ids.idsuserapp.entityhandlers.DataRetriever;
 import com.ids.idsuserapp.entityhandlers.MappaDataHandler;
-import com.ids.idsuserapp.fragment.BeaconRecyclerFragment;
 import com.ids.idsuserapp.percorso.BaseFragment;
 import com.ids.idsuserapp.percorso.HomeFragment;
 import com.ids.idsuserapp.services.LocatorService;
@@ -138,8 +130,6 @@ public class HomeActivity extends AppCompatActivity implements DataRetriever{
 
         Grafo grafo = new Grafo(tronchi);
 
-        //inizializza il fragment dei beacon
-        setupBeaconFragment();
 //        startLocatorService();
 
     }
@@ -226,16 +216,6 @@ public class HomeActivity extends AppCompatActivity implements DataRetriever{
         mappaViewModel.deleteAll();
     }
 
-    private void setupBeaconFragment() {
-        BeaconRecyclerFragment fragment = new BeaconRecyclerFragment();
-        android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
-        android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.add(R.id.beaconfragmentcontainer, fragment).commit();
-        origineSearchView = fragment.getSearchViewPartenza();
-        destinazioneSearchView = fragment.getSearchViewDestinazione();
-
-    }
-
     private void handleLocationPermissions() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             // Android M Permission check 
@@ -245,6 +225,7 @@ public class HomeActivity extends AppCompatActivity implements DataRetriever{
                 builder.setMessage("Consentire l'accesso alla posizione.");
                 builder.setPositiveButton(android.R.string.ok, null);
                 builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @RequiresApi(api = Build.VERSION_CODES.M)
                     public void onDismiss(DialogInterface dialog) {
                         requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSION_REQUEST_COARSE_LOCATION);
                     }
