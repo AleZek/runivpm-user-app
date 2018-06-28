@@ -24,7 +24,6 @@
     <string name="error_connection_failed">Errore di connessione, controlla la tua connessione internet</string>
 
 
-
     <string name="title_activity_logow">LogowActivity</string>
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
