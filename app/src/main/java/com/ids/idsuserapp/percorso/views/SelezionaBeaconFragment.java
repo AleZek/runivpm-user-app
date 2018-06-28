@@ -1,4 +1,4 @@
-package com.ids.idsuserapp.percorso;
+package com.ids.idsuserapp.percorso.views;
 
 import android.content.Context;
 import android.net.Uri;

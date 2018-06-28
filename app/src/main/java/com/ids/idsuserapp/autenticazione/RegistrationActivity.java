@@ -11,5 +11,15 @@ public class RegistrationActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration);
+
+
+        if (savedInstanceState == null) {
+            RegistrationFragment registrationFragment =new RegistrationFragment();
+            android.support.v4.app.FragmentManager fm = getSupportFragmentManager();
+            fm.beginTransaction().replace(R.id.registraion_content_pane, registrationFragment, RegistrationFragment.TAG)
+                    .commit();
+        }
+
+
     }
 }

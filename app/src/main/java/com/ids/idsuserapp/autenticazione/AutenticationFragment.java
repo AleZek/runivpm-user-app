@@ -1,14 +1,23 @@
 package com.ids.idsuserapp.autenticazione;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.Toolbar;
 
+import com.ids.idsuserapp.HomeActivity;
+import com.ids.idsuserapp.LogoActivity;
 import com.ids.idsuserapp.R;
+import com.ids.idsuserapp.percorso.BaseFragment;
+import com.ids.idsuserapp.percorso.HomeFragment;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -26,6 +35,7 @@ public class AutenticationFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
+    private AutenticationFragment.ViewHolder holder;
 
     public AutenticationFragment() {
         // Required empty public constructor
@@ -58,15 +68,84 @@ public class AutenticationFragment extends Fragment {
         }
     }
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_autentication, container, false);
+        final View view = inflater.inflate(R.layout.fragment_autentication, container, false);
+        holder = new ViewHolder(view);
+        return view;
     }
 
 
 
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+    }
+
+
+    /**
+     * Classe wrapper degli elementi della vista
+     */
+    public class ViewHolder extends BaseFragment.ViewHolder {
+
+       //public final Toolbar toolbar;
+       public final Button offlineButton;
+       public final Button loginButton;
+       public final Button registerButton;
+
+
+       public ViewHolder(View v){
+
+         //  toolbar = v.findViewById((R.id.navigation_toolbar));
+           offlineButton = v.findViewById(R.id.offline_btn);
+           loginButton= v.findViewById(R.id.login_btn);
+           registerButton=v.findViewById(R.id.register_btn);
+
+
+
+          offlineButton.setOnClickListener(new View.OnClickListener() {
+               @Override
+               public void onClick(View v) {
+
+
+                   Intent intent = new Intent(getActivity(), HomeActivity.class);
+                   startActivity(intent);
+                   }
+           });
+
+
+
+
+          loginButton.setOnClickListener(new View.OnClickListener() {
+              @Override
+              public void onClick(View v) {
+
+
+                  Intent intent = new Intent(getActivity(), LoginActivity.class);
+                  startActivity(intent);
+              }
+
+          });
+
+
+          registerButton.setOnClickListener(new View.OnClickListener() {
+              @Override
+              public void onClick(View v) {
+                  Intent intent = new Intent(getActivity(),RegistrationActivity.class);
+                  startActivity(intent);
+              }
+          });
+
+
+       }
+
+
+
+    }
 
 
 }
