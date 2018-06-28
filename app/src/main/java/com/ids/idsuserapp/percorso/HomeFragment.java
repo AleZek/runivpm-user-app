@@ -1,8 +1,12 @@
 package com.ids.idsuserapp.percorso;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -52,9 +56,7 @@ public class HomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_home, container, false);
-
         holder = new ViewHolder(view);
-
         return view;
     }
 
@@ -88,37 +90,80 @@ public class HomeFragment extends Fragment {
 
     private void openSelezionaMappaFragment(View v) {
         SelezionaMappaFragment selectionFragment;
-        Beacon alreadySelectedBeacon = null;
+        Beacon alreadySelectedNode = null;
+
         int code = 1;
-        selectionFragment = SelezionaMappaFragment.newInstance(offline);
+        switch (v.getId()) {
+            case R.id.scegli_da_mappa_origine_button:
+                code = ORIGIN_SELECTION_REQUEST_CODE;
+                alreadySelectedNode = destination;
+                break;
+            case R.id.scegli_da_mappa_destinazione_button:
+                code = DESTINATION_SELECTION_REQUEST_CODE;
+                alreadySelectedNode = origin;
+                break;
+        }
+
+        selectionFragment = SelezionaMappaFragment.newInstance(code, alreadySelectedNode, offline);
         selectionFragment.setTargetFragment(this, code);
         ((HomeActivity) getActivity()).changeFragment(selectionFragment);
     }
 
 
 
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        if(getArguments() != null) {
+            offline = getArguments().getBoolean(OFFLINE);
+        }
+
+        /*if(!offline) {
+            NodesDownloaderTask nodesDownloaderTask = new NodesDownloaderTask(
+                    getContext(), new NodesDownloaderTaskListener());
+            nodesDownloaderTask.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR);
+            EdgesDownloaderTask task = new EdgesDownloaderTask(
+                    getContext(), new EdgesDownloaderTaskListener());
+            task.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR);
+        }*/
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        // Set the Toolbar as the ActionBar
+        AppCompatActivity activity = (AppCompatActivity) getActivity();
+        activity.setSupportActionBar(holder.toolbar);
+        assert activity.getSupportActionBar() != null;
+        activity.getSupportActionBar().setDisplayShowTitleEnabled(false);
+        setHasOptionsMenu(true);
+    }
 
     /**
      * Classe wrapper degli elementi della vista
      */
     public class ViewHolder extends BaseFragment.ViewHolder {
-        private Button selezionaMappaOrigineButton;
-        private Button selezionaMappaDestinazioneButton;
-        private Button selezionaBeaconOrigineButton;
-        private Button selezionaBeaconDestinazioneButton;
 
-        private View mappaContainer;
+        public final Toolbar toolbar;
+        public final Button selezionaMappaOrigineButton;
+        public final Button selezionaMappaDestinazioneButton;
+        public final Button selezionaBeaconOrigineButton;
+        public final Button selezionaBeaconDestinazioneButton;
 
-        private View selezionaMappaOrigineLayout;
-        private View selezionaBeaconOrigineLayout;
-        private View selezionaMappaDestinazioneLayout;
-        private View selezionaBeaconDestinazioneLayout;
+       // public final View mappaContainer;
 
-        private Button selezionaOrigineButton;
-        private Button selezionaDestinazioneButton;
-        private BeaconViewModel mBeaconViewModel;
+        public final View selezionaMappaOrigineLayout;
+        public final View selezionaBeaconOrigineLayout;
+        public final View selezionaMappaDestinazioneLayout;
+        public final View selezionaBeaconDestinazioneLayout;
+
+        public final Button selezionaOrigineButton;
+        public final Button selezionaDestinazioneButton;
+        public BeaconViewModel mBeaconViewModel;
 
         public ViewHolder(View v) {
+            toolbar = v.findViewById((R.id.navigation_toolbar));
             selezionaMappaOrigineButton = v.findViewById(R.id.scegli_da_mappa_origine_button);
             selezionaMappaDestinazioneButton = v.findViewById(R.id.scegli_da_mappa_destinazione_button);
             selezionaBeaconOrigineButton = v.findViewById(R.id.scegli_da_beacon_origine_button);
@@ -129,7 +174,7 @@ public class HomeFragment extends Fragment {
             selezionaBeaconOrigineLayout = v.findViewById(R.id.scegli_da_beacon_origine_layout);
             selezionaBeaconDestinazioneLayout = v.findViewById(R.id.scegli_da_beacon_destinazione_layout);
 
-            mappaContainer = v.findViewById(R.id.navigation_map_image_home);
+         //   mappaContainer = v.findViewById(R.id.navigation_map_image);
 
 
             selezionaOrigineButton = v.findViewById(R.id.seleziona_origine);
@@ -141,7 +186,7 @@ public class HomeFragment extends Fragment {
             selezionaBeaconOrigineLayout.setVisibility(View.GONE);
             selezionaBeaconDestinazioneLayout.setVisibility(View.GONE);
 
-            mappaContainer.setVisibility(View.GONE);
+         //   mappaContainer.setVisibility(View.GONE);
 
 
             selezionaOrigineButton.setOnClickListener(new View.OnClickListener() {

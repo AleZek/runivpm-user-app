@@ -49,6 +49,8 @@ public class SelezionaMappaFragment extends BaseFragment {
     public static final String OFFLINE_USAGE = "offline_usage";
     private AsyncTask<Integer, Void, Boolean> mapsTask;
     private ViewHolder holder;
+    private static final String SELECTION_REQUEST_CODE = "selection_request_code";
+    private static final String ALREADY_SELECTED_NODE = "already_selected_node";
     private int currentFloor = STARTING_FLOOR;
     private Beacon selectedNode = null;
     private boolean offline;
@@ -60,10 +62,12 @@ public class SelezionaMappaFragment extends BaseFragment {
      *
      * @return A new instance of fragment ResetPasswordFragment.
      */
-    public static SelezionaMappaFragment newInstance(boolean offline) {
+    public static SelezionaMappaFragment newInstance(int requestCode, Beacon alreadySelectedBeacon, boolean offline) {
 
         SelezionaMappaFragment fragment = new SelezionaMappaFragment();
         Bundle args = new Bundle();
+        args.putInt(SELECTION_REQUEST_CODE, requestCode);
+        args.putSerializable(ALREADY_SELECTED_NODE, alreadySelectedBeacon);
         args.putSerializable(OFFLINE_USAGE, offline);
         fragment.setArguments(args);
 
@@ -76,7 +80,7 @@ public class SelezionaMappaFragment extends BaseFragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_seleziona_mappa, container, false);
         holder = new ViewHolder(view);
-        offline = true; //getArguments().getBoolean(OFFLINE_USAGE);
+        offline = getArguments().getBoolean(OFFLINE_USAGE);
 
         switch (getTargetRequestCode()) {
             case ORIGIN_SELECTION_REQUEST_CODE:
@@ -106,8 +110,7 @@ public class SelezionaMappaFragment extends BaseFragment {
         holder.backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getContext(), HomeActivity.class);
-                startActivity(intent);
+                getActivity().getSupportFragmentManager().popBackStack();
             }
         });
 

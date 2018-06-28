@@ -21,34 +21,7 @@ import org.apache.commons.lang3.SerializationUtils;
 public class HomeActivity extends AppCompatActivity {
     public static final String TAG = HomeActivity.class.getSimpleName();
 
-    private Button selezionaMappaOrigineButton;
-    private Button selezionaMappaDestinazioneButton;
-    private Button selezionaBeaconOrigineButton;
-    private Button selezionaBeaconDestinazioneButton;
-
-    private View mappaContainer;
-
-    private View selezionaMappaOrigineLayout;
-    private View selezionaBeaconOrigineLayout;
-    private View selezionaMappaDestinazioneLayout;
-    private View selezionaBeaconDestinazioneLayout;
-
-    private Button selezionaOrigineButton;
-    private Button selezionaDestinazioneButton;
-    private BeaconViewModel mBeaconViewModel;
-
-    public static final int ORIGIN_SELECTION_REQUEST_CODE = 200;
-    public static final int DESTINATION_SELECTION_REQUEST_CODE = 201;
-
-    private boolean visible = false;
-    private boolean choosenOrigin=false;
-    private boolean choosenDestination = false;
     private boolean offline;
-
-
-    private static Beacon origin = null, destination = null;
-    public static final String INTENT_KEY_POSITION = "position";
-    private int indexOfPathSelected;
     public static final String OFFLINE_USAGE = "offline_usage";
 
 
