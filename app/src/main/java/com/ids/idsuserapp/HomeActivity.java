@@ -16,6 +16,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.WindowManager;
 
 import com.ids.idsuserapp.db.entity.Tronco;
 import com.ids.idsuserapp.entityhandlers.ArcoDataHandler;
@@ -113,7 +114,11 @@ public class HomeActivity extends AppCompatActivity implements DataRetriever{
             fm.beginTransaction().replace(R.id.navigation_content_pane, homeFragment, HomeFragment.TAG)
                     .commit();
         }
-
+//segmento di codice utile all unlock automaitico
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
+                + WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD|
+                + WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED|
+                + WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
         setupViewModels();
         setupDataHandlers();
         handleFilePermissions();
@@ -130,7 +135,7 @@ public class HomeActivity extends AppCompatActivity implements DataRetriever{
 
         Grafo grafo = new Grafo(tronchi);
 
-//        startLocatorService();
+        startLocatorService();
 
     }
 

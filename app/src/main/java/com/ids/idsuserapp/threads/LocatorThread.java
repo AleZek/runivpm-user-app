@@ -8,7 +8,7 @@ public class LocatorThread extends Thread {
     public BluetoothLocator bluetoothLocator;
     boolean running = false;
     private int mode;
-    public static int STANDARD_MODE = 300000;
+    public static int STANDARD_MODE = 20000;
     public static int NAVIGATION_MODE = 20000;
     public static int EMERGENCY_MODE = 3000;
 

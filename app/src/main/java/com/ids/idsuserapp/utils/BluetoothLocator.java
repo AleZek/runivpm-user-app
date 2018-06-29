@@ -147,6 +147,8 @@ public class BluetoothLocator {
     }
 
     public boolean isBeacon(String resultDevice) {
-        return resultDevice.equals("CC2650 SensorTag");
+        if (resultDevice != null)
+            return resultDevice.equals("CC2650 SensorTag");
+        return false;
     }
 }
