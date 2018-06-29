@@ -88,7 +88,6 @@ public class MapView extends LinearLayout {
      * @param floor Floor
      */
     private void changeImage(String floor) {
-        holder.placeholderView.setVisibility(View.GONE);
         holder.progressAnimation = new ShowProgressAnimation(
                 holder.mapContainer,
                 holder.downloadProgress,
@@ -96,7 +95,7 @@ public class MapView extends LinearLayout {
 
         holder.progressAnimation.showProgress(true);
         AsyncTask<Integer, Void, Boolean> mapLoader;
-        if(offline) {
+        if (offline) {
             mapLoader = new MappaStaticaTask(getContext(), new MapListener());
         } else {
             mapLoader = new MappaStaticaTask(getContext(), new MapListener()); //new MapsDownloaderTask(getContext(), new MapListener());
@@ -230,7 +229,6 @@ public class MapView extends LinearLayout {
         public void onClick(View v) {
             currentFloor = Integer.parseInt(((Button) v).getText().toString());
             holder.setupFloorButtonsUI(String.valueOf(currentFloor));
-
             changeImage(String.valueOf(currentFloor));
             drawPath(String.valueOf(currentFloor));
             drawPins(currentFloor);
@@ -244,7 +242,12 @@ public class MapView extends LinearLayout {
 
         @Override
         public void onTaskSuccess(Mappa map) {
-            holder.pinView.setImage(ImageSource.asset(map.getImmagine()));
+            if (origin.getFloorInt() == 145) {
+                holder.pinView.setImage(ImageSource.resource(R.drawable.floor_145));
+            } else if (origin.getFloorInt() == 155) {
+                holder.pinView.setImage(ImageSource.resource(R.drawable.floor_155));
+            } else
+                holder.pinView.setImage(ImageSource.resource(R.drawable.floor_150));
         }
 
         @Override
@@ -272,7 +275,10 @@ public class MapView extends LinearLayout {
         public final HashMap<String, Button> floorButtons;
         public final ViewGroup mapContainer;
         public final ProgressBar downloadProgress;
-        public final ViewGroup placeholderView;
+
+        public final Button button_145;
+        public final Button button_155;
+        public final Button button_150;
         public ShowProgressAnimation progressAnimation;
 
         public ViewHolder(View view) {
@@ -280,8 +286,11 @@ public class MapView extends LinearLayout {
             floorButtonContainer = (LinearLayout) view.findViewById(R.id.floor_button_container);
             mapContainer = (ViewGroup) view.findViewById(R.id.map_container);
             downloadProgress = (ProgressBar) view.findViewById(R.id.downloading_progress);
+            button_145 = view.findViewById(R.id.floor_button_145_map);
+            button_155 = view.findViewById(R.id.floor_button_155_map);
+            button_150 = view.findViewById(R.id.floor_button_150_map);
             floorButtons = getFloorButtons();
-            placeholderView = (ViewGroup) view.findViewById(R.id.map_placeholder);
+            showFloorButtons();
         }
 
         /**
@@ -302,6 +311,24 @@ public class MapView extends LinearLayout {
             }
 
             return result;
+        }
+
+
+        /**
+         * Nasconde i pulsanti dei piani
+         *
+         * @return Istanza di Viewholder
+         */
+        private ViewHolder showFloorButtons() {
+            floorButtonContainer.setVisibility(View.VISIBLE);
+            if (origin.getFloorInt() == 145 || destination.getFloorInt() == 145)
+                button_145.setVisibility(VISIBLE);
+            else if (origin.getFloorInt() == 155 || destination.getFloorInt() == 155)
+                button_155.setVisibility(VISIBLE);
+            else if (origin.getFloorInt() == 150 || destination.getFloorInt() == 150)
+                button_150.setVisibility(VISIBLE);
+
+            return this;
         }
 
         /**

@@ -31,7 +31,7 @@ import ir.mirrajabi.searchdialog.core.SearchResultListener;
 import ir.mirrajabi.searchdialog.core.Searchable;
 
 
-public class HomeFragment extends Fragment {
+public class HomeFragment extends BaseFragment {
     public static final String TAG = HomeFragment.class.getSimpleName();
 
     public static final String EMERGENCY = "emergenza";
@@ -49,6 +49,7 @@ public class HomeFragment extends Fragment {
     private int indexOfPathSelected;
     private ViewHolder holder;
     private boolean offline = false;
+    private VisualizzaPercorsoFragment visualizzaPercorsoFragment;
 
 
     public static HomeFragment newInstance(boolean emergency, boolean offline) {
@@ -141,28 +142,28 @@ public class HomeFragment extends Fragment {
     }
 
     public void setText(){
-        holder.infoTextView.setText("Seleziona origine e destinazione per visualizzare il percorso");
+        holder.infoTextView.setText("\n Seleziona origine e destinazione per visualizzare il percorso");
         if(choosenOrigin && !choosenDestination) {
-            holder.infoTextView.setText("Origine selezionata: " +
+            holder.infoTextView.setText("\nOrigine selezionata: " +
                     "\n Piano:" + origin.getFloor().toString() +
                     "\n Beacon: " + origin.getNome().toString()+
-                    "\n Seleziona destinazione per poter visualizzare il percorso di uscita.");
+                    "\n\n Seleziona destinazione per poter visualizzare il percorso.");
         } else if(choosenOrigin && choosenDestination){
             holder.infoTextView.setText(
-                    "Origine selezionata: " +
+                    "\nOrigine selezionata: " +
                             "\n Piano:" + origin.getFloor().toString() +
                             "\n Beacon scelto: " + origin.getNome().toString()+
                             "\n\n Destinazione selezionata: " +
                             "\n Piano: " + destination.getFloor().toString() +
                             "\n Beacon scelto: " + destination.getNome().toString());
         } else if(choosenDestination && !choosenOrigin) {
-            holder.infoTextView.setText("Destinazione selezionata: " +
+            holder.infoTextView.setText("\nDestinazione selezionata: " +
                     "\n Piano:" + destination.getFloor().toString() +
                     "\n Beacon: " + destination.getNome().toString()+
-                    "\n Seleziona origine per poter visualizzare il percorso di uscita.");
+                    "\n\n Seleziona origine per poter visualizzare il percorso.");
         } else if(choosenOrigin && choosenDestination){
             holder.infoTextView.setText(
-                    "Origine selezionata: " +
+                    "\n Origine selezionata: " +
                             "\n Piano:" + origin.getFloor().toString() +
                             "\n Beacon scelto: " + origin.getNome().toString()+
                             "\n\n Destinazione selezionata: " +
@@ -379,22 +380,14 @@ public class HomeFragment extends Fragment {
             holder.visualizzaPercorsoButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    // TODO start activity per visualizzazione percorso
+                    visualizzaPercorsoFragment = new VisualizzaPercorsoFragment(origin, destination);
+                    ((HomeActivity) getActivity()).changeFragment(visualizzaPercorsoFragment);
                 }
             });
         }
     }
 
 
-    /**
-     * Wrap di ContextCompact.getColor()
-     *
-     * @param id Id del colore
-     * @return Codice del color
-     */
-    public int color(int id) {
-        return ContextCompat.getColor(getContext(), id);
-    }
 
 
 }

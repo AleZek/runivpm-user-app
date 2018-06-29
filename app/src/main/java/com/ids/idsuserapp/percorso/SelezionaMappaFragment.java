@@ -312,19 +312,7 @@ public class SelezionaMappaFragment extends BaseFragment {
             toolbarTitle = find(v, R.id.toolbar_title);
             selectedNode = find(v, R.id.node);
 
-
-
         }
-    }
-
-    /**
-     * Wrap di ContextCompact.getColor()
-     *
-     * @param id Id del colore
-     * @return Codice del color
-     */
-    public int color(int id) {
-        return ContextCompat.getColor(getContext(), id);
     }
 
 }

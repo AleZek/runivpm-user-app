@@ -108,11 +108,11 @@
 
         <TextView
             android:id="@+id/info_text_view"
+            android:textAlignment="center"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="sans-serif"
             android:textSize="20sp"
-            android:textColor="@color/black_overlay"
             android:text="" />
 
 

@@ -24,4 +24,12 @@
     <string name="title_activity_logow">LogowActivity</string>
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="label_select_path">Percorso %d</string>
+    <string name="find_nearest_exit">Cerco l\'uscita più vicina</string>
+    <string name="select_path">Seleziona un percorso</string>
+    <string name="computing_route">Calcolando il percorso migliore</string>
+    <string name="please_wait">Attendere per favore...</string>
+
+
+
 </resources>

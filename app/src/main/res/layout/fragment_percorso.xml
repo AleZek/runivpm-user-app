@@ -40,7 +40,7 @@
         android:layout_above="@+id/action_buttons_container"
         android:layout_below="@+id/toolbar_container">
 
-        <com.dii.ids.application.views.PinView
+        <com.ids.idsuserapp.percorso.views.PinView
             android:id="@+id/navigation_map_image"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
