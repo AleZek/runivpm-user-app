@@ -15,10 +15,12 @@ import android.text.Editable;
 import android.text.TextWatcher;
 
 
-
+import com.android.volley.toolbox.Volley;
 import com.ids.idsuserapp.HomeActivity;
 import com.ids.idsuserapp.R;
+import com.ids.idsuserapp.entityhandlers.UserRequestHandler;
 import com.ids.idsuserapp.percorso.BaseFragment;
+import com.ids.idsuserapp.utils.ConnectionChecker;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -45,9 +47,34 @@ public class RegistrationFragment extends Fragment {
 
     private RegistrationFragment.ViewHolder holder;
 
+    private UserRequestHandler userRequestHandler;
+
     public RegistrationFragment() {
         // Required empty public constructor
     }
+
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            mParam1 = getArguments().getString(ARG_PARAM1);
+            mParam2 = getArguments().getString(ARG_PARAM2);
+
+
+            /*userRequestHandler = new UserRequestHandler(getContext());
+
+            if (ConnectionChecker.getInstance().isNetworkAvailable(getContext()))
+                creaUserServer();
+       */ }
+    }
+
+
+
+    /*public void creaUserServer(){
+        userRequestHandler.creaUserServer(email,password);
+    }*/
+
 
     /**
      * Use this factory method to create a new instance of
@@ -66,6 +93,10 @@ public class RegistrationFragment extends Fragment {
         fragment.setArguments(args);
         return fragment;
     }
+
+
+
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -89,7 +120,8 @@ public class RegistrationFragment extends Fragment {
         public final EditText email;
         public final EditText password;
         public final EditText pwd_confirmation;
-        public String valid_email;
+        public UserRequestHandler userRequestHandler;
+
 
         public ViewHolder(View view) {
 
@@ -98,6 +130,10 @@ public class RegistrationFragment extends Fragment {
             email = view.findViewById(R.id.email_text);
             password = view.findViewById(R.id.pwd_text);
             pwd_confirmation = view.findViewById(R.id.confirmation_text);
+
+            userRequestHandler = new UserRequestHandler(getContext());
+
+
 
 
 
@@ -163,15 +199,18 @@ public class RegistrationFragment extends Fragment {
                         String pas = password.getText().toString();
 
 
+                        if (ConnectionChecker.getInstance().isNetworkAvailable(getContext()))
+                            userRequestHandler.creaUserServer(new_mail,pas);
 
-                        Intent intent = new Intent(getActivity(), HomeActivity.class);
-                        intent.putExtra("email", new_mail);
-                        intent.putExtra("password", pas);
-                        startActivity(intent);
+
                     }
 
                 }
             });
+
+
+
+
 
 
 
