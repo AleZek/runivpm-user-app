@@ -6,5 +6,6 @@
     <string name="api_archi">http://159.89.102.18/api/arcos</string>
     <string name="api_mappa_image">http://159.89.102.18/api/image/map/</string>
     <string name="api_delete_mappa">http://159.89.102.18/api/custom/mappas/</string>
+    <string name="api_user_locator">http://159.89.102.18/api/user/locate</string>
 </resources>
 

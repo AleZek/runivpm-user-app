@@ -112,7 +112,7 @@ public class Beacon implements Checkpoint, Serializable {
     }
 
     public void setX_meter(int x_meter) {
-            this.x_meter = x_meter;
+        this.x_meter = x_meter;
     }
 
     public void setY(int y) {
@@ -120,7 +120,7 @@ public class Beacon implements Checkpoint, Serializable {
     }
 
     public void setY_meter(int y_meter) {
-            this.y_meter = y_meter;
+        this.y_meter = y_meter;
     }
 
     public void setType(String type){
@@ -154,7 +154,6 @@ public class Beacon implements Checkpoint, Serializable {
 
         return Objects.hash(id, nome, floor, larghezza, x, y, mappa);
     }
-
     public PointF toPointF() {
         return new PointF(x, y);
     }

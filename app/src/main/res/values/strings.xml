@@ -14,6 +14,7 @@
     <string name="directory_mappe">/idsAdmin/map_img/</string>
     <string name="title_activity_modifica_mappa">ModificaMappaActivity</string>
     <string name="title_activity_beacon_list">BeaconList</string>
+    <string name="title_activity_percorso">PercorsoActivity</string>
     <string name="action_back">Indietro</string>
     <string name="action_confirm">Conferma</string>
     <string name="title_activity_navigation">Naviga</string>

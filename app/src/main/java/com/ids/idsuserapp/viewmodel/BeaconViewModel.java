@@ -35,10 +35,13 @@ public class BeaconViewModel extends AndroidViewModel {
 
 
     public LiveData<List<Beacon>> getAllBeacons() { return mBeaconRepository.getAllBeacons(); }
+    public List<Beacon> getAllSynchronous() { return mBeaconRepository.getAllSynchronously(); }
     public LiveData<List<Beacon>> getBeaconByIdMappa(int mappa)
     {return mBeaconRepository.getBeaconByIdMappa(mappa);}
     public void delete(Beacon beacon){ mBeaconRepository.delete(beacon); }
     public void update(Beacon beacon) {mBeaconRepository.update(beacon);}
+    public Beacon findByName(String name){ return mBeaconRepository.findByName(name); }
+    public Beacon findByDevice(String device){ return mBeaconRepository.findByDevice(device); }
 
     public List<Beacon> getBeaconsByFloor(int floor, int x0, int y0, int radius) {
         return mBeaconRepository.getBeaconsByFloor(floor, x0, y0, radius);

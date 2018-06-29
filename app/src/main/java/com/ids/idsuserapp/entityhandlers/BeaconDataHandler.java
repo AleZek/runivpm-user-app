@@ -21,9 +21,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-/**
- * Created by giuli on 07/05/2018.
- */
+
 
 public class BeaconDataHandler {
     private Context context;
@@ -45,7 +43,7 @@ public class BeaconDataHandler {
     }
 
     public void creaBeacon(String nome, String quota, double larghezza, int x, int y, int x_meter, int y_meter, int mappa, String device, String type) {
-        //Beacon beacon = new Beacon(nome, quota,larghezza,x,y,x_meter,y_meter,mappa);
+
         Beacon beacon = new Beacon(nome, quota, larghezza,x,y, x_meter,y_meter,mappa, device, type);
         beaconViewModel.insert(beacon);
     }
@@ -185,14 +183,12 @@ public class BeaconDataHandler {
 
     public void putBeacon(int  idBeacon, String nomeBeacon, String quota, double larghezza, int x, int y, int x_meter, int y_meter, String mappa, String type){
         JsonObjectRequest putBeaconRequest = preparePutBeaconRequest( idBeacon, nomeBeacon, quota,larghezza,x,y,x_meter,y_meter,mappa,type);
-        //JsonObjectRequest putBeaconRequest = preparePutBeaconRequest( idBeacon, nomeBeacon, quota,larghezza,x,y,x_meter,y_meter,mappa);
         serverRequestQueue.add(putBeaconRequest);
     }
 
     public JsonObjectRequest preparePutBeaconRequest(final int idBeacon, String nomeBeacon, String quota, double larghezza, int x, int y, int x_meter, int y_meter, String mappa, String type) {
         String bcns_url = context.getString(R.string.api_beacons) + "/" + Integer.toString(idBeacon);
         JSONObject newBeacon = createNewBeaconJson(nomeBeacon,quota,larghezza,x,y,x_meter,y_meter,mappa,type);
-        //JSONObject newBeacon = createNewBeaconJson(nomeBeacon,quota,larghezza,x,y,x_meter,y_meter,mappa);
         return new JsonObjectRequest(Request.Method.PUT, bcns_url, newBeacon,
                 new Response.Listener<JSONObject>() {
                     @Override

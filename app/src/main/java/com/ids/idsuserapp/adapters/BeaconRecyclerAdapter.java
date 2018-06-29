@@ -118,8 +118,6 @@ public class BeaconRecyclerAdapter extends RecyclerView.Adapter<BeaconRecyclerAd
         notifyDataSetChanged();
     }
 
-
-
     public List<Beacon> getmBeaconCercati() {
         return mBeaconCercati;
     }
