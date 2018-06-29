@@ -42,13 +42,6 @@ android:scrollbarAlwaysDrawVerticalTrack="true">
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <EditText
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:hint="User Name"
-                android:inputType="text"
-                android:singleLine="true"
-                android:textSize="18sp" />
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
@@ -56,6 +49,7 @@ android:scrollbarAlwaysDrawVerticalTrack="true">
             android:layout_height="wrap_content">
 
             <EditText
+                android:id="@+id/email_text"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:hint="Email"
@@ -69,28 +63,31 @@ android:scrollbarAlwaysDrawVerticalTrack="true">
             android:layout_height="wrap_content">
 
             <EditText
+                android:id="@+id/pwd_text"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:singleLine="true"
                 android:hint="Password"
-                android:inputType="textPassword" />
+                android:inputType="textPassword"
+                android:singleLine="true" />
         </android.support.design.widget.TextInputLayout>
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <EditText
+                android:id="@+id/confirmation_text"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:singleLine="true"
                 android:hint="Conferma Password"
-                android:inputType="textPassword" />
+                android:inputType="textPassword"
+                android:singleLine="true" />
         </android.support.design.widget.TextInputLayout>
 
 
         <Button
+            android:id="@+id/register_btn"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_margin="22dp"

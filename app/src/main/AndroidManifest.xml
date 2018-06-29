@@ -29,14 +29,14 @@
             android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name=".LogoActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".MapNavigationActivity" />
         <activity android:name=".BeaconNavigationActivity" />
         <activity
-            android:name=".autenticazione.AutenticationActivity"
+            android:name=".autentication.AutenticationActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".autenticazione.LoginActivity" />
-        <activity android:name=".autenticazione.RegistrationActivity"></activity>
+        <activity android:name=".autentication.LoginActivity" />
+        <activity android:name=".autentication.RegistrationActivity"></activity>
     </application>
 
 </manifest>

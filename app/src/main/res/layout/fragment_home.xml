@@ -56,8 +56,11 @@
                         style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:fontFamily="cursive"
                         android:text="@string/title_activity_navigation"
-                        android:textColor="@android:color/black" />
+                        android:textColor="#B30000"
+                        android:textSize="30dp"
+                        android:textStyle="bold" />
 
                 </android.support.v7.widget.Toolbar>
 
@@ -69,6 +72,7 @@
                     android:layout_marginLeft="15dp"
                     android:layout_marginRight="15dp"
                     android:text="Seleziona Origine"
+                    android:textColor="#B30000"
 
                     />
 
@@ -90,7 +94,8 @@
                     android:layout_marginTop="5dp"
                     android:layout_marginLeft="15dp"
                     android:layout_marginRight="15dp"
-                    android:text="Seleziona Destinazione" />
+                    android:text="Seleziona Destinazione"
+                    android:textColor="#B30000"/>
 
                 <include
                     android:visibility="invisible"

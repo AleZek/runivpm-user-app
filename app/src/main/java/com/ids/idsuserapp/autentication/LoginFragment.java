@@ -1,7 +1,5 @@
-package com.ids.idsuserapp.autenticazione;
+package com.ids.idsuserapp.autentication;
 
-import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -23,17 +21,15 @@ import com.ids.idsuserapp.percorso.BaseFragment;
 public class LoginFragment extends Fragment {
 
     public static final String TAG = LoginFragment.class.getSimpleName();
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    public static final int ACCOUNT_CREATED = 1;
+    public static final String INTENT_KEY_EMAIL = "email";
+    public static final String INTENT_KEY_PASSWORD = "password";
+    private static final String EMAIL = "email";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private String email;
+    //private EmailAutocompleter emailAutocompleter;
 
     private LoginFragment.ViewHolder holder;
-
     public LoginFragment() {
         // Required empty public constructor
     }
@@ -42,16 +38,14 @@ public class LoginFragment extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
+     * @param email Parameter 1.
      * @return A new instance of fragment LoginFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static LoginFragment newInstance(String param1, String param2) {
+    public static LoginFragment newInstance(String email) {
         LoginFragment fragment = new LoginFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putString(EMAIL, email);
         fragment.setArguments(args);
         return fragment;
     }
@@ -60,8 +54,7 @@ public class LoginFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            email = getArguments().getString(EMAIL);
         }
     }
 

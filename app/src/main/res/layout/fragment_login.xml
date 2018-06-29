@@ -45,8 +45,8 @@
                 <EditText
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:hint="User Name"
-                    android:inputType="text"
+                    android:hint="Email"
+                    android:inputType="textEmailAddress"
                     android:singleLine="true"
                     android:textSize="18sp" />
             </android.support.design.widget.TextInputLayout>
