@@ -1,15 +1,21 @@
 package com.ids.idsuserapp;
 
-import android.bluetooth.le.ScanResult;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ids.idsuserapp.db.entity.Beacon;
 import com.ids.idsuserapp.db.entity.Tronco;
+import com.ids.idsuserapp.percorso.BaseFragment;
+import com.ids.idsuserapp.percorso.Tasks.MinimumPathTask;
+import com.ids.idsuserapp.percorso.Tasks.TaskListener;
+import com.ids.idsuserapp.percorso.views.MapView;
+import com.ids.idsuserapp.percorso.views.exceptions.DestinationNotSettedException;
+import com.ids.idsuserapp.percorso.views.exceptions.OriginNotSettedException;
 import com.ids.idsuserapp.threads.LocatorThread;
 import com.ids.idsuserapp.utils.BluetoothLocator;
 import com.ids.idsuserapp.viewmodel.ArcoViewModel;
@@ -17,12 +23,14 @@ import com.ids.idsuserapp.viewmodel.BeaconViewModel;
 import com.ids.idsuserapp.wayfinding.Dijkstra;
 import com.ids.idsuserapp.wayfinding.Grafo;
 import com.ids.idsuserapp.wayfinding.Percorso;
+import com.ids.idsuserapp.wayfinding.PercorsoMultipiano;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import org.apache.commons.lang3.SerializationUtils;
+
 import java.util.List;
 
-public class PercorsoActivity extends AppCompatActivity implements  BluetoothLocator.LocatorCallbacks {
+public class PercorsoActivity extends AppCompatActivity implements BluetoothLocator.LocatorCallbacks {
+    public static final String TAG = PercorsoActivity.class.getSimpleName();
 
     TextView locationText;
     BluetoothLocator bluetoothLocator;
@@ -35,20 +43,27 @@ public class PercorsoActivity extends AppCompatActivity implements  BluetoothLoc
     BeaconViewModel beaconViewModel;
     String userPosition = "";
     Beacon userPositionBeacon;
+
+    private List<Percorso> solutionPaths = null;
+    private Percorso selectedSolution;
+
+
+    public ViewHolderPercorso holder;
     int count = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_percorso);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+
         locationText = findViewById(R.id.locationtext);
+
 
         beaconViewModel = new BeaconViewModel(getApplication());
         arcoViewModel = new ArcoViewModel(getApplication());
 
-        setOrigineDestinazione();
-        setSupportActionBar(toolbar);
+        setOrigineDestinazione(getIntent());
+        holder = new ViewHolderPercorso();
 
         startLocatorThread();
         setBluetoothLocator();
@@ -57,7 +72,9 @@ public class PercorsoActivity extends AppCompatActivity implements  BluetoothLoc
         percorso = dijkstra.ricerca(destinazione);
         Log.v("percorso", percorso.toString());
 
+
     }
+
 
     @Override
     protected void onDestroy() {
@@ -70,20 +87,25 @@ public class PercorsoActivity extends AppCompatActivity implements  BluetoothLoc
         locatorThread.start();
     }
 
-    private void setBeaconWhiteList() {
-        List<Beacon> beaconList = beaconViewModel.getAllSynchronous();
-        bluetoothLocator.setBeaconWhiteList(beaconList);
-    }
 
-    private void setOrigineDestinazione() {
-        String nomeOrigine = getIntent().getExtras().getString("origine");
-        String nomeDestinazione = getIntent().getExtras().getString("destinazione");
-        origine = beaconViewModel.findByName(nomeOrigine);
-        destinazione = beaconViewModel.findByName(nomeDestinazione);
+    private void setOrigineDestinazione(Intent data) {
+        byte[] serializedDataOrigine;
+        byte[] serializedDataDestinazione;
+        try {
+            serializedDataOrigine = data.getByteArrayExtra("beaconOrigine");
+            serializedDataDestinazione = data.getByteArrayExtra("beaconDestinazione");
+            if (serializedDataOrigine == null || serializedDataDestinazione == null) {
+                throw new NullPointerException("Null array data");
+            }
+            origine = (Beacon) SerializationUtils.deserialize(serializedDataOrigine);
+            destinazione = (Beacon) SerializationUtils.deserialize(serializedDataDestinazione);
+        } catch (NullPointerException ee) {
+            Log.e(TAG, "NullPointer", ee);
+        }
     }
 
     private void setDijkstra() {
-        List<Tronco> tronchi = arcoViewModel.getTronchi();
+        List<Tronco> tronchi = arcoViewModel.getTronchi(); //classi con un arco e due beacon
         Grafo grafo = new Grafo(tronchi);
 
         dijkstra = new Dijkstra();
@@ -94,7 +116,6 @@ public class PercorsoActivity extends AppCompatActivity implements  BluetoothLoc
 
     private void setBluetoothLocator() {
         bluetoothLocator = locatorThread.getBluetoothLocator();
-        setBeaconWhiteList();
     }
 
     private void setUserBeacon() {
@@ -105,7 +126,7 @@ public class PercorsoActivity extends AppCompatActivity implements  BluetoothLoc
 
     public void nextStep() {
         int index = percorso.indexOf(userPositionBeacon);
-        if(userPositionBeacon!= null) {
+        if (userPositionBeacon != null) {
             if (userPositionBeacon.equals(destinazione)) {
                 Toast.makeText(this, "Sei giunto a destinazione", Toast.LENGTH_LONG).show();
                 locatorThread.interrupt();
@@ -132,7 +153,7 @@ public class PercorsoActivity extends AppCompatActivity implements  BluetoothLoc
 
     @Override
     public void sendCurrentPosition(String device) {
-        if(bluetoothLocator.isBeacon(device)) {
+        if (bluetoothLocator.isBeacon(device)) {
             setCurrentPosition();
             nextStep();
         }
@@ -164,4 +185,62 @@ public class PercorsoActivity extends AppCompatActivity implements  BluetoothLoc
 //
 //
 //    }
+
+
+    // @TODO Esternalizzare
+    private class MinimumPathListener implements TaskListener<List<Percorso>> {
+        @Override
+        public void onTaskSuccess(List<Percorso> searchResult) {
+            solutionPaths = searchResult;
+            selectedSolution = new Percorso(solutionPaths.get(0));
+            PercorsoMultipiano multiFloorSolution = selectedSolution.toMultiFloorPath();
+
+            try {
+                holder.mapView.drawRoute(multiFloorSolution);
+            } catch (OriginNotSettedException | DestinationNotSettedException e) {
+                e.printStackTrace();
+            }
+
+        }
+
+        @Override
+        public void onTaskError(Exception e) {
+            Log.e(TAG, "Errore nel calcolo del percorso minimo", e);
+        }
+
+        @Override
+        public void onTaskComplete() {
+        }
+
+        @Override
+        public void onTaskCancelled() {
+
+        }
+    }
+
+
+    public class ViewHolderPercorso extends BaseFragment.ViewHolder {
+        public final MapView mapView;
+
+
+        public ViewHolderPercorso() {
+            mapView = findViewById(R.id.navigation_map_image_percorso);
+            setupMapView();
+
+
+
+        }
+
+        public void setupMapView() {
+
+            MinimumPathTask minimumPathTask = new MinimumPathTask(getBaseContext(), new MinimumPathListener(), arcoViewModel);
+            minimumPathTask.execute(origine, destinazione);
+
+
+        }
+
+
+    }
+
+
 }

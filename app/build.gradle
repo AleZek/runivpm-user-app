@@ -60,8 +60,10 @@ dependencies {
 
     implementation 'com.afollestad.material-dialogs:core:0.8.6.1'
 
+    apply plugin: 'com.google.gms.google-services'
+
+
 
 
 }
 
-apply plugin: 'com.google.gms.google-services'

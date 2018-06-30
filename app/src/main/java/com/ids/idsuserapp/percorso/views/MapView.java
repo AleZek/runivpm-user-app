@@ -1,6 +1,9 @@
 package com.ids.idsuserapp.percorso.views;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.icu.util.BuddhistCalendar;
 import android.os.AsyncTask;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -11,17 +14,16 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
 
-import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.ids.idsuserapp.R;
 import com.ids.idsuserapp.db.entity.Beacon;
 import com.ids.idsuserapp.db.entity.Mappa;
-import com.ids.idsuserapp.percorso.MultiFloorPath;
-import com.ids.idsuserapp.percorso.Path;
-import com.ids.idsuserapp.percorso.Tasks.MappaStaticaTask;
+import com.ids.idsuserapp.percorso.Tasks.MapsStaticLoaderTask;
 import com.ids.idsuserapp.percorso.Tasks.TaskListener;
 import com.ids.idsuserapp.percorso.animation.ShowProgressAnimation;
 import com.ids.idsuserapp.percorso.views.exceptions.DestinationNotSettedException;
 import com.ids.idsuserapp.percorso.views.exceptions.OriginNotSettedException;
+import com.ids.idsuserapp.wayfinding.Percorso;
+import com.ids.idsuserapp.wayfinding.PercorsoMultipiano;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -32,7 +34,7 @@ public class MapView extends LinearLayout {
     private ViewHolder holder;
     private int currentFloor;
     private Beacon origin, destination;
-    private MultiFloorPath route;
+    private PercorsoMultipiano route;
     private boolean offline;
 
     public boolean isOffline() {
@@ -74,7 +76,7 @@ public class MapView extends LinearLayout {
     public MapView setOrigin(Beacon origin) {
         this.origin = origin;
         this.currentFloor = origin.getFloorInt();
-        changeImage(String.valueOf(currentFloor));
+        changeImage(currentFloor);
         drawPins(currentFloor);
         return this;
     }
@@ -87,25 +89,21 @@ public class MapView extends LinearLayout {
      *
      * @param floor Floor
      */
-    private void changeImage(String floor) {
+    private void changeImage(int floor) {
+
         holder.progressAnimation = new ShowProgressAnimation(
                 holder.mapContainer,
                 holder.downloadProgress,
                 20);
 
         holder.progressAnimation.showProgress(true);
+
         AsyncTask<Integer, Void, Boolean> mapLoader;
-        if (offline) {
-            mapLoader = new MappaStaticaTask(getContext(), new MapListener());
-        } else {
-            mapLoader = new MappaStaticaTask(getContext(), new MapListener()); //new MapsDownloaderTask(getContext(), new MapListener());
-        }
-        mapLoader.execute(Integer.valueOf(floor));
+        mapLoader = new MapsStaticLoaderTask(getContext(), new MapListener());
+
+        mapLoader.execute(floor);
     }
 
-    public void showSpinner(boolean show) {
-        holder.progressAnimation.showProgress(show);
-    }
 
     /**
      * Disegna i pin
@@ -134,7 +132,7 @@ public class MapView extends LinearLayout {
     public MapView setDestination(Beacon destination) {
         this.destination = destination;
         this.currentFloor = destination.getFloorInt();
-        changeImage(String.valueOf(currentFloor));
+        changeImage(currentFloor);
         drawPins(currentFloor);
         return this;
     }
@@ -147,11 +145,11 @@ public class MapView extends LinearLayout {
      * @throws OriginNotSettedException
      * @throws DestinationNotSettedException
      */
-    public MapView drawRoute(MultiFloorPath route)
+    public MapView drawRoute(PercorsoMultipiano route)
             throws OriginNotSettedException, DestinationNotSettedException {
         this.route = route;
-        this.origin = (Beacon) route.getOrigin();
-        this.destination = (Beacon) route.getDestination();
+        this.origin = (Beacon) route.getOrigine();
+        this.destination = (Beacon) route.getDestinazione();
 
         if (origin == null) {
             throw new OriginNotSettedException();
@@ -162,8 +160,8 @@ public class MapView extends LinearLayout {
 
         currentFloor = origin.getFloorInt();
 
-        changeImage(String.valueOf(currentFloor));
-        drawPath(String.valueOf(currentFloor));
+        changeImage(currentFloor);
+        drawPath(currentFloor);
         drawPins(currentFloor);
         setupFloorButtons();
 
@@ -183,9 +181,9 @@ public class MapView extends LinearLayout {
      *
      * @param floor Piano
      */
-    private void drawPath(String floor) {
+    private void drawPath(int floor) {
         if (this.route != null) {
-            holder.pinView.setPath(this.route.get(floor));
+            holder.pinView.setPath(this.route.get(String.valueOf(floor)));
         }
     }
 
@@ -196,14 +194,8 @@ public class MapView extends LinearLayout {
         // UI operations
         holder.hideFloorButtons()
                 .setupFloorButtonsUI(String.valueOf(currentFloor));
-
-        // Soluzione per piano non vuota -> visualizzare il piano
-        // Soluzione per piano con un solo punto
-        //              -> destinazione => visualizzare il piano
-        //              -> != destinazione => nascondere il piano
-        // Soluzione per piano vuota -> nascondere il piano
         Set<String> pianiNellaSoluzione = route.keySet();
-        Path solutionPerFloor;
+        Percorso solutionPerFloor;
         boolean onePointSolution, destinationSolution, multiplePointSolution, originSolution;
 
         for (String floor : pianiNellaSoluzione) {
@@ -215,8 +207,8 @@ public class MapView extends LinearLayout {
             originSolution = (onePointSolution && solutionPerFloor.get(0).equals(origin));
 
             if (multiplePointSolution || destinationSolution || originSolution) {
-                holder.floorButtons.get(floor).setVisibility(View.VISIBLE);
-                holder.floorButtons.get(floor).setOnClickListener(new FloorButtonListener());
+                holder.floorButtons.get("Quota " +floor).setVisibility(View.VISIBLE);
+                holder.floorButtons.get("Quota "+floor).setOnClickListener(new FloorButtonListener());
             }
         }
     }
@@ -224,13 +216,14 @@ public class MapView extends LinearLayout {
     /**
      * Listener che gestisce il click sui bottoni dei piani
      */
-    private class FloorButtonListener implements OnClickListener {
+    private class FloorButtonListener implements View.OnClickListener {
         @Override
         public void onClick(View v) {
-            currentFloor = Integer.parseInt(((Button) v).getText().toString());
+            currentFloor = Integer.parseInt(((Button) v).getText().toString().substring(6));
             holder.setupFloorButtonsUI(String.valueOf(currentFloor));
-            changeImage(String.valueOf(currentFloor));
-            drawPath(String.valueOf(currentFloor));
+
+            changeImage(currentFloor);
+            drawPath(currentFloor);
             drawPins(currentFloor);
         }
     }
@@ -241,13 +234,26 @@ public class MapView extends LinearLayout {
     private class MapListener implements TaskListener<Mappa> {
 
         @Override
-        public void onTaskSuccess(Mappa map) {
-            if (origin.getFloorInt() == 145) {
-                holder.pinView.setImage(ImageSource.resource(R.drawable.floor_145));
-            } else if (origin.getFloorInt() == 155) {
-                holder.pinView.setImage(ImageSource.resource(R.drawable.floor_155));
-            } else
-                holder.pinView.setImage(ImageSource.resource(R.drawable.floor_150));
+        public void onTaskSuccess(Mappa mappa) {
+
+            int floor = Integer.parseInt(mappa.getName().substring(6));
+            Bitmap bitmap;
+
+            switch (floor) {
+                case 145:
+                    bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.floor_145);
+                    break;
+                case 150:
+                    bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.floor_150);
+                    break;
+                case 155:
+                    bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.floor_155);
+                    break;
+                default:
+                    bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.floor_155);
+                    break;
+            }
+            holder.pinView.setImage(bitmap);
         }
 
         @Override
@@ -271,26 +277,28 @@ public class MapView extends LinearLayout {
      */
     private class ViewHolder {
         public final PinView pinView;
-        public final LinearLayout floorButtonContainer;
-        public final HashMap<String, Button> floorButtons;
-        public final ViewGroup mapContainer;
-        public final ProgressBar downloadProgress;
 
-        public final Button button_145;
-        public final Button button_155;
-        public final Button button_150;
+        public Button floor155Button;
+        public Button floor145Button;
+        public Button floor150Button;
+        public final ViewGroup mapContainer;
+        public final HashMap<String, Button> floorButtons;
+        public final LinearLayout floorButtonContainer;
+
+        public final ProgressBar downloadProgress;
         public ShowProgressAnimation progressAnimation;
 
         public ViewHolder(View view) {
-            pinView = (PinView) view.findViewById(R.id.map_image);
             floorButtonContainer = (LinearLayout) view.findViewById(R.id.floor_button_container);
+
+            pinView = (PinView) view.findViewById(R.id.map_image);
             mapContainer = (ViewGroup) view.findViewById(R.id.map_container);
             downloadProgress = (ProgressBar) view.findViewById(R.id.downloading_progress);
-            button_145 = view.findViewById(R.id.floor_button_145_map);
-            button_155 = view.findViewById(R.id.floor_button_155_map);
-            button_150 = view.findViewById(R.id.floor_button_150_map);
+            floor145Button = (Button) view.findViewById(R.id.floor_button_145);
+            floor155Button = (Button) view.findViewById(R.id.floor_button_155);
+            floor150Button = (Button) view.findViewById(R.id.floor_button_150);
             floorButtons = getFloorButtons();
-            showFloorButtons();
+
         }
 
         /**
@@ -313,24 +321,6 @@ public class MapView extends LinearLayout {
             return result;
         }
 
-
-        /**
-         * Nasconde i pulsanti dei piani
-         *
-         * @return Istanza di Viewholder
-         */
-        private ViewHolder showFloorButtons() {
-            floorButtonContainer.setVisibility(View.VISIBLE);
-            if (origin.getFloorInt() == 145 || destination.getFloorInt() == 145)
-                button_145.setVisibility(VISIBLE);
-            else if (origin.getFloorInt() == 155 || destination.getFloorInt() == 155)
-                button_155.setVisibility(VISIBLE);
-            else if (origin.getFloorInt() == 150 || destination.getFloorInt() == 150)
-                button_150.setVisibility(VISIBLE);
-
-            return this;
-        }
-
         /**
          * Nasconde i pulsanti dei piani
          *
@@ -351,9 +341,10 @@ public class MapView extends LinearLayout {
             for (String key : floorButtons.keySet()) {
                 floorButtons.get(key).setTextColor(getResources().getColor(R.color.colorBlack));
             }
-            floorButtons.get(floor).setTextColor(getResources().getColor(R.color.linkText));
-
+            Button prova = floorButtons.get("Quota " +floor);//.setTextColor(getResources().getColor(R.color.linkText));
+            prova.setTextColor(getResources().getColor(R.color.linkText));
             return this;
         }
     }
+
 }

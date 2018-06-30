@@ -62,6 +62,10 @@
             android:name=".autenticazione.AutenticationActivity"
             android:theme="@style/AppTheme.NoActionBar" />
 
+        <activity
+            android:name=".PercorsoActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+
         <activity android:name=".autenticazione.LoginActivity" />
 
         <activity android:name=".autenticazione.RegistrationActivity"></activity>

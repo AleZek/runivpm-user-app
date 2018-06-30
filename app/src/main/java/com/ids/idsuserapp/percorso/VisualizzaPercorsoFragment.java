@@ -29,6 +29,8 @@ import com.ids.idsuserapp.percorso.views.MapView;
 import com.ids.idsuserapp.percorso.views.PinView;
 import com.ids.idsuserapp.percorso.views.exceptions.DestinationNotSettedException;
 import com.ids.idsuserapp.percorso.views.exceptions.OriginNotSettedException;
+import com.ids.idsuserapp.wayfinding.Percorso;
+import com.ids.idsuserapp.wayfinding.PercorsoMultipiano;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,8 +42,8 @@ import static com.ids.idsuserapp.HomeActivity.OFFLINE_USAGE;
 public class VisualizzaPercorsoFragment extends BaseFragment {
     public Beacon origine;
     public Beacon destinazione;
-    private List<Path> solutionPaths = null;
-    private Path selectedSolution;
+    private List<Percorso> solutionPaths = null;
+    private Percorso selectedSolution;
     private int indexOfPathSelected;
 
     public int originFloor;
@@ -128,22 +130,22 @@ public class VisualizzaPercorsoFragment extends BaseFragment {
 
         public void setupMapView() {
             holder.mapView.setOrigin(origine);
-            holder.mapView.setDestination(destinazione);
+          /*  holder.mapView.setDestination(destinazione);
             MinimumPathTask minimumPathTask = new MinimumPathTask(
                     getContext(), new MinimumPathListener());
-            minimumPathTask.execute(origine, destinazione);
+            minimumPathTask.execute(origine, destinazione);*/
         }
 
     }
 
 
     // @TODO Esternalizzare
-    private class MinimumPathListener implements TaskListener<List<Path>> {
+    private class MinimumPathListener implements TaskListener<List<Percorso>> {
         @Override
-        public void onTaskSuccess(List<Path> searchResult) {
+        public void onTaskSuccess(List<Percorso> searchResult) {
             solutionPaths = searchResult;
-            selectedSolution = new Path(solutionPaths.get(0));
-            MultiFloorPath multiFloorSolution = selectedSolution.toMultiFloorPath();
+            selectedSolution = new Percorso(solutionPaths.get(0));
+            PercorsoMultipiano multiFloorSolution = selectedSolution.toMultiFloorPath();
 
             try {
                 holder.mapView.drawRoute(multiFloorSolution);
@@ -187,8 +189,8 @@ public class VisualizzaPercorsoFragment extends BaseFragment {
                         @Override
                         public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
                             indexOfPathSelected = which;
-                            selectedSolution = new Path(solutionPaths.get(indexOfPathSelected));
-                            MultiFloorPath multiFloorPath = solutionPaths.get(which).toMultiFloorPath();
+                            selectedSolution = new Percorso(solutionPaths.get(indexOfPathSelected));
+                            PercorsoMultipiano multiFloorPath = solutionPaths.get(which).toMultiFloorPath();
                             try {
                                 holder.mapView.drawRoute(multiFloorPath);
                             } catch (OriginNotSettedException | DestinationNotSettedException e) {

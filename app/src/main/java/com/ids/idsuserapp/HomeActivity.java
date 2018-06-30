@@ -3,8 +3,10 @@ package com.ids.idsuserapp;
 import android.Manifest;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
@@ -52,6 +54,7 @@ public class HomeActivity extends AppCompatActivity implements DataRetriever{
 
 
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -167,6 +170,7 @@ public class HomeActivity extends AppCompatActivity implements DataRetriever{
 
 
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     private void handleBtAdapter() {
         BluetoothManager bluetoothManager = (BluetoothManager) getApplicationContext().getSystemService(Context.BLUETOOTH_SERVICE);
         BluetoothAdapter bluetoothAdapter = null;

@@ -15,4 +15,5 @@
         android:text="Posizione: No"
         tools:layout_editor_absoluteX="49dp"
         tools:layout_editor_absoluteY="47dp" />
+
 </android.support.constraint.ConstraintLayout>

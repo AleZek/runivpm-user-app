@@ -4,29 +4,23 @@ import android.arch.lifecycle.LifecycleOwner;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 
-import com.ids.idsuserapp.PercorsoActivity;
 import com.ids.idsuserapp.R;
 import com.ids.idsuserapp.adapters.BeaconRecyclerAdapter;
 import com.ids.idsuserapp.db.entity.Beacon;
 import com.ids.idsuserapp.viewmodel.BeaconViewModel;
-import com.ids.idsuserapp.wayfinding.PercorsoFragment;
 
 import java.util.List;
 

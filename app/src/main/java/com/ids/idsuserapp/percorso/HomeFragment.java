@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -16,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ids.idsuserapp.HomeActivity;
+import com.ids.idsuserapp.PercorsoActivity;
 import com.ids.idsuserapp.R;
 import com.ids.idsuserapp.SearchModel;
 import com.ids.idsuserapp.db.entity.Beacon;
@@ -380,8 +382,10 @@ public class HomeFragment extends BaseFragment {
             holder.visualizzaPercorsoButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    visualizzaPercorsoFragment = new VisualizzaPercorsoFragment(origin, destination);
-                    ((HomeActivity) getActivity()).changeFragment(visualizzaPercorsoFragment);
+                    Intent intent = new Intent(getActivity(), PercorsoActivity.class);
+                    intent.putExtra("beaconOrigine", SerializationUtils.serialize(origin));
+                    intent.putExtra("beaconDestinazione", SerializationUtils.serialize(destination));
+                    startActivity(intent);
                 }
             });
         }

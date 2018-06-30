@@ -1,21 +1,13 @@
 package com.ids.idsuserapp;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.view.View;
-import android.widget.Button;
 
 import com.android.volley.toolbox.Volley;
-import com.ids.idsuserapp.adapters.BeaconRecyclerAdapter;
 import com.ids.idsuserapp.entityhandlers.BeaconDataHandler;
 import com.ids.idsuserapp.fragment.BeaconRecyclerFragment;
 import com.ids.idsuserapp.utils.ConnectionChecker;
 import com.ids.idsuserapp.viewmodel.BeaconViewModel;
-import com.ids.idsuserapp.wayfinding.PercorsoFragment;
 
 public class BeaconList extends FragmentActivity {
 

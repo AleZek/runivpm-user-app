@@ -1,22 +1,25 @@
 package com.ids.idsuserapp.percorso;
 
+import com.ids.idsuserapp.db.entity.Beacon;
+import com.ids.idsuserapp.wayfinding.Percorso;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Set;
 
-public class MultiFloorPath extends HashMap<String, Path> {
-    private Checkpoint origin;
-    private Checkpoint destination;
+public class MultiFloorPath extends HashMap<String, Percorso> {
+    private Beacon origin;
+    private Beacon destination;
 
     public MultiFloorPath() {
     }
 
-    public Path toPath() {
+    public Percorso toPath() {
         return toPath(origin, destination);
     }
 
-    public Path toPath(Checkpoint origin, Checkpoint destination) {
+    public Percorso toPath(Beacon origin, Beacon destination) {
         int originFloor = origin.getFloorInt();
         int destinationFloor = destination.getFloorInt();
         boolean ascendant = originFloor <= destinationFloor;
@@ -33,31 +36,32 @@ public class MultiFloorPath extends HashMap<String, Path> {
             Collections.sort(floors, Collections.<Integer>reverseOrder());
         }
 
-        Path path = new Path();
+        Percorso path = new Percorso();
+
         for (Integer floor : floors) {
             String f = String.valueOf(floor);
-            for (Checkpoint checkpoint : get(f)) {
-                path.add(checkpoint);
+            for (Beacon beacon : get(f)) {
+                path.add(beacon);
             }
         }
 
         return path;
     }
 
-    public Checkpoint getOrigin() {
+    public Beacon getOrigin() {
         return origin;
     }
 
-    public MultiFloorPath setOrigin(Checkpoint origin) {
+    public MultiFloorPath setOrigin(Beacon origin) {
         this.origin = origin;
         return this;
     }
 
-    public Checkpoint getDestination() {
+    public Beacon getDestination() {
         return destination;
     }
 
-    public MultiFloorPath setDestination(Checkpoint destination) {
+    public MultiFloorPath setDestination(Beacon destination) {
         this.destination = destination;
         return this;
     }

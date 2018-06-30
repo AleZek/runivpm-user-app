@@ -14,7 +14,9 @@ import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 
 import com.ids.idsuserapp.R;
+import com.ids.idsuserapp.db.entity.Beacon;
 import com.ids.idsuserapp.percorso.Checkpoint;
+import com.ids.idsuserapp.wayfinding.Percorso;
 
 import java.util.ArrayList;
 
@@ -113,9 +115,9 @@ public class PinView extends SubsamplingScaleImageView {
         invalidate();
     }
 
-    public void setPath(com.ids.idsuserapp.percorso.Path path) {
+    public void setPath(Percorso path) {
         ArrayList<PointF> points = new ArrayList<>(path.size());
-        for (Checkpoint node : path) {
+        for (Beacon node : path) {
             points.add(new PointF(node.getX(), node.getY()));
         }
         this.path = points;

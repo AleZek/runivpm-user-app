@@ -2,52 +2,6 @@
 <merge xmlns:android="http://schemas.android.com/apk/res/android">
 
     <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <LinearLayout
-            android:id="@+id/floor_button_container"
-            android:layout_width="match_parent"
-            android:layout_height="45dp"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/floor_button_145_map"
-                android:layout_width="55dp"
-                android:layout_height="51dp"
-                android:layout_weight="1"
-                android:background="@color/colorPrimary"
-                android:text="Quota 145"
-                android:visibility="invisible"
-                android:textColor="@color/colorWhite" />
-
-            <Button
-                android:id="@+id/floor_button_150_map"
-                android:layout_width="55dp"
-                android:layout_height="51dp"
-                android:layout_weight="1"
-                android:background="@color/colorPrimary"
-                android:text="Quota 150"
-                android:visibility="invisible"
-
-                android:textColor="@color/colorWhite" />
-
-            <Button
-                android:id="@+id/floor_button_155_map"
-                android:layout_width="55dp"
-                android:layout_height="51dp"
-                android:layout_weight="1"
-                android:background="@color/colorPrimary"
-                android:text="Quota 155"
-                android:visibility="invisible"
-
-                android:textColor="@color/colorWhite" />
-
-
-        </LinearLayout>
-    </RelativeLayout>
-
-    <RelativeLayout
         android:id="@+id/map_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -57,20 +11,56 @@
             android:id="@+id/map_image"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_gravity="center_horizontal" />
+            android:layout_gravity="center_horizontal"/>
 
 
+        <LinearLayout
+            android:id="@+id/floor_button_container"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/floor_button_145"
+                android:layout_width="55dp"
+                android:layout_height="51dp"
+                android:layout_weight="1"
+                android:background="@color/colorPrimary"
+                android:text="Quota 145"
+                android:textColor="@color/colorWhite" />
+
+            <Button
+                android:id="@+id/floor_button_150"
+                android:layout_width="55dp"
+                android:layout_height="51dp"
+                android:layout_weight="1"
+                android:background="@color/colorPrimary"
+                android:text="Quota 150"
+                android:textColor="@color/colorWhite" />
+
+            <Button
+                android:id="@+id/floor_button_155"
+                android:layout_width="55dp"
+                android:layout_height="51dp"
+                android:layout_weight="1"
+                android:background="@color/colorPrimary"
+                android:text="Quota 155"
+                android:textColor="@color/colorWhite" />
+
+
+        </LinearLayout>
     </RelativeLayout>
 
     <ProgressBar
+        android:gravity="center"
+        android:layout_gravity="center_vertical"
         android:id="@+id/downloading_progress"
         style="?android:attr/progressBarStyleLarge"
+        android:indeterminate="true"
+        android:indeterminateTintMode="src_in"
+        android:indeterminateTint="@color/colorPrimary"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:gravity="center"
-        android:indeterminate="true"
-        android:indeterminateTint="@color/colorPrimary"
-        android:indeterminateTintMode="src_in" />
+        />
 
 </merge>
