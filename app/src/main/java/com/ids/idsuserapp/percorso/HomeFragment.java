@@ -3,9 +3,6 @@ package com.ids.idsuserapp.percorso;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -51,7 +48,6 @@ public class HomeFragment extends BaseFragment {
     private int indexOfPathSelected;
     private ViewHolder holder;
     private boolean offline = false;
-    private VisualizzaPercorsoFragment visualizzaPercorsoFragment;
 
 
     public static HomeFragment newInstance(boolean emergency, boolean offline) {
