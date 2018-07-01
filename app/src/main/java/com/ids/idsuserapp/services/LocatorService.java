@@ -1,6 +1,7 @@
 package com.ids.idsuserapp.services;
 
 import android.app.Service;
+import android.arch.persistence.room.Room;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -9,6 +10,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
 
+import com.ids.idsuserapp.db.AppRoomDatabase;
 import com.ids.idsuserapp.db.dao.MappaDao;
 import com.ids.idsuserapp.db.entity.Beacon;
 import com.ids.idsuserapp.db.entity.Mappa;
@@ -24,7 +26,7 @@ import java.util.concurrent.TimeUnit;
 public class LocatorService extends Service implements BluetoothLocator.LocatorCallbacks {
     LocatorThread locatorThread;
     ServerUserLocator serverUserLocator;
-    public static int STANDARD_MODE = 10000;
+    int mode;
 
     public LocatorService() {
     }
@@ -33,7 +35,6 @@ public class LocatorService extends Service implements BluetoothLocator.LocatorC
     public void onCreate() {
         super.onCreate();
         serverUserLocator = new ServerUserLocator(getApplication());
-        locatorThread = new LocatorThread(this, LocatorThread.STANDARD_MODE);
     }
 
     @Override
@@ -45,8 +46,16 @@ public class LocatorService extends Service implements BluetoothLocator.LocatorC
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         super.onStartCommand(intent, flags, startId);
+        mode = Integer.parseInt(intent.getAction());
+        locatorThread = new LocatorThread(this, LocatorThread.STANDARD_MODE);
         locatorThread.start();
         return START_STICKY;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        locatorThread.interrupt();
     }
 
     @Override

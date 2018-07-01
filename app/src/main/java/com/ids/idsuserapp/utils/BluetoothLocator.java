@@ -26,6 +26,7 @@ public class BluetoothLocator {
     private ScanCallback scanCallback;
     private HashMap strongestBeacon;
     private ArrayList<String> beaconWhiteList;
+    private boolean scanning;
 
     public BluetoothLocator(Context context) {
         this.context = context;
@@ -84,11 +85,15 @@ public class BluetoothLocator {
 //    }
 
     public void stopScan(){
-        scanner.stopScan(scanCallback);
+        if (scanning){
+            scanner.stopScan(scanCallback);
+            scanning = false;
+        }
     }
 
     public void startScan(){
         scanner.startScan(scanCallback);
+        scanning = true;
     }
 
     public void setupLocatorScanner(){
@@ -147,6 +152,6 @@ public class BluetoothLocator {
     }
 
     public boolean isBeacon(String resultDevice) {
-        return resultDevice.equals("CC2650 SensorTag");
+        return resultDevice != null && resultDevice.equals("CC2650 SensorTag");
     }
 }

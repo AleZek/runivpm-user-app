@@ -1,25 +1,15 @@
 package com.ids.idsuserapp;
 
-import android.Manifest;
-import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothManager;
+import android.app.ActivityManager;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.RequiresApi;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.WindowManager;
-import android.widget.Toast;
 
-import com.ids.idsuserapp.db.entity.Tronco;
 import com.ids.idsuserapp.entityhandlers.ArcoDataHandler;
 import com.ids.idsuserapp.entityhandlers.BeaconDataHandler;
 import com.ids.idsuserapp.entityhandlers.DataRetriever;
@@ -28,20 +18,14 @@ import com.ids.idsuserapp.percorso.BaseFragment;
 import com.ids.idsuserapp.percorso.HomeFragment;
 import com.ids.idsuserapp.services.LocatorService;
 import com.ids.idsuserapp.threads.LocatorThread;
-import com.ids.idsuserapp.utils.BluetoothLocator;
 import com.ids.idsuserapp.utils.ConnectionChecker;
 import com.ids.idsuserapp.utils.PermissionsUtil;
 import com.ids.idsuserapp.viewmodel.ArcoViewModel;
 import com.ids.idsuserapp.viewmodel.BeaconViewModel;
 import com.ids.idsuserapp.viewmodel.MappaViewModel;
-import com.ids.idsuserapp.wayfinding.Grafo;
-
-import java.util.List;
 
 public class HomeActivity extends AppCompatActivity implements DataRetriever{
     public static final String TAG = HomeActivity.class.getSimpleName();
-    private android.support.v7.widget.SearchView origineSearchView;
-    private android.support.v7.widget.SearchView destinazioneSearchView;
     private MappaViewModel mappaViewModel;
     private BeaconViewModel beaconViewModel;
     private ArcoViewModel arcoViewModel;
@@ -49,8 +33,6 @@ public class HomeActivity extends AppCompatActivity implements DataRetriever{
     private MappaDataHandler mappaDataHandler;
     private ArcoDataHandler arcoDataHandler;
     private PermissionsUtil permissionsUtil;
-    private LocatorThread locatorThread;
-    private static final int PERMISSION_REQUEST_COARSE_LOCATION = 124;
     private static final int BT_ENABLED = 1;
     private boolean offline;
     public static final String OFFLINE_USAGE = "offline_usage";
@@ -72,7 +54,7 @@ public class HomeActivity extends AppCompatActivity implements DataRetriever{
             getDatasetFromServer();
         permissionsUtil = new PermissionsUtil(this);
         if(permissionsUtil.requestEnableBt())
-            startLocatorService();
+            startLocatorService(LocatorThread.STANDARD_MODE);
     }
 
     private void setupMessageReception(Bundle savedInstanceState) {
@@ -140,8 +122,9 @@ public class HomeActivity extends AppCompatActivity implements DataRetriever{
 
     }
 
-    private void startLocatorService() {
+    private void startLocatorService(int mode) {
         Intent serviceIntent = new Intent(this, LocatorService.class);
+        serviceIntent.setAction(Integer.toString(mode));
         startService(serviceIntent);
     }
 
@@ -160,7 +143,8 @@ public class HomeActivity extends AppCompatActivity implements DataRetriever{
     @Override
     protected void onDestroy() {
         super.onDestroy();
-//        locatorThread.interrupt();
+        Intent intent = new Intent(this, LocatorService.class);
+        stopService(intent);
     }
 
 
@@ -208,10 +192,10 @@ public class HomeActivity extends AppCompatActivity implements DataRetriever{
         switch (requestCode){
             case BT_ENABLED:
                 if(resultCode == RESULT_OK)
-                    startLocatorService();
+                    startLocatorService(LocatorThread.STANDARD_MODE);
               else
-
-                    Toast.makeText(this, "L'applicazione necessita del Bluetooth per poter funzionare.", Toast.LENGTH_LONG);
+                  permissionsUtil.btAlert();
+              break;
         }
     }
 }

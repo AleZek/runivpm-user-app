@@ -21,10 +21,6 @@ public class LocatorThread extends Thread {
         return bluetoothLocator;
     }
 
-    public void setBluetoothLocator(BluetoothLocator bluetoothLocator) {
-        this.bluetoothLocator = bluetoothLocator;
-    }
-
     @Override
     public void run() {
         super.run();
@@ -38,5 +34,11 @@ public class LocatorThread extends Thread {
                 e.printStackTrace();
             }
         }
+    }
+
+    @Override
+    public void interrupt() {
+        super.interrupt();
+        bluetoothLocator.stopScan();
     }
 }
