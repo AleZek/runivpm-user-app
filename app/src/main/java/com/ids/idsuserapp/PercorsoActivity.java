@@ -70,11 +70,6 @@ public class PercorsoActivity extends AppCompatActivity implements  BluetoothLoc
         locatorThread.start();
     }
 
-    private void setBeaconWhiteList() {
-        List<Beacon> beaconList = beaconViewModel.getAllSynchronous();
-        bluetoothLocator.setBeaconWhiteList(beaconList);
-    }
-
     private void setOrigineDestinazione() {
         String nomeOrigine = getIntent().getExtras().getString("origine");
         String nomeDestinazione = getIntent().getExtras().getString("destinazione");
@@ -94,7 +89,6 @@ public class PercorsoActivity extends AppCompatActivity implements  BluetoothLoc
 
     private void setBluetoothLocator() {
         bluetoothLocator = locatorThread.getBluetoothLocator();
-        setBeaconWhiteList();
     }
 
     private void setUserBeacon() {

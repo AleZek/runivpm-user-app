@@ -9,6 +9,7 @@ import android.util.Log;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+import com.ids.idsuserapp.HomeActivity;
 import com.ids.idsuserapp.MainActivity;
 
 /** da usare se si voglio effettuare delle implementazioni custom sui metodi di FirebaseMessagingService.
@@ -48,7 +49,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         // Also if you intend on generating your own notifications as a result of a received FCM
         // message, here is where that should be initiated. See sendNotification method below.
         Log.d(TAG, "arriva all'interno del onMessaggeReceived");
-        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP);
         startActivity(intent);
         // da qui in poi puo essere inutile perche il resto avviene nella activity
