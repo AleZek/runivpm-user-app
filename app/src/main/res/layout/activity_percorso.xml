@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".percorso.SelezionaMappaFragment">
+    tools:context=".fragment.SelezionaMappaFragment">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/toolbar_container_visualizza"

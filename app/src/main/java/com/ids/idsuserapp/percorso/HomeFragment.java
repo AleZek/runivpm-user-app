@@ -18,6 +18,7 @@ import com.ids.idsuserapp.PercorsoActivity;
 import com.ids.idsuserapp.R;
 import com.ids.idsuserapp.SearchModel;
 import com.ids.idsuserapp.db.entity.Beacon;
+import com.ids.idsuserapp.fragment.SelezionaMappaFragment;
 import com.ids.idsuserapp.viewmodel.BeaconViewModel;
 
 import org.apache.commons.lang3.SerializationUtils;

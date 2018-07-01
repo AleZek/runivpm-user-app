@@ -1,4 +1,4 @@
-package com.ids.idsuserapp.percorso;
+package com.ids.idsuserapp.fragment;
 
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
@@ -8,7 +8,6 @@ import android.graphics.PointF;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
@@ -25,6 +24,8 @@ import com.ids.idsuserapp.adapters.BeaconRecyclerAdapter;
 import com.ids.idsuserapp.db.entity.Beacon;
 import com.ids.idsuserapp.db.entity.Mappa;
 import com.ids.idsuserapp.db.entity.Position;
+import com.ids.idsuserapp.percorso.BaseFragment;
+import com.ids.idsuserapp.percorso.HomeFragment;
 import com.ids.idsuserapp.percorso.Tasks.MappaStaticaTask;
 import com.ids.idsuserapp.percorso.Tasks.SelectablePointsTask;
 import com.ids.idsuserapp.percorso.Tasks.TaskListener;
