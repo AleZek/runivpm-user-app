@@ -1,14 +1,23 @@
 package com.ids.idsuserapp.autentication;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 
 import com.ids.idsuserapp.R;
+import com.ids.idsuserapp.entityhandlers.UserLoginHandler;
 import com.ids.idsuserapp.percorso.BaseFragment;
+import com.ids.idsuserapp.utils.ConnectionChecker;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -76,8 +85,87 @@ public class LoginFragment extends Fragment {
 
     public class ViewHolder extends BaseFragment.ViewHolder {
 
+        public final EditText emailTxt;
+        public final EditText pwdTxt;
+        public final Button loginButton;
+        public UserLoginHandler userLoginHandler;
+
+
         public ViewHolder(View view) {
+
+
+            emailTxt = view.findViewById(R.id.email_txt);
+            pwdTxt = view.findViewById(R.id.pwd_txt);
+            loginButton = view.findViewById(R.id.login_btn);
+
+
+            userLoginHandler = new UserLoginHandler(getContext());
+
+
+            loginButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    String validemail = "[a-zA-Z0-9\\+\\.\\_\\%\\-\\+]{1,256}" +"\\@" +"[a-zA-Z0-9][a-zA-Z0-9\\-]{0,64}" +"(" +"\\." +"[a-zA-Z0-9][a-zA-Z0-9\\-]{0,25}" +")+";
+
+
+
+                    String mail = emailTxt.getText().toString();
+
+                    Matcher matcher= Pattern.compile(validemail).matcher(mail);
+
+
+                    if (!matcher.matches()){
+                        AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
+                        alertDialog.setTitle("oops!");
+                        alertDialog.setMessage("Inserire email valida");
+                        alertDialog.setButton("Ok",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        //dismiss the dialog
+                                    }
+                                });
+                        alertDialog.show();
+                    }
+                    else if(pwdTxt.getText().toString().equals("")){
+
+                        AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
+                        alertDialog.setTitle("oops!");
+                        alertDialog.setMessage("Hai dimenticato di inserire la password");
+                        alertDialog.setButton("Ok",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        //dismiss the dialog
+                                    }
+                                });
+
+                        alertDialog.show();
+                    }
+
+
+
+                    else{
+
+                        String new_mail = emailTxt.getText().toString();
+
+                        String pas = pwdTxt.getText().toString();
+
+
+                        if (ConnectionChecker.getInstance().isNetworkAvailable(getContext()))
+                            userLoginHandler.loginUserServer(new_mail,pas);
+
+
+                    }
+
+                }
+            });
+
+
+        }
+
+
+
 
         }
     }
-}
+

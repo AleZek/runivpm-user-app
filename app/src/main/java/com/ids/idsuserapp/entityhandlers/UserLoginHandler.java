@@ -12,37 +12,37 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.ids.idsuserapp.HomeActivity;
 import com.ids.idsuserapp.R;
-import com.ids.idsuserapp.autentication.LoginActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class UserRequestHandler {
-
+public class UserLoginHandler {
 
     private Context context;
     private com.android.volley.RequestQueue serverRequestQueue;
 
 
-    public UserRequestHandler(Context context) {
+    public UserLoginHandler(Context context) {
         this.context = context;
         serverRequestQueue = Volley.newRequestQueue(context);
     }
 
-   public void creaUserServer(String email, String password){
-       JsonObjectRequest newUserJSONRequest = preparePostUserRequest(email,password);
-       serverRequestQueue.add(newUserJSONRequest);
-   }
 
-    public JsonObjectRequest preparePostUserRequest(String email, String password) {
-        String registration_url = context.getString(R.string.api_registrazione);
-        JSONObject newUser = createNewUserJson(email,password);
-        return new JsonObjectRequest(Request.Method.POST, registration_url, newUser,
+
+    public void loginUserServer(String email, String password){
+        JsonObjectRequest newLoginJSONRequest = preparePostLoginRequest(email,password);
+        serverRequestQueue.add(newLoginJSONRequest);
+    }
+
+    public JsonObjectRequest preparePostLoginRequest(String email, String password) {
+        String login_url = context.getString(R.string.api_login);
+        JSONObject newLoginUser = createNewLoginUserJson(email,password);
+        return new JsonObjectRequest(Request.Method.POST, login_url, newLoginUser,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        Toast.makeText(context, "success", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(context,LoginActivity.class);
+                        //Toast.makeText(context, "success", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(context,HomeActivity.class);
                         context.startActivity(intent);
 
                     }
@@ -51,23 +51,24 @@ public class UserRequestHandler {
             public void onErrorResponse(VolleyError error) {
                 Log.v("VolleyError", error.toString());
                 error.printStackTrace();
-                Toast toast = Toast.makeText(context, "Errore!", Toast.LENGTH_SHORT);
+                Toast toast = Toast.makeText(context, "Errore, Email o Password errati!", Toast.LENGTH_SHORT);
                 toast.show();
             }
         });
     }
 
 
-    private JSONObject createNewUserJson(String email, String password) {
-        JSONObject newUser = new JSONObject();
+    private JSONObject createNewLoginUserJson(String email, String password) {
+        JSONObject loginUser = new JSONObject();
         try {
-            newUser.put("email", email);
-            newUser.put("password", password);
+            loginUser.put("email", email);
+            loginUser.put("password", password);
 
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return newUser;
+        return loginUser;
     }
+
 
 }
