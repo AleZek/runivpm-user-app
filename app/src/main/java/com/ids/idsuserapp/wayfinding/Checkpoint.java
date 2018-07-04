@@ -8,7 +8,7 @@ public interface Checkpoint {
 
 //    boolean isGeneral();
 //
-//    boolean isRoom();
+    boolean isRoom();
 //
 //    boolean isExit();
 //

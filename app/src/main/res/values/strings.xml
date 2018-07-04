@@ -30,6 +30,18 @@
     <string name="select_path">Seleziona un percorso</string>
     <string name="computing_route">Calcolando il percorso migliore</string>
     <string name="please_wait">Attendere per favore...</string>
+    <string name="next_node">Poi</string>
+    <string name="action_go_ahead">Prosegui dritto</string>
+    <string name="action_turn_right">Gira a destra</string>
+    <string name="action_turn_left">Gira a sinistra</string>
+    <string name="action_turn_back_right">Curva stretta a destra</string>
+    <string name="action_turn_back_left">Curva stretta a sinistra</string>
+    <string name="action_go_upstairs">Sali le scale</string>
+    <string name="action_go_downstairs">Scendi le scale</string>
+    <string name="action_exit">Esci dall\'aula</string>
+    <string name="action_destination_reached">Hai raggiunto la destinazione</string>
+    <string name="toward_node">verso il punto %1$s</string>
+    <string name="congratulation">Complimenti!</string>
 
 
 

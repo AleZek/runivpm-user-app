@@ -75,7 +75,7 @@ public class HomeActivity extends AppCompatActivity implements DataRetriever{
             getDatasetFromServer();
         permissionsUtil = new PermissionsUtil(this);
         if(permissionsUtil.requestEnableBt())
-            startLocatorService();
+            startLocatorService(LocatorThread.STANDARD_MODE);
     }
 
     private void setupMessageReception(Bundle savedInstanceState) {
@@ -144,8 +144,9 @@ public class HomeActivity extends AppCompatActivity implements DataRetriever{
 
     }
 
-    private void startLocatorService() {
+    private void startLocatorService(int mode) {
         Intent serviceIntent = new Intent(this, LocatorService.class);
+        serviceIntent.setAction(Integer.toString(mode));
         startService(serviceIntent);
     }
 
@@ -212,7 +213,7 @@ public class HomeActivity extends AppCompatActivity implements DataRetriever{
         switch (requestCode){
             case BT_ENABLED:
                 if(resultCode == RESULT_OK)
-                    startLocatorService();
+                    startLocatorService(LocatorThread.STANDARD_MODE);
               else
                 permissionsUtil.btAlert();
         }

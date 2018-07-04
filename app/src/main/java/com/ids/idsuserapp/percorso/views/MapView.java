@@ -123,6 +123,11 @@ public class MapView extends LinearLayout {
         holder.pinView.setMultiplePins(pins);
     }
 
+    public void showSpinner(boolean show) {
+        holder.progressAnimation.showProgress(show);
+    }
+
+
     /**
      * Disegna la destinazione
      *

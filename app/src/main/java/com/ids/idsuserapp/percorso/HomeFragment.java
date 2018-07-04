@@ -38,6 +38,7 @@ public class HomeFragment extends BaseFragment {
     public static final String OFFLINE = "offline";
     public static final int ORIGIN_SELECTION_REQUEST_CODE = 200;
     public static final int DESTINATION_SELECTION_REQUEST_CODE = 201;
+    public static final String EMERGENCY_ACTION = "emergency_action";
 
     private boolean visible = false;
     private boolean choosenOrigin = false;

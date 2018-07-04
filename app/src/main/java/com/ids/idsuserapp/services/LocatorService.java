@@ -54,4 +54,10 @@ public class LocatorService extends Service implements BluetoothLocator.LocatorC
         serverUserLocator.sendPosition(device);
         Log.v("locator", "callback chiamata");
     }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        locatorThread.interrupt();
+    }
 }

@@ -7,8 +7,8 @@
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
@@ -30,45 +30,38 @@
             android:name=".BeaconList"
             android:label="@string/title_activity_beacon_list"
             android:theme="@style/AppTheme.NoActionBar" />
-
-        <activity android:name=".HomeActivity"
-            android:theme="@style/AppTheme.NoActionBar"/>
-
+        <activity
+            android:name=".HomeActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".LogoActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+
         <service
             android:name=".services.LocatorService"
             android:enabled="true"
             android:exported="true" />
-
-        <service
-            android:name=".utils.MyFirebaseMessagingService">
+        <service android:name=".utils.MyFirebaseMessagingService">
             <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-        <service
-            android:name=".utils.MyFirebaseInstanceIdService">
+        <service android:name=".utils.MyFirebaseInstanceIdService">
             <intent-filter>
-                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
-
 
         <activity android:name=".BeaconNavigationActivity" />
-
         <activity
             android:name=".autenticazione.AutenticationActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
             android:name=".PercorsoActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity android:name=".autenticazione.LoginActivity" />
-
-        <activity android:name=".autenticazione.RegistrationActivity"></activity>
+        <activity android:name=".autenticazione.RegistrationActivity" />
+        <activity android:name=".percorso.NavigationActivity"></activity>
     </application>
 
 </manifest>

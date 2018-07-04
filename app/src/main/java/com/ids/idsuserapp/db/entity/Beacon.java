@@ -77,6 +77,11 @@ public class Beacon implements Checkpoint, Serializable {
 
     public int getFloorInt() { return Integer.parseInt(floor); }
 
+    @Override
+    public boolean isRoom() {
+        return false;
+    }
+
     public Double getLarghezza() {return larghezza; }
 
     public int getX() {return x;}

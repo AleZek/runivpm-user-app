@@ -53,8 +53,6 @@ public class ServerUserLocator {
     private JSONObject createPositionJson(int positionId) {
             JSONObject position = new JSONObject();
             try {
-                //TODO NOME UTENTE DA RECUPERARE DA APP
-                position.put("email", "zek@zek.it");
                 position.put("position", positionId);
             } catch (JSONException e) {
                 e.printStackTrace();

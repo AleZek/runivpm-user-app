@@ -11,4 +11,6 @@
     <color name="disabledText">#40000000</color>
     <color name="grey">#9E9E9E</color>
     <color name="black_overlay">#66000000</color>
+    <color name="listItemIcon">#868686</color>
+
 </resources>

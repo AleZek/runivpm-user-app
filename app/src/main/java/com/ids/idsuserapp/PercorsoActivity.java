@@ -2,14 +2,18 @@ package com.ids.idsuserapp;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ids.idsuserapp.db.entity.Beacon;
 import com.ids.idsuserapp.db.entity.Tronco;
+import com.ids.idsuserapp.fragment.NavigatorFragment;
 import com.ids.idsuserapp.percorso.BaseFragment;
+import com.ids.idsuserapp.percorso.NavigationActivity;
 import com.ids.idsuserapp.percorso.Tasks.MinimumPathTask;
 import com.ids.idsuserapp.percorso.Tasks.TaskListener;
 import com.ids.idsuserapp.percorso.views.MapView;
@@ -45,6 +49,8 @@ public class PercorsoActivity extends AppCompatActivity implements BluetoothLoca
 
     private List<Percorso> solutionPaths = null;
     private Percorso selectedSolution;
+    private boolean emergency = false;
+    private boolean offline = true;
 
 
     public ViewHolderPercorso holder;
@@ -217,16 +223,36 @@ public class PercorsoActivity extends AppCompatActivity implements BluetoothLoca
         }
     }
 
+    /**
+     * Responsible for navigation start button
+     */
+    private class NavigationButtonListener implements View.OnClickListener {
+
+        @Override
+        public void onClick(View v) {
+                openNavigatorFragment();
+        }
+    }
+
+    private void openNavigatorFragment() {
+        NavigatorFragment navigatorFragment = NavigatorFragment.newInstance(selectedSolution, emergency, offline);
+        NavigationActivity navActivity = new NavigationActivity();
+        navActivity.changeFragment(navigatorFragment);
+    }
+
 
     public class ViewHolderPercorso extends BaseFragment.ViewHolder {
         public final MapView mapView;
+        public final FloatingActionButton startFabButton;
+
 
 
         public ViewHolderPercorso() {
+            startFabButton = findViewById(R.id.navigation_fab_start);
+            startFabButton.setOnClickListener(new NavigationButtonListener());
+
             mapView = findViewById(R.id.navigation_map_image_percorso);
             setupMapView();
-
-
 
         }
 

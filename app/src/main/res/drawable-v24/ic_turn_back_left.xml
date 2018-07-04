@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:width="45dp"
+        android:height="45dp"
+        android:viewportWidth="45"
+        android:viewportHeight="45"
+    >
+
+    <group
+        android:translateX="-2.000000"
+        android:translateY="-2.000000">
+        <group
+            android:translateX="2.000000"
+            android:translateY="2.000000">
+            <path
+                android:name="Combined-Shape"
+                android:fillColor="#000000"
+                android:pathData="M0.658289572,20.9133533 L20.9133533,0.658289572 C21.7910728,-0.219429857
+23.2089272,-0.219429857 24.0866467,0.658289572 L44.3417104,20.9133533
+C45.2194299,21.7910728 45.2194299,23.2089272 44.3417104,24.0866467
+L24.0866467,44.3417104 C23.2089272,45.2194299 21.7910728,45.2194299
+20.9133533,44.3417104 L0.658289572,24.0866467 C-0.219429857,23.2314329
+-0.219429857,21.8135784 0.658289572,20.9133533 Z M17.8769692,27.7539385
+L17.8769692,22.1275319 L26.8792198,22.1275319 L26.8792198,28.8792198
+L31.3803451,28.8792198 L31.3803451,19.8769692 C31.3803451,18.6391598
+30.3675919,17.6264066 29.1297824,17.6264066 L17.8769692,17.6264066
+L17.8769692,12 L10,19.8769692 L17.8769692,27.7539385 Z" />
+        </group>
+    </group>
+</vector>
