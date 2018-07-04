@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -18,17 +19,15 @@ import com.ids.idsuserapp.BeaconNavigationActivity;
 import com.ids.idsuserapp.HomeActivity;
 import com.ids.idsuserapp.R;
 import com.ids.idsuserapp.SearchModel;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.ids.idsuserapp.HomeActivity;
+import com.ids.idsuserapp.R;
 import com.ids.idsuserapp.db.entity.Beacon;
 import com.ids.idsuserapp.viewmodel.BeaconViewModel;
 
 import org.apache.commons.lang3.SerializationUtils;
-
-import java.util.ArrayList;
-
-import ir.mirrajabi.searchdialog.SimpleSearchDialogCompat;
-import ir.mirrajabi.searchdialog.core.BaseSearchDialogCompat;
-import ir.mirrajabi.searchdialog.core.SearchResultListener;
-import ir.mirrajabi.searchdialog.core.Searchable;
 
 
 public class HomeFragment extends Fragment {
@@ -40,7 +39,7 @@ public class HomeFragment extends Fragment {
     public static final int DESTINATION_SELECTION_REQUEST_CODE = 201;
 
     private boolean visible = false;
-    private boolean choosenOrigin=false;
+    private boolean choosenOrigin = false;
     private boolean choosenDestination = false;
 
 
@@ -49,7 +48,6 @@ public class HomeFragment extends Fragment {
     private int indexOfPathSelected;
     private ViewHolder holder;
     private boolean offline = false;
-
 
 
     public static HomeFragment newInstance(boolean emergency, boolean offline) {
@@ -67,6 +65,7 @@ public class HomeFragment extends Fragment {
                              Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_home, container, false);
         holder = new ViewHolder(view);
+        toggleConfirmButtonState();
         return view;
     }
 
@@ -84,11 +83,11 @@ public class HomeFragment extends Fragment {
             switch (requestCode) {
                 case ORIGIN_SELECTION_REQUEST_CODE:
                     origin = node;
-                    choosenOrigin=true;
+                    choosenOrigin = true;
                     break;
                 case DESTINATION_SELECTION_REQUEST_CODE:
                     destination = node;
-                    choosenDestination=true;
+                    choosenDestination = true;
                     break;
             }
 
@@ -120,15 +119,11 @@ public class HomeFragment extends Fragment {
     }
 
 
-
-
-
-
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        if(getArguments() != null) {
+        if (getArguments() != null) {
             offline = getArguments().getBoolean(OFFLINE);
         }
 
@@ -164,34 +159,39 @@ public class HomeFragment extends Fragment {
         public final Button selezionaBeaconOrigineButton;
         public final Button selezionaBeaconDestinazioneButton;
 
-       // public final View mappaContainer;
+        // public final View mappaContainer;
 
         public final View selezionaMappaOrigineLayout;
         public final View selezionaBeaconOrigineLayout;
         public final View selezionaMappaDestinazioneLayout;
         public final View selezionaBeaconDestinazioneLayout;
 
+        public final Button visualizzaPercorsoButton;
+        public TextView infoTextView;
+
         public final Button selezionaOrigineButton;
         public final Button selezionaDestinazioneButton;
         public BeaconViewModel mBeaconViewModel;
 
         public ViewHolder(View v) {
-            toolbar = v.findViewById((R.id.navigation_toolbar));
-            selezionaMappaOrigineButton = v.findViewById(R.id.scegli_da_mappa_origine_button);
-            selezionaMappaDestinazioneButton = v.findViewById(R.id.scegli_da_mappa_destinazione_button);
-            selezionaBeaconOrigineButton = v.findViewById(R.id.scegli_da_beacon_origine_button);
-            selezionaBeaconDestinazioneButton = v.findViewById(R.id.scegli_da_beacon_destinazione_button);
+            toolbar = find(v,(R.id.navigation_toolbar));
+            selezionaMappaOrigineButton = find(v,R.id.scegli_da_mappa_origine_button);
+            selezionaMappaDestinazioneButton = find(v,R.id.scegli_da_mappa_destinazione_button);
+            selezionaBeaconOrigineButton = find(v,R.id.scegli_da_beacon_origine_button);
+            selezionaBeaconDestinazioneButton = find(v,R.id.scegli_da_beacon_destinazione_button);
 
-            selezionaMappaOrigineLayout = v.findViewById(R.id.scegli_da_mappa_origine_layout);
-            selezionaMappaDestinazioneLayout = v.findViewById(R.id.scegli_da_mappa_destinazione_layout);
-            selezionaBeaconOrigineLayout = v.findViewById(R.id.scegli_da_beacon_origine_layout);
-            selezionaBeaconDestinazioneLayout = v.findViewById(R.id.scegli_da_beacon_destinazione_layout);
+            selezionaMappaOrigineLayout = find(v,R.id.scegli_da_mappa_origine_layout);
+            selezionaMappaDestinazioneLayout = find(v,R.id.scegli_da_mappa_destinazione_layout);
+            selezionaBeaconOrigineLayout = find(v,R.id.scegli_da_beacon_origine_layout);
+            selezionaBeaconDestinazioneLayout = find(v,R.id.scegli_da_beacon_destinazione_layout);
 
-         //   mappaContainer = v.findViewById(R.id.navigation_map_image);
+            infoTextView = find(v,R.id.info_text_view);
+            visualizzaPercorsoButton = find(v,R.id.visualizza_percorso_button);
+            //   mappaContainer = v.findViewById(R.id.navigation_map_image);
 
 
-            selezionaOrigineButton = v.findViewById(R.id.seleziona_origine);
-            selezionaDestinazioneButton = v.findViewById(R.id.seleziona_destinazione);
+            selezionaOrigineButton =find(v,R.id.seleziona_origine);
+            selezionaDestinazioneButton = find(v,R.id.seleziona_destinazione);
 
 
             selezionaMappaOrigineLayout.setVisibility(View.GONE);
@@ -199,7 +199,7 @@ public class HomeFragment extends Fragment {
             selezionaBeaconOrigineLayout.setVisibility(View.GONE);
             selezionaBeaconDestinazioneLayout.setVisibility(View.GONE);
 
-         //   mappaContainer.setVisibility(View.GONE);
+            //   mappaContainer.setVisibility(View.GONE);
 
 
             selezionaOrigineButton.setOnClickListener(new View.OnClickListener() {
@@ -222,64 +222,16 @@ public class HomeFragment extends Fragment {
                 }
             });
 
-
-
-
-
-            selezionaBeaconOrigineButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    new SimpleSearchDialogCompat(getActivity(), "Cerca", "Seleziona beacon", null, initData(), new SearchResultListener<Searchable>() {
-                        @Override
-                        public void onSelected(BaseSearchDialogCompat baseSearchDialogCompat, Searchable searchable, int i) {
-                            Toast.makeText(getActivity(),"Hai selezionato il "+searchable.getTitle(),Toast.LENGTH_SHORT).show();
-                            baseSearchDialogCompat.dismiss();
-
-                        }
-                    }).show();
-
-
-                }
-
-
-
-            });
-
-            selezionaBeaconDestinazioneButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    new SimpleSearchDialogCompat(getActivity(), "Cerca", "Seleziona beacon", null, initData(), new SearchResultListener<Searchable>() {
-                        @Override
-                        public void onSelected(BaseSearchDialogCompat baseSearchDialogCompat, Searchable searchable, int i) {
-                            Toast.makeText(getActivity(),"Hai selezionato il "+searchable.getTitle(),Toast.LENGTH_SHORT).show();
-                            baseSearchDialogCompat.dismiss();
-
-                        }
-                    }).show();
-
-
-                }
-
-
-
-            });
-
-
-
-
         }
 
-        private ArrayList<SearchModel> initData(){
-            ArrayList<SearchModel> items = new ArrayList<>();
-            items.add(new SearchModel("beacon1"));
-            items.add(new SearchModel("beacon2"));
-            items.add(new SearchModel("beacon3"));
-            items.add(new SearchModel("beacon4"));
-            items.add(new SearchModel("beacon5"));
-            items.add(new SearchModel("beacon6"));
-            items.add(new SearchModel("beacon7"));
-
-            return items;
+        @SuppressWarnings("unchecked")
+        public <T extends View> T find(View view, int id) {
+            View resultView = view.findViewById(id);
+            try {
+                return (T) resultView;
+            } catch (ClassCastException e) {
+                return null;
+            }
         }
 
         public void toggleOrigine() {
@@ -311,11 +263,41 @@ public class HomeFragment extends Fragment {
         }
 
 
+    }
 
+    private void disableVisualizzaPercorsoButtonState() {
+        holder.visualizzaPercorsoButton.setEnabled(false);
+        holder.visualizzaPercorsoButton.setTextColor(color(R.color.disabledText));
+    }
+
+    private void toggleConfirmButtonState() {
+        if (origin == null) {
+            disableVisualizzaPercorsoButtonState();
+
+        } else if (destination == null) {
+            disableVisualizzaPercorsoButtonState();
+        } else {
+            holder.visualizzaPercorsoButton.setEnabled(true);
+            holder.visualizzaPercorsoButton.setTextColor(color(R.color.linkText));
+            holder.visualizzaPercorsoButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // TODO start activity per visualizzazione percorso
+                }
+            });
+        }
     }
 
 
-
+    /**
+     * Wrap di ContextCompact.getColor()
+     *
+     * @param id Id del colore
+     * @return Codice del color
+     */
+    public int color(int id) {
+        return ContextCompat.getColor(getContext(), id);
+    }
 
 
 }

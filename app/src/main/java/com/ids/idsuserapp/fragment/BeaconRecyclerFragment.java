@@ -4,10 +4,12 @@ import android.arch.lifecycle.LifecycleOwner;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -19,6 +21,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.ids.idsuserapp.PercorsoActivity;
 import com.ids.idsuserapp.R;
 import com.ids.idsuserapp.adapters.BeaconRecyclerAdapter;
 import com.ids.idsuserapp.db.entity.Beacon;
@@ -33,6 +36,7 @@ public class BeaconRecyclerFragment extends Fragment{
     private RecyclerView recyclerBeaconDestinazione; // recyclerview della destinazione da collegare nel xml
     private SearchView searchViewPartenza; //searchview della partenza, presente nel layout del beaconfragment
     private SearchView searchViewDestinazione; //searchview della destinazione
+    private FloatingActionButton goFAB;
 
     private BeaconRecyclerAdapter beaconRecyclerAdapterPartenza; // recycleradapter della partenza
     private BeaconRecyclerAdapter beaconRecyclerAdapterDestinazione; // recyclerAdapter della destinazione
@@ -89,7 +93,6 @@ public class BeaconRecyclerFragment extends Fragment{
         View view = inflater.inflate(R.layout.fragment_beacon_recycler, container, false);
         setupRecycler(view);
         setupSearch(view);
-
         return view;
     }
 
@@ -190,5 +193,12 @@ public class BeaconRecyclerFragment extends Fragment{
     }
 
 
+    public SearchView getSearchViewPartenza() {
+        return searchViewPartenza;
+    }
+
+    public SearchView getSearchViewDestinazione() {
+        return searchViewDestinazione;
+    }
 
 }

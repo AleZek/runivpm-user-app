@@ -21,8 +21,8 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:text="Scegli sulla mappa "
-        android:backgroundTint="#ffffff"
-        android:textColor="#B30000"/>
+        android:textColor="#B30000"
+        android:backgroundTint="#ffffff"/>
 
 </LinearLayout>
 

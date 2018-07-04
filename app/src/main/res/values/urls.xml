@@ -8,5 +8,6 @@
     <string name="api_delete_mappa">http://159.89.102.18/api/custom/mappas/</string>
     <string name="api_registrazione">http://159.89.102.18/register</string>
     <string name="api_login">http://159.89.102.18/api/login</string>
+    <string name="api_user_locator">http://159.89.102.18/api/user/locate</string>
 </resources>
 
