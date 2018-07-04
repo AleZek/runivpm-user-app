@@ -29,6 +29,13 @@ import com.ids.idsuserapp.viewmodel.BeaconViewModel;
 
 import org.apache.commons.lang3.SerializationUtils;
 
+import java.util.ArrayList;
+
+import ir.mirrajabi.searchdialog.SimpleSearchDialogCompat;
+import ir.mirrajabi.searchdialog.core.BaseSearchDialogCompat;
+import ir.mirrajabi.searchdialog.core.SearchResultListener;
+import ir.mirrajabi.searchdialog.core.Searchable;
+
 
 public class HomeFragment extends Fragment {
     public static final String TAG = HomeFragment.class.getSimpleName();
@@ -174,24 +181,24 @@ public class HomeFragment extends Fragment {
         public BeaconViewModel mBeaconViewModel;
 
         public ViewHolder(View v) {
-            toolbar = find(v,(R.id.navigation_toolbar));
-            selezionaMappaOrigineButton = find(v,R.id.scegli_da_mappa_origine_button);
-            selezionaMappaDestinazioneButton = find(v,R.id.scegli_da_mappa_destinazione_button);
-            selezionaBeaconOrigineButton = find(v,R.id.scegli_da_beacon_origine_button);
-            selezionaBeaconDestinazioneButton = find(v,R.id.scegli_da_beacon_destinazione_button);
+            toolbar = find(v, (R.id.navigation_toolbar));
+            selezionaMappaOrigineButton = find(v, R.id.scegli_da_mappa_origine_button);
+            selezionaMappaDestinazioneButton = find(v, R.id.scegli_da_mappa_destinazione_button);
+            selezionaBeaconOrigineButton = find(v, R.id.scegli_da_beacon_origine_button);
+            selezionaBeaconDestinazioneButton = find(v, R.id.scegli_da_beacon_destinazione_button);
 
-            selezionaMappaOrigineLayout = find(v,R.id.scegli_da_mappa_origine_layout);
-            selezionaMappaDestinazioneLayout = find(v,R.id.scegli_da_mappa_destinazione_layout);
-            selezionaBeaconOrigineLayout = find(v,R.id.scegli_da_beacon_origine_layout);
-            selezionaBeaconDestinazioneLayout = find(v,R.id.scegli_da_beacon_destinazione_layout);
+            selezionaMappaOrigineLayout = find(v, R.id.scegli_da_mappa_origine_layout);
+            selezionaMappaDestinazioneLayout = find(v, R.id.scegli_da_mappa_destinazione_layout);
+            selezionaBeaconOrigineLayout = find(v, R.id.scegli_da_beacon_origine_layout);
+            selezionaBeaconDestinazioneLayout = find(v, R.id.scegli_da_beacon_destinazione_layout);
 
-            infoTextView = find(v,R.id.info_text_view);
-            visualizzaPercorsoButton = find(v,R.id.visualizza_percorso_button);
+            infoTextView = find(v, R.id.info_text_view);
+            visualizzaPercorsoButton = find(v, R.id.visualizza_percorso_button);
             //   mappaContainer = v.findViewById(R.id.navigation_map_image);
 
 
-            selezionaOrigineButton =find(v,R.id.seleziona_origine);
-            selezionaDestinazioneButton = find(v,R.id.seleziona_destinazione);
+            selezionaOrigineButton = find(v, R.id.seleziona_origine);
+            selezionaDestinazioneButton = find(v, R.id.seleziona_destinazione);
 
 
             selezionaMappaOrigineLayout.setVisibility(View.GONE);
@@ -222,7 +229,58 @@ public class HomeFragment extends Fragment {
                 }
             });
 
+
+            selezionaBeaconOrigineButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    new SimpleSearchDialogCompat(getActivity(), "Cerca", "Seleziona beacon", null, initData(), new SearchResultListener<Searchable>() {
+                        @Override
+                        public void onSelected(BaseSearchDialogCompat baseSearchDialogCompat, Searchable searchable, int i) {
+                            Toast.makeText(getActivity(), "Hai selezionato il " + searchable.getTitle(), Toast.LENGTH_SHORT).show();
+                            baseSearchDialogCompat.dismiss();
+                        }
+                    }).show();
+
+
+                }
+
+
+            });
+
+
+
+            selezionaBeaconDestinazioneButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    new SimpleSearchDialogCompat(getActivity(), "Cerca", "Seleziona beacon", null, initData(), new SearchResultListener<Searchable>() {
+                        @Override
+                        public void onSelected(BaseSearchDialogCompat baseSearchDialogCompat, Searchable searchable, int i) {
+                            Toast.makeText(getActivity(), "Hai selezionato il " + searchable.getTitle(), Toast.LENGTH_SHORT).show();
+                            baseSearchDialogCompat.dismiss();
+                        }
+                    }).show();
+
+
+                }
+
+
+            });
         }
+
+            private ArrayList<SearchModel> initData(){
+                ArrayList<SearchModel> items = new ArrayList<>();
+                items.add(new SearchModel("beacon1"));
+                items.add(new SearchModel("beacon2"));
+                items.add(new SearchModel("beacon3"));
+                return items;
+            }
+
+
+
+
+
+
+
 
         @SuppressWarnings("unchecked")
         public <T extends View> T find(View view, int id) {
