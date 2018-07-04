@@ -100,15 +100,15 @@ public class PercorsoActivity extends AppCompatActivity implements  BluetoothLoc
     public void nextStep() {
         int index = percorso.indexOf(userPositionBeacon);
         if(userPositionBeacon!= null) {
-            if (userPositionBeacon.equals(destinazione)) {
-                Toast.makeText(this, "Sei giunto a destinazione", Toast.LENGTH_LONG).show();
-                locatorThread.interrupt();
-                bluetoothLocator.stopScan();
-            } else if (index != -1) {
+             if (index != -1) {
                 Beacon nextBeacon = percorso.get(index + 1);
                 Toast.makeText(this, "Prosegui verso " + nextBeacon.getNome(), Toast.LENGTH_LONG).show();
 //                getIndicazioni(userPositionBeacon, nextBeacon);
-            } else {
+            }else if (userPositionBeacon.equals(destinazione)) {
+                 Toast.makeText(this, "Sei giunto a destinazione", Toast.LENGTH_LONG).show();
+                 locatorThread.interrupt();
+                 bluetoothLocator.stopScan();
+             } else {
                 dijkstra.inizio(userPositionBeacon);
                 dijkstra.ricerca(destinazione);
                 Beacon nextBeacon = percorso.get(1);
