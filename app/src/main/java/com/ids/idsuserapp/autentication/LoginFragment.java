@@ -12,7 +12,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.ids.idsuserapp.R;
-import com.ids.idsuserapp.entityhandlers.UserLoginHandler;
+import com.ids.idsuserapp.entityhandlers.UserRequestHandler;
 import com.ids.idsuserapp.percorso.BaseFragment;
 import com.ids.idsuserapp.utils.ConnectionChecker;
 
@@ -88,7 +88,7 @@ public class LoginFragment extends Fragment {
         public final EditText emailTxt;
         public final EditText pwdTxt;
         public final Button loginButton;
-        public UserLoginHandler userLoginHandler;
+        public UserRequestHandler userRequestHandler;
 
 
         public ViewHolder(View view) {
@@ -99,7 +99,7 @@ public class LoginFragment extends Fragment {
             loginButton = view.findViewById(R.id.login_btn);
 
 
-            userLoginHandler = new UserLoginHandler(getContext());
+            userRequestHandler = new UserRequestHandler(getContext());
 
 
             loginButton.setOnClickListener(new View.OnClickListener() {
@@ -152,7 +152,7 @@ public class LoginFragment extends Fragment {
 
 
                         if (ConnectionChecker.getInstance().isNetworkAvailable(getContext()))
-                            userLoginHandler.loginUserServer(new_mail,pas);
+                            userRequestHandler.loginUserServer(new_mail,pas);
 
 
                     }
@@ -162,9 +162,6 @@ public class LoginFragment extends Fragment {
 
 
         }
-
-
-
 
         }
     }

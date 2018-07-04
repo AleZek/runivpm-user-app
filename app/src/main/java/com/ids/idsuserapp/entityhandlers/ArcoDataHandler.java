@@ -1,7 +1,6 @@
 package com.ids.idsuserapp.entityhandlers;
 
 import android.content.Context;
-import android.net.Uri;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -10,9 +9,9 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.ids.idsuserapp.R;
 import com.ids.idsuserapp.db.entity.Arco;
+import com.ids.idsuserapp.utils.AuthenticatedJsonObjectRequest;
 import com.ids.idsuserapp.viewmodel.ArcoViewModel;
 import com.ids.idsuserapp.viewmodel.BeaconViewModel;
-import com.ids.idsuserapp.viewmodel.MappaViewModel;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -37,9 +36,9 @@ public class ArcoDataHandler {
         serverRequestQueue.add(archiRequest);
     }
 
-    public JsonObjectRequest prepareGetArchiRequest() {
+    public AuthenticatedJsonObjectRequest prepareGetArchiRequest() {
         String archi_url = context.getString(R.string.api_archi);
-        return new JsonObjectRequest(Request.Method.GET, archi_url, null,
+        return new AuthenticatedJsonObjectRequest(context,Request.Method.GET, archi_url, null,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
