@@ -60,7 +60,7 @@ public class MappeRecyclerFragment extends Fragment{
         });
 
         beaconViewModel = ViewModelProviders.of(this).get(BeaconViewModel.class);
-        mappaDataHandler = new MappaDataHandler(getContext(),mMappaViewModel,beaconViewModel);
+        mappaDataHandler = new MappaDataHandler(getContext(),mMappaViewModel);
     }
 
     @Override

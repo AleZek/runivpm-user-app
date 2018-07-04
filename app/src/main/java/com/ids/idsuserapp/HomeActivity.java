@@ -52,11 +52,31 @@ public class HomeActivity extends AppCompatActivity implements DataRetriever{
         //se si allora viene pulita la lista dei beacon e viene aggiornato il dataset
         if (ConnectionChecker.getInstance().isNetworkAvailable(getApplicationContext()))
             getDatasetFromServer();
+
+
+        boolean emergency = false;
+        if (getIntent().getExtras() != null) {
+            for (String key : getIntent().getExtras().keySet()) {
+                if (key.equals("emergency")) {
+                    emergency = true;
+                }
+                String value = getIntent().getExtras().getString(key);
+                Log.d(TAG, "Key: " + key + " Value: " + value);
+            }
+        }
+
+        Log.d(TAG, String.valueOf(emergency));
+        if (savedInstanceState == null) {
+            HomeFragment homeFragment = HomeFragment.newInstance(emergency, offline);
+            FragmentManager fm = getSupportFragmentManager();
+            fm.beginTransaction().replace(R.id.navigation_content_pane, homeFragment, HomeFragment.TAG)
+                    .commit();
+        }
     }
 
     private void setupDataHandlers() {
         beaconDataHandler = new BeaconDataHandler(this, beaconViewModel);
-        mappaDataHandler = new MappaDataHandler(this, mappaViewModel,beaconViewModel);
+        mappaDataHandler = new MappaDataHandler(this, mappaViewModel);
         arcoDataHandler = new ArcoDataHandler(this, arcoViewModel, beaconViewModel);
     }
 

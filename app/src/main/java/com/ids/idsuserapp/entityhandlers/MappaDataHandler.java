@@ -12,7 +12,6 @@ import com.ids.idsuserapp.R;
 import com.ids.idsuserapp.db.entity.Mappa;
 import com.ids.idsuserapp.utils.AuthenticatedJsonObjectRequest;
 import com.ids.idsuserapp.utils.FileHelper;
-import com.ids.idsuserapp.viewmodel.BeaconViewModel;
 import com.ids.idsuserapp.viewmodel.MappaViewModel;
 
 import org.json.JSONArray;
@@ -25,15 +24,15 @@ import java.util.ArrayList;
 public class MappaDataHandler {
     private Context context;
     private MappaViewModel mappaViewModel;
-    private BeaconViewModel beaconViewModel;
+    private DataRetriever dataRetriever;
     private com.android.volley.RequestQueue serverRequestQueue;
     private Uri nuovaMappaFilePath;
 
 
-    public MappaDataHandler(Context context, MappaViewModel mappaViewModel, BeaconViewModel beaconViewModel) {
+    public MappaDataHandler(Context context, MappaViewModel mappaViewModel) {
         this.context = context;
+        dataRetriever = (DataRetriever) context;
         this.mappaViewModel = mappaViewModel;
-        this.beaconViewModel = beaconViewModel;
         serverRequestQueue = Volley.newRequestQueue(context);
     }
 
@@ -52,6 +51,7 @@ public class MappaDataHandler {
                         try {
                             persistMappeCollectionLocally(response.getJSONArray("hydra:member"));
                             downloadMapImages(response.getJSONArray("hydra:member"));
+                            dataRetriever.retrieveBeacons();
                             //persistCollection(response.get("hydra:member"));
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -152,6 +152,7 @@ public class MappaDataHandler {
     public void setNuovaMappaFilePath(Uri nuovaMappaFilePath) {
         this.nuovaMappaFilePath = nuovaMappaFilePath;
     }
+
 
 
 }
