@@ -1,4 +1,4 @@
-package com.ids.idsuserapp.autenticazione;
+package com.ids.idsuserapp.autentication;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;

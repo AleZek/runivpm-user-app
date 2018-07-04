@@ -44,28 +44,24 @@ public class MainActivity extends AppCompatActivity {
 //                + WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
 
 
-
-        Intent logoIntent = new Intent(MainActivity.this,LogoActivity.class);
+        Intent logoIntent = new Intent(MainActivity.this, LogoActivity.class);
         startActivity(logoIntent);
 
 
     }
+
     //questo metodo permette alla app di sottoscriversi al topic emergenza, questo permette a firebase
     // di mandare messaggi broadcast alle istanze della app
-    private void subscribeTopic(final String topic){
+    private void subscribeTopic(final String topic) {
         FirebaseMessaging.getInstance().subscribeToTopic(topic)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
-                        String msg = "Sottoscrizione avvenuta a ";
                         if (!task.isSuccessful()) {
-                            msg = "sottoscrizione fallita a ";
+                            Log.d(TAG, getString(R.string.emergency_subscribe_error)); // sono mostrati dei messaggi nel log e nella app se la sottoscrizione avviene o meno
+                            Toast.makeText(MainActivity.this, R.string.emergency_subscribe_error, Toast.LENGTH_SHORT).show();
                         }
-                        Log.d(TAG, msg + topic); // sono mostrati dei messaggi nel log e nella app se la sottoscrizione avviene o meno
-                        Toast.makeText(MainActivity.this, msg + topic, Toast.LENGTH_SHORT).show();
                     }
                 });
-
-
     }
 }

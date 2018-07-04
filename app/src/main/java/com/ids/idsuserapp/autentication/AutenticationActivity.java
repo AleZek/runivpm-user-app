@@ -1,19 +1,12 @@
-package com.ids.idsuserapp.autenticazione;
+package com.ids.idsuserapp.autentication;
 
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.content.Intent;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-import android.widget.Button;
 
 import com.ids.idsuserapp.R;
 import com.ids.idsuserapp.percorso.BaseFragment;
-import com.ids.idsuserapp.percorso.HomeFragment;
+import com.ids.idsuserapp.utils.PermissionsUtil;
 
 public class AutenticationActivity extends AppCompatActivity{
 
@@ -24,7 +17,10 @@ public class AutenticationActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_autentication);
-
+        PermissionsUtil permissionsUtil = new PermissionsUtil(this);
+        permissionsUtil.handleFilePermissions();
+        permissionsUtil.handleLocationPermissions();
+        permissionsUtil.requestEnableBt();
 
       /*  button1 = findViewById(R.id.login_btn);
         button1.setOnClickListener(new View.OnClickListener() {

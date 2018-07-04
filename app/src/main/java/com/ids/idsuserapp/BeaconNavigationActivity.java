@@ -18,9 +18,9 @@ public class BeaconNavigationActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_beacon_navigation);
+        setContentView(R.layout.fragment_home);
 
-        findViewById(R.id.starting_beacon_button).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.scegli_da_beacon_origine_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 new SimpleSearchDialogCompat(BeaconNavigationActivity.this, "Cerca", "Seleziona beacon", null, initData(), new SearchResultListener<Searchable>() {
@@ -39,7 +39,7 @@ public class BeaconNavigationActivity extends AppCompatActivity {
 
     });
 
-        findViewById(R.id.ending_beacon_button).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.scegli_da_beacon_destinazione_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 new SimpleSearchDialogCompat(BeaconNavigationActivity.this, "Cerca", "Seleziona beacon", null, initData(), new SearchResultListener<Searchable>() {

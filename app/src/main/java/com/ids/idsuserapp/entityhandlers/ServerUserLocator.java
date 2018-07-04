@@ -11,6 +11,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.ids.idsuserapp.R;
 import com.ids.idsuserapp.db.entity.Beacon;
+import com.ids.idsuserapp.utils.AuthenticatedJsonObjectRequest;
 import com.ids.idsuserapp.viewmodel.BeaconViewModel;
 
 import org.json.JSONException;
@@ -34,10 +35,10 @@ public class ServerUserLocator {
         serverRequestQueue.add(positionRequest);
     }
 
-    public JsonObjectRequest prepareSendPositionRequest(int positionId) {
+    public AuthenticatedJsonObjectRequest prepareSendPositionRequest(int positionId) {
         String url = context.getString(R.string.api_user_locator);
         JSONObject position = createPositionJson(positionId);
-        return new JsonObjectRequest(Request.Method.POST, url, position,
+        return new AuthenticatedJsonObjectRequest(context, Request.Method.POST, url, position,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
