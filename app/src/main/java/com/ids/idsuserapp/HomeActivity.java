@@ -1,10 +1,5 @@
 package com.ids.idsuserapp;
 
-import android.Manifest;
-import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothManager;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -20,28 +15,35 @@ import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.ids.idsuserapp.db.entity.Tronco;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.text.Layout;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+
+import com.ids.idsuserapp.db.entity.Beacon;
 import com.ids.idsuserapp.entityhandlers.ArcoDataHandler;
 import com.ids.idsuserapp.entityhandlers.BeaconDataHandler;
 import com.ids.idsuserapp.entityhandlers.DataRetriever;
 import com.ids.idsuserapp.entityhandlers.MappaDataHandler;
 import com.ids.idsuserapp.percorso.BaseFragment;
 import com.ids.idsuserapp.percorso.HomeFragment;
+import com.ids.idsuserapp.percorso.Tasks.TaskListener;
 import com.ids.idsuserapp.services.LocatorService;
 import com.ids.idsuserapp.threads.LocatorThread;
-import com.ids.idsuserapp.utils.BluetoothLocator;
 import com.ids.idsuserapp.utils.ConnectionChecker;
 import com.ids.idsuserapp.utils.PermissionsUtil;
 import com.ids.idsuserapp.viewmodel.ArcoViewModel;
 import com.ids.idsuserapp.viewmodel.BeaconViewModel;
 import com.ids.idsuserapp.viewmodel.MappaViewModel;
-import com.ids.idsuserapp.wayfinding.Grafo;
 
-import java.util.List;
+import org.apache.commons.lang3.SerializationUtils;
 
 public class HomeActivity extends AppCompatActivity implements DataRetriever{
     public static final String TAG = HomeActivity.class.getSimpleName();
-    private android.support.v7.widget.SearchView origineSearchView;
-    private android.support.v7.widget.SearchView destinazioneSearchView;
     private MappaViewModel mappaViewModel;
     private BeaconViewModel beaconViewModel;
     private ArcoViewModel arcoViewModel;
@@ -94,28 +96,8 @@ public class HomeActivity extends AppCompatActivity implements DataRetriever{
                 public void onTaskError(Exception e) {
                     Log.e(TAG, "Save deviceKey error", e);
                 }
+*/
 
-                @Override
-                public void onTaskComplete() {
-                }
-
-                @Override
-                public void onTaskCancelled() {
-                }
-            });
-            task.execute();
-            // [END handle_device_token]
-        }*/
-
-        // If a notification message is tapped, any data accompanying the notification
-        // message is available in the intent extras. In this sample the launcher
-        // intent is fired when the notification is tapped, so any accompanying data would
-        // be handled here. If you want a different intent fired, set the click_action
-        // field of the notification message to the desired intent. The launcher intent
-        // is used when no click_action is specified.
-        //
-        // Handle possible data accompanying notification message.
-        // [START handle_data_extras]
         boolean emergency = false;
         if (getIntent().getExtras() != null) {
             for (String key : getIntent().getExtras().keySet()) {
@@ -126,7 +108,6 @@ public class HomeActivity extends AppCompatActivity implements DataRetriever{
                 Log.d(TAG, "Key: " + key + " Value: " + value);
             }
         }
-        // [END handle_data_extras]
 
         Log.d(TAG, String.valueOf(emergency));
         if (savedInstanceState == null) {
@@ -152,7 +133,7 @@ public class HomeActivity extends AppCompatActivity implements DataRetriever{
 
     private void setupDataHandlers() {
         beaconDataHandler = new BeaconDataHandler(this, beaconViewModel);
-        mappaDataHandler = new MappaDataHandler(this, mappaViewModel,beaconViewModel);
+        mappaDataHandler = new MappaDataHandler(this, mappaViewModel);
         arcoDataHandler = new ArcoDataHandler(this, arcoViewModel, beaconViewModel);
     }
 
@@ -167,8 +148,6 @@ public class HomeActivity extends AppCompatActivity implements DataRetriever{
         super.onDestroy();
 //        locatorThread.interrupt();
     }
-
-
 
     private void getDatasetFromServer() {
         cleanDb();
@@ -190,7 +169,6 @@ public class HomeActivity extends AppCompatActivity implements DataRetriever{
     public void retrieveArchi() {
         arcoDataHandler.retrieveArchiDataset();
     }
-
 
     /**
      * Cambia il fragment

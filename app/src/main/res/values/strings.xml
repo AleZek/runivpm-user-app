@@ -42,7 +42,8 @@
     <string name="action_destination_reached">Hai raggiunto la destinazione</string>
     <string name="toward_node">verso il punto %1$s</string>
     <string name="congratulation">Complimenti!</string>
-
+    <string name="auth_preference">com.ids.idsuserapp.auth_file</string>
+    <string name="emergency_subscribe_error">Errore di comunicazione con il server emergenze</string>
 
 
 </resources>
