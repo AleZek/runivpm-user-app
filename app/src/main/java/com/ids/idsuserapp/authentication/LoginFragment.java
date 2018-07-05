@@ -1,8 +1,11 @@
-package com.ids.idsuserapp.autentication;
+package com.ids.idsuserapp.authentication;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -10,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.ids.idsuserapp.R;
 import com.ids.idsuserapp.entityhandlers.UserRequestHandler;
@@ -18,6 +22,7 @@ import com.ids.idsuserapp.utils.ConnectionChecker;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -91,6 +96,7 @@ public class LoginFragment extends Fragment {
         public UserRequestHandler userRequestHandler;
 
 
+
         public ViewHolder(View view) {
 
 
@@ -99,7 +105,9 @@ public class LoginFragment extends Fragment {
             loginButton = view.findViewById(R.id.login_btn);
 
 
+
             userRequestHandler = new UserRequestHandler(getContext());
+
 
 
             loginButton.setOnClickListener(new View.OnClickListener() {
@@ -150,16 +158,22 @@ public class LoginFragment extends Fragment {
 
                         String pas = pwdTxt.getText().toString();
 
-
                         if (ConnectionChecker.getInstance().isNetworkAvailable(getContext()))
                             userRequestHandler.loginUserServer(new_mail,pas);
-
-
-                    }
+                        }
 
                 }
             });
 
+
+            /*@Override
+            public void onBackPressed() {
+                Intent intent = new Intent(Intent.ACTION_MAIN);
+                intent.addCategory(Intent.CATEGORY_HOME);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+                super.onBackPressed();
+            }*/
 
         }
 

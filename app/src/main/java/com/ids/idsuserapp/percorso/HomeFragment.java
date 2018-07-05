@@ -30,7 +30,6 @@ import com.ids.idsuserapp.viewmodel.BeaconViewModel;
 import org.apache.commons.lang3.SerializationUtils;
 
 import java.util.ArrayList;
-
 import ir.mirrajabi.searchdialog.SimpleSearchDialogCompat;
 import ir.mirrajabi.searchdialog.core.BaseSearchDialogCompat;
 import ir.mirrajabi.searchdialog.core.SearchResultListener;
@@ -180,6 +179,8 @@ public class HomeFragment extends Fragment {
         public final Button selezionaDestinazioneButton;
         public BeaconViewModel mBeaconViewModel;
 
+
+
         public ViewHolder(View v) {
             toolbar = find(v, (R.id.navigation_toolbar));
             selezionaMappaOrigineButton = find(v, R.id.scegli_da_mappa_origine_button);
@@ -240,14 +241,7 @@ public class HomeFragment extends Fragment {
                             baseSearchDialogCompat.dismiss();
                         }
                     }).show();
-
-
-                }
-
-
-            });
-
-
+                    }});
 
             selezionaBeaconDestinazioneButton.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -259,12 +253,7 @@ public class HomeFragment extends Fragment {
                             baseSearchDialogCompat.dismiss();
                         }
                     }).show();
-
-
-                }
-
-
-            });
+                    }});
         }
 
             private ArrayList<SearchModel> initData(){
@@ -274,12 +263,6 @@ public class HomeFragment extends Fragment {
                 items.add(new SearchModel("beacon3"));
                 return items;
             }
-
-
-
-
-
-
 
 
         @SuppressWarnings("unchecked")
@@ -319,8 +302,6 @@ public class HomeFragment extends Fragment {
                 }
             }
         }
-
-
     }
 
     private void disableVisualizzaPercorsoButtonState() {

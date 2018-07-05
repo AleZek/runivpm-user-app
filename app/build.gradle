@@ -57,6 +57,8 @@ dependencies {
     implementation 'com.github.mirrajabi:search-dialog:1.2.2'
     implementation 'com.davemorrissey.labs:subsampling-scale-image-view:3.10.0'
     implementation 'org.apache.commons:commons-lang3:3.3.2'
+
+
 }
 
 apply plugin: 'com.google.gms.google-services'

@@ -1,27 +1,24 @@
-package com.ids.idsuserapp.autentication;
+package com.ids.idsuserapp.authentication;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import com.ids.idsuserapp.R;
 
-public class LoginActivity extends AppCompatActivity {
+public class RegistrationActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
-
-
+        setContentView(R.layout.activity_registration);
 
 
         if (savedInstanceState == null) {
-            LoginFragment loginFragment =new LoginFragment();
+            RegistrationFragment registrationFragment =new RegistrationFragment();
             android.support.v4.app.FragmentManager fm = getSupportFragmentManager();
-            fm.beginTransaction().replace(R.id.login_content_pane, loginFragment, LoginFragment.TAG)
+            fm.beginTransaction().replace(R.id.registraion_content_pane, registrationFragment, RegistrationFragment.TAG)
                     .commit();
         }
-
 
 
     }

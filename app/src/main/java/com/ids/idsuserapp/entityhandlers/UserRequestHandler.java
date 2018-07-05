@@ -13,7 +13,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.ids.idsuserapp.HomeActivity;
 import com.ids.idsuserapp.R;
-import com.ids.idsuserapp.autentication.LoginActivity;
+import com.ids.idsuserapp.authentication.LoginActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -23,6 +23,7 @@ public class UserRequestHandler {
 
     private Context context;
     private com.android.volley.RequestQueue serverRequestQueue;
+
 
 
     public UserRequestHandler(Context context) {

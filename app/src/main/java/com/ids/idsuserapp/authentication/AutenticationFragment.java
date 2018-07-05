@@ -1,4 +1,4 @@
-package com.ids.idsuserapp.autentication;
+package com.ids.idsuserapp.authentication;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -120,7 +120,11 @@ public class AutenticationFragment extends Fragment {
 
 
                   Intent intent = new Intent(getActivity(), LoginActivity.class);
+                  intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                   startActivity(intent);
+
+
+
               }
 
           });
@@ -130,6 +134,7 @@ public class AutenticationFragment extends Fragment {
               @Override
               public void onClick(View v) {
                   Intent intent = new Intent(getActivity(),RegistrationActivity.class);
+                  intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                   startActivity(intent);
               }
           });
