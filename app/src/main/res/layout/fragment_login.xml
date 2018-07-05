@@ -49,6 +49,7 @@
                     android:hint="Email"
                     android:inputType="textEmailAddress"
                     android:singleLine="true"
+                    android:text="a@a.a"
                     android:textSize="18sp" />
             </android.support.design.widget.TextInputLayout>
 

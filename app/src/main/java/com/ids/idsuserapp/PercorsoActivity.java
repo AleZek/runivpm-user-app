@@ -25,6 +25,7 @@ import com.ids.idsuserapp.viewmodel.ArcoViewModel;
 import com.ids.idsuserapp.viewmodel.BeaconViewModel;
 import com.ids.idsuserapp.wayfinding.Dijkstra;
 import com.ids.idsuserapp.wayfinding.Grafo;
+import com.ids.idsuserapp.wayfinding.IndiciNavigazione;
 import com.ids.idsuserapp.wayfinding.Percorso;
 import com.ids.idsuserapp.wayfinding.PercorsoMultipiano;
 
@@ -51,6 +52,7 @@ public class PercorsoActivity extends AppCompatActivity implements BluetoothLoca
     private Percorso selectedSolution;
     private boolean emergency = false;
     private boolean offline = true;
+    private IndiciNavigazione indiciNavigazione;
 
 
     public ViewHolderPercorso holder;
@@ -197,8 +199,10 @@ public class PercorsoActivity extends AppCompatActivity implements BluetoothLoca
         @Override
         public void onTaskSuccess(List<Percorso> searchResult) {
             solutionPaths = searchResult;
-            selectedSolution = new Percorso(solutionPaths.get(0));
-            PercorsoMultipiano multiFloorSolution = selectedSolution.toMultiFloorPath();
+            if (selectedSolution == null)
+                selectedSolution = new Percorso(solutionPaths.get(0));
+            Percorso pathToDraw = new Percorso(selectedSolution.subList(indiciNavigazione.current, selectedSolution.size() - 1));
+            PercorsoMultipiano multiFloorSolution = pathToDraw.toMultiFloorPath();
 
             try {
                 holder.mapView.drawRoute(multiFloorSolution);
@@ -223,14 +227,29 @@ public class PercorsoActivity extends AppCompatActivity implements BluetoothLoca
         }
     }
 
-    /**
-     * Responsible for navigation start button
-     */
-    private class NavigationButtonListener implements View.OnClickListener {
+    private class NavigationButtonAvantiListener implements View.OnClickListener {
 
         @Override
         public void onClick(View v) {
-                openNavigatorFragment();
+            if (!holder.fabButtonIndietro.isClickable()) {
+                holder.fabButtonIndietro.setEnabled(true);
+                holder.fabButtonIndietro.setClickable(true);
+            }
+            indiciNavigazione = new IndiciNavigazione(indiciNavigazione.next, indiciNavigazione.next + 1);
+            holder.setupMapView();
+        }
+    }
+
+    private class NavigationButtonIndietroListener implements View.OnClickListener {
+
+        @Override
+        public void onClick(View v) {
+            if (!holder.fabButtonAvanti.isClickable()) {
+                holder.fabButtonAvanti.setEnabled(true);
+                holder.fabButtonAvanti.setClickable(true);
+            }
+            indiciNavigazione = new IndiciNavigazione(indiciNavigazione.current - 1, indiciNavigazione.current);
+            holder.setupMapView();
         }
     }
 
@@ -243,13 +262,15 @@ public class PercorsoActivity extends AppCompatActivity implements BluetoothLoca
 
     public class ViewHolderPercorso extends BaseFragment.ViewHolder {
         public final MapView mapView;
-        public final FloatingActionButton startFabButton;
-
+        public final FloatingActionButton fabButtonAvanti;
+        public final FloatingActionButton fabButtonIndietro;
 
 
         public ViewHolderPercorso() {
-            startFabButton = findViewById(R.id.navigation_fab_start);
-            startFabButton.setOnClickListener(new NavigationButtonListener());
+            fabButtonAvanti = findViewById(R.id.navigation_fab_avanti);
+            fabButtonIndietro = findViewById(R.id.navigation_fab_indietro);
+            fabButtonAvanti.setOnClickListener(new NavigationButtonAvantiListener());
+            fabButtonIndietro.setOnClickListener(new NavigationButtonIndietroListener());
 
             mapView = findViewById(R.id.navigation_map_image_percorso);
             setupMapView();
@@ -257,14 +278,33 @@ public class PercorsoActivity extends AppCompatActivity implements BluetoothLoca
         }
 
         public void setupMapView() {
-
-            MinimumPathTask minimumPathTask = new MinimumPathTask(getBaseContext(), new MinimumPathListener(), arcoViewModel);
-            minimumPathTask.execute(origine, destinazione);
-
-
+            Beacon currentBeacon;
+            if (selectedSolution != null) {
+                if (indiciNavigazione.current == 0) {
+                    fabButtonIndietro.setClickable(false);
+                    fabButtonIndietro.setEnabled(false);
+                }
+                if (indiciNavigazione.current == selectedSolution.size() - 2) {
+                    //fine
+                    fabButtonAvanti.setClickable(false);
+                    fabButtonAvanti.setEnabled(false);
+                }
+                currentBeacon = selectedSolution.get(indiciNavigazione.current);
+                if (currentBeacon != destinazione)
+                    launchSearchPathTask(currentBeacon);
+            } else {
+                currentBeacon = origine;
+                indiciNavigazione = new IndiciNavigazione(0, 1);
+                launchSearchPathTask(currentBeacon);
+                fabButtonIndietro.setClickable(false);
+                fabButtonIndietro.setEnabled(false);
+            }
         }
 
-
+        private void launchSearchPathTask(Beacon currentBeacon) {
+            MinimumPathTask minimumPathTask = new MinimumPathTask(getBaseContext(), new MinimumPathListener(), arcoViewModel);
+            minimumPathTask.execute(currentBeacon, destinazione);
+        }
     }
 
 
