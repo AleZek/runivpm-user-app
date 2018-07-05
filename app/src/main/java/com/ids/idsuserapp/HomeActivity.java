@@ -1,29 +1,25 @@
 package com.ids.idsuserapp;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.text.Layout;
 import android.util.Log;
-import android.view.View;
-import android.widget.Button;
 
-import com.ids.idsuserapp.db.entity.Beacon;
 import com.ids.idsuserapp.entityhandlers.ArcoDataHandler;
 import com.ids.idsuserapp.entityhandlers.BeaconDataHandler;
 import com.ids.idsuserapp.entityhandlers.DataRetriever;
 import com.ids.idsuserapp.entityhandlers.MappaDataHandler;
 import com.ids.idsuserapp.percorso.BaseFragment;
 import com.ids.idsuserapp.percorso.HomeFragment;
-import com.ids.idsuserapp.percorso.Tasks.TaskListener;
+import com.ids.idsuserapp.services.LocatorService;
+import com.ids.idsuserapp.threads.LocatorThread;
 import com.ids.idsuserapp.utils.ConnectionChecker;
+import com.ids.idsuserapp.utils.PermissionsUtil;
 import com.ids.idsuserapp.viewmodel.ArcoViewModel;
 import com.ids.idsuserapp.viewmodel.BeaconViewModel;
 import com.ids.idsuserapp.viewmodel.MappaViewModel;
-
-import org.apache.commons.lang3.SerializationUtils;
 
 public class HomeActivity extends AppCompatActivity implements DataRetriever{
     public static final String TAG = HomeActivity.class.getSimpleName();
@@ -33,6 +29,7 @@ public class HomeActivity extends AppCompatActivity implements DataRetriever{
     private BeaconDataHandler beaconDataHandler;
     private MappaDataHandler mappaDataHandler;
     private ArcoDataHandler arcoDataHandler;
+    private PermissionsUtil permissionsUtil;
     private static final int BT_ENABLED = 1;
     private boolean offline;
     public static final String OFFLINE_USAGE = "offline_usage";
@@ -42,16 +39,20 @@ public class HomeActivity extends AppCompatActivity implements DataRetriever{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-
+        permissionsUtil = new PermissionsUtil(this);
         setupMessageReception(savedInstanceState);
         setupViewModels();
         setupDataHandlers();
+
 //        startLocatorThread();
 
         //controlla se la connessione ad internet è attiva dato l application context,
         //se si allora viene pulita la lista dei beacon e viene aggiornato il dataset
-        if (ConnectionChecker.getInstance().isNetworkAvailable(getApplicationContext()))
+        if (ConnectionChecker.getInstance().isNetworkAvailable(getApplicationContext())) {
             getDatasetFromServer();
+            if(permissionsUtil.requestEnableBt())
+                startLocatorService(LocatorThread.STANDARD_MODE);
+        }
 
 
         boolean emergency = false;
@@ -151,6 +152,25 @@ public class HomeActivity extends AppCompatActivity implements DataRetriever{
                 .commit();
     }
 
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode){
+            case BT_ENABLED:
+                if(resultCode == RESULT_OK)
+                    startLocatorService(LocatorThread.STANDARD_MODE);
+                else
+                    permissionsUtil.btAlert();
+                break;
+        }
+    }
+
+    private void startLocatorService(int mode) {
+        Intent serviceIntent = new Intent(this, LocatorService.class);
+        serviceIntent.setAction(Integer.toString(mode));
+        startService(serviceIntent);
+    }
 
 }
 
