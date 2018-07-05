@@ -49,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         Intent logoIntent = new Intent(MainActivity.this,LogoActivity.class);
+        logoIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(logoIntent);
 
 
