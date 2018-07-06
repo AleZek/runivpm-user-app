@@ -141,31 +141,35 @@ public class HomeFragment extends BaseFragment {
         }*/
     }
 
-    public void setText(){
+    public void setText() {
         holder.infoTextView.setText("\n Seleziona origine e destinazione per visualizzare il percorso");
-        if(choosenOrigin && !choosenDestination) {
+        if (choosenOrigin && !choosenDestination) {
             holder.infoTextView.setText("\nOrigine selezionata: " +
                     "\n Piano:" + origin.getFloor().toString() +
-                    "\n Beacon: " + origin.getNome().toString()+
+                    "\n Beacon: " + origin.getNome().toString() +
                     "\n\n Seleziona destinazione per poter visualizzare il percorso.");
-        } else if(choosenOrigin && choosenDestination){
-            holder.infoTextView.setText(
-                    "\nOrigine selezionata: " +
-                            "\n Piano:" + origin.getFloor().toString() +
-                            "\n Beacon scelto: " + origin.getNome().toString()+
-                            "\n\n Destinazione selezionata: " +
-                            "\n Piano: " + destination.getFloor().toString() +
-                            "\n Beacon scelto: " + destination.getNome().toString());
-        } else if(choosenDestination && !choosenOrigin) {
+        } else if (choosenOrigin && choosenDestination) {
+            if (choosenOrigin == choosenDestination) {
+                holder.infoTextView.setText("\n Devi selezionare due Beacon diversi per origine e destinazione");
+            } else {
+                holder.infoTextView.setText(
+                        "\nOrigine selezionata: " +
+                                "\n Piano:" + origin.getFloor().toString() +
+                                "\n Beacon scelto: " + origin.getNome().toString() +
+                                "\n\n Destinazione selezionata: " +
+                                "\n Piano: " + destination.getFloor().toString() +
+                                "\n Beacon scelto: " + destination.getNome().toString());
+            }
+        } else if (choosenDestination && !choosenOrigin) {
             holder.infoTextView.setText("\nDestinazione selezionata: " +
                     "\n Piano:" + destination.getFloor().toString() +
-                    "\n Beacon: " + destination.getNome().toString()+
+                    "\n Beacon: " + destination.getNome().toString() +
                     "\n\n Seleziona origine per poter visualizzare il percorso.");
-        } else if(choosenOrigin && choosenDestination){
+        } else if (choosenOrigin && choosenDestination) {
             holder.infoTextView.setText(
                     "\n Origine selezionata: " +
                             "\n Piano:" + origin.getFloor().toString() +
-                            "\n Beacon scelto: " + origin.getNome().toString()+
+                            "\n Beacon scelto: " + origin.getNome().toString() +
                             "\n\n Destinazione selezionata: " +
                             "\n Piano: " + destination.getFloor().toString() +
                             "\n Beacon scelto: " + destination.getNome().toString());
@@ -210,24 +214,24 @@ public class HomeFragment extends BaseFragment {
         public BeaconViewModel mBeaconViewModel;
 
         public ViewHolder(View v) {
-            toolbar = find(v,(R.id.navigation_toolbar));
-            selezionaMappaOrigineButton = find(v,R.id.scegli_da_mappa_origine_button);
-            selezionaMappaDestinazioneButton = find(v,R.id.scegli_da_mappa_destinazione_button);
-            selezionaBeaconOrigineButton = find(v,R.id.scegli_da_beacon_origine_button);
-            selezionaBeaconDestinazioneButton = find(v,R.id.scegli_da_beacon_destinazione_button);
+            toolbar = find(v, (R.id.navigation_toolbar));
+            selezionaMappaOrigineButton = find(v, R.id.scegli_da_mappa_origine_button);
+            selezionaMappaDestinazioneButton = find(v, R.id.scegli_da_mappa_destinazione_button);
+            selezionaBeaconOrigineButton = find(v, R.id.scegli_da_beacon_origine_button);
+            selezionaBeaconDestinazioneButton = find(v, R.id.scegli_da_beacon_destinazione_button);
 
-            selezionaMappaOrigineLayout = find(v,R.id.scegli_da_mappa_origine_layout);
-            selezionaMappaDestinazioneLayout = find(v,R.id.scegli_da_mappa_destinazione_layout);
-            selezionaBeaconOrigineLayout = find(v,R.id.scegli_da_beacon_origine_layout);
-            selezionaBeaconDestinazioneLayout = find(v,R.id.scegli_da_beacon_destinazione_layout);
+            selezionaMappaOrigineLayout = find(v, R.id.scegli_da_mappa_origine_layout);
+            selezionaMappaDestinazioneLayout = find(v, R.id.scegli_da_mappa_destinazione_layout);
+            selezionaBeaconOrigineLayout = find(v, R.id.scegli_da_beacon_origine_layout);
+            selezionaBeaconDestinazioneLayout = find(v, R.id.scegli_da_beacon_destinazione_layout);
 
-            infoTextView = find(v,R.id.info_text_view);
-            visualizzaPercorsoButton = find(v,R.id.visualizza_percorso_button);
+            infoTextView = find(v, R.id.info_text_view);
+            visualizzaPercorsoButton = find(v, R.id.visualizza_percorso_button);
             //   mappaContainer = v.findViewById(R.id.navigation_map_image);
 
 
-            selezionaOrigineButton =find(v,R.id.seleziona_origine);
-            selezionaDestinazioneButton = find(v,R.id.seleziona_destinazione);
+            selezionaOrigineButton = find(v, R.id.seleziona_origine);
+            selezionaDestinazioneButton = find(v, R.id.seleziona_destinazione);
 
 
             selezionaMappaOrigineLayout.setVisibility(View.GONE);
@@ -271,7 +275,7 @@ public class HomeFragment extends BaseFragment {
                     new SimpleSearchDialogCompat(getActivity(), "Cerca", "Seleziona beacon", null, initData(), new SearchResultListener<Searchable>() {
                         @Override
                         public void onSelected(BaseSearchDialogCompat baseSearchDialogCompat, Searchable searchable, int i) {
-                            Toast.makeText(getActivity(),"Hai selezionato il "+searchable.getTitle(),Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), "Hai selezionato il " + searchable.getTitle(), Toast.LENGTH_SHORT).show();
                             baseSearchDialogCompat.dismiss();
 
                         }
@@ -279,7 +283,6 @@ public class HomeFragment extends BaseFragment {
 
 
                 }
-
 
 
             });
@@ -290,7 +293,7 @@ public class HomeFragment extends BaseFragment {
                     new SimpleSearchDialogCompat(getActivity(), "Cerca", "Seleziona beacon", null, initData(), new SearchResultListener<Searchable>() {
                         @Override
                         public void onSelected(BaseSearchDialogCompat baseSearchDialogCompat, Searchable searchable, int i) {
-                            Toast.makeText(getActivity(),"Hai selezionato il "+searchable.getTitle(),Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), "Hai selezionato il " + searchable.getTitle(), Toast.LENGTH_SHORT).show();
                             baseSearchDialogCompat.dismiss();
 
                         }
@@ -300,12 +303,11 @@ public class HomeFragment extends BaseFragment {
                 }
 
 
-
             });
 
         }
 
-        private ArrayList<SearchModel> initData(){
+        private ArrayList<SearchModel> initData() {
             ArrayList<SearchModel> items = new ArrayList<>();
             items.add(new SearchModel("beacon1"));
             items.add(new SearchModel("beacon2"));
@@ -317,7 +319,6 @@ public class HomeFragment extends BaseFragment {
 
             return items;
         }
-
 
 
         @SuppressWarnings("unchecked")
@@ -361,8 +362,6 @@ public class HomeFragment extends BaseFragment {
     }
 
 
-
-
     private void disableVisualizzaPercorsoButtonState() {
         holder.visualizzaPercorsoButton.setEnabled(false);
         holder.visualizzaPercorsoButton.setTextColor(color(R.color.disabledText));
@@ -371,10 +370,11 @@ public class HomeFragment extends BaseFragment {
     private void toggleConfirmButtonState() {
         if (origin == null) {
             disableVisualizzaPercorsoButtonState();
-
         } else if (destination == null) {
             disableVisualizzaPercorsoButtonState();
-        } else {
+        } else if (origin == destination) {
+            disableVisualizzaPercorsoButtonState();
+        }else {
             holder.visualizzaPercorsoButton.setEnabled(true);
             holder.visualizzaPercorsoButton.setTextColor(color(R.color.linkText));
             holder.visualizzaPercorsoButton.setOnClickListener(new View.OnClickListener() {
@@ -388,8 +388,6 @@ public class HomeFragment extends BaseFragment {
             });
         }
     }
-
-
 
 
 }
