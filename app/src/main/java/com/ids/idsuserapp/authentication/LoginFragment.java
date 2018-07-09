@@ -3,6 +3,7 @@ package com.ids.idsuserapp.authentication;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -13,8 +14,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import android.app.ProgressDialog;
 import com.ids.idsuserapp.R;
 import com.ids.idsuserapp.entityhandlers.UserRequestHandler;
 import com.ids.idsuserapp.percorso.BaseFragment;
@@ -94,6 +98,9 @@ public class LoginFragment extends Fragment {
         public final EditText pwdTxt;
         public final Button loginButton;
         public UserRequestHandler userRequestHandler;
+        private ProgressBar progressbar;
+        final RelativeLayout layout;
+
 
 
 
@@ -103,6 +110,10 @@ public class LoginFragment extends Fragment {
             emailTxt = view.findViewById(R.id.email_txt);
             pwdTxt = view.findViewById(R.id.pwd_txt);
             loginButton = view.findViewById(R.id.login_btn);
+            progressbar = view.findViewById(R.id.progress_bar);
+            progressbar.setVisibility(View.GONE);
+            layout = view.findViewById(R.id.relative_layout);
+
 
 
 
@@ -158,9 +169,13 @@ public class LoginFragment extends Fragment {
 
                         String pas = pwdTxt.getText().toString();
 
+                       progressbar.setVisibility(View.VISIBLE);
+
+
                         if (ConnectionChecker.getInstance().isNetworkAvailable(getContext()))
                             userRequestHandler.loginUserServer(new_mail,pas);
-                        }
+
+                    }
 
                 }
             });

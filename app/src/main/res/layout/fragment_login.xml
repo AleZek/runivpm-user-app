@@ -22,6 +22,7 @@
         android:textStyle="bold" />
 
     <RelativeLayout
+        android:id="@+id/relative_layout"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/registration_title"
@@ -53,6 +54,13 @@
                     android:textSize="18sp" />
             </android.support.design.widget.TextInputLayout>
 
+            <ProgressBar
+                android:id="@+id/progress_bar"
+                style="?android:attr/progressBarStyleLarge"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone" />
+
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -76,6 +84,8 @@
                 android:backgroundTint="#ffffff"
                 android:text="LOGIN"
                 android:textColor="#B30000" />
+
+
         </LinearLayout>
     </RelativeLayout>
 
