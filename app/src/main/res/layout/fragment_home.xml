@@ -123,6 +123,7 @@
     </LinearLayout>
 
 
+
     <Button
         android:id="@+id/visualizza_percorso_button"
         android:layout_width="match_parent"
@@ -134,4 +135,19 @@
         android:background="@drawable/borderless_white_button"
         android:layout_weight="1"
         android:text="Visualizza Percorso" />
+
+    <Button
+        android:id="@+id/visualizza_uscita_vicina_button"
+        android:layout_width="match_parent"
+        android:layout_above="@+id/visualizza_percorso_button"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginBottom="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/borderless_white_button"
+        android:layout_weight="1"
+        android:text="Visualizza l'uscita più vicina" />
+
+
 </RelativeLayout>

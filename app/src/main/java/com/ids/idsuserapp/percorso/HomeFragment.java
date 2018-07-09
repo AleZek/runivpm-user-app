@@ -147,9 +147,10 @@ public class HomeFragment extends BaseFragment {
             holder.infoTextView.setText("\nOrigine selezionata: " +
                     "\n Piano:" + origin.getFloor().toString() +
                     "\n Beacon: " + origin.getNome().toString() +
-                    "\n\n Seleziona destinazione per poter visualizzare il percorso.");
+                    "\n\n Seleziona anche la destinazione se vuoi visualizzare il percorso.");
+
         } else if (choosenOrigin && choosenDestination) {
-            if (choosenOrigin == choosenDestination) {
+            if (origin.getId() == destination.getId()) {
                 holder.infoTextView.setText("\n Devi selezionare due Beacon diversi per origine e destinazione");
             } else {
                 holder.infoTextView.setText(
@@ -207,6 +208,7 @@ public class HomeFragment extends BaseFragment {
         public final View selezionaBeaconDestinazioneLayout;
 
         public final Button visualizzaPercorsoButton;
+        public final Button visualizzaUscitaVicinaButton;
         public TextView infoTextView;
 
         public final Button selezionaOrigineButton;
@@ -227,6 +229,7 @@ public class HomeFragment extends BaseFragment {
 
             infoTextView = find(v, R.id.info_text_view);
             visualizzaPercorsoButton = find(v, R.id.visualizza_percorso_button);
+            visualizzaUscitaVicinaButton = find(v, R.id.visualizza_uscita_vicina_button);
             //   mappaContainer = v.findViewById(R.id.navigation_map_image);
 
 
@@ -238,6 +241,9 @@ public class HomeFragment extends BaseFragment {
             selezionaMappaDestinazioneLayout.setVisibility(View.GONE);
             selezionaBeaconOrigineLayout.setVisibility(View.GONE);
             selezionaBeaconDestinazioneLayout.setVisibility(View.GONE);
+            visualizzaUscitaVicinaButton.setVisibility(View.GONE);
+            visualizzaPercorsoButton.setVisibility(View.GONE);
+
 
             //   mappaContainer.setVisibility(View.GONE);
 
@@ -363,19 +369,35 @@ public class HomeFragment extends BaseFragment {
 
 
     private void disableVisualizzaPercorsoButtonState() {
-        holder.visualizzaPercorsoButton.setEnabled(false);
-        holder.visualizzaPercorsoButton.setTextColor(color(R.color.disabledText));
+        holder.visualizzaPercorsoButton.setVisibility(View.GONE);
+    }
+
+    private void disableVisualizzaUscitaButtonState() {
+        holder.visualizzaUscitaVicinaButton.setVisibility(View.GONE);
     }
 
     private void toggleConfirmButtonState() {
         if (origin == null) {
             disableVisualizzaPercorsoButtonState();
+            disableVisualizzaUscitaButtonState();
         } else if (destination == null) {
             disableVisualizzaPercorsoButtonState();
+            holder.visualizzaUscitaVicinaButton.setVisibility(View.VISIBLE);
+            holder.visualizzaUscitaVicinaButton.setTextColor(color(R.color.linkText));
+            holder.visualizzaUscitaVicinaButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getActivity(), PercorsoActivity.class);
+                    intent.putExtra("beaconOrigine", SerializationUtils.serialize(origin));
+                    startActivity(intent);
+                }
+            });
         } else if (origin == destination) {
             disableVisualizzaPercorsoButtonState();
+            disableVisualizzaUscitaButtonState();
         }else {
-            holder.visualizzaPercorsoButton.setEnabled(true);
+            disableVisualizzaUscitaButtonState();
+            holder.visualizzaPercorsoButton.setVisibility(View.VISIBLE);
             holder.visualizzaPercorsoButton.setTextColor(color(R.color.linkText));
             holder.visualizzaPercorsoButton.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -389,5 +411,10 @@ public class HomeFragment extends BaseFragment {
         }
     }
 
-
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        origin = null;
+        destination = null;
+    }
 }
