@@ -1,4 +1,4 @@
-package com.ids.idsuserapp.autentication;
+package com.ids.idsuserapp.authentication;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -121,6 +121,9 @@ public class AutenticationFragment extends Fragment {
 
                   Intent intent = new Intent(getActivity(), LoginActivity.class);
                   startActivity(intent);
+
+
+
               }
 
           });

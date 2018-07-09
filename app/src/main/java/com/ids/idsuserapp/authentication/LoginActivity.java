@@ -1,8 +1,13 @@
-package com.ids.idsuserapp.autentication;
+package com.ids.idsuserapp.authentication;
 
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Window;
 
+import com.ids.idsuserapp.LogoActivity;
 import com.ids.idsuserapp.R;
 
 public class LoginActivity extends AppCompatActivity {
@@ -13,10 +18,8 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
 
-
-
         if (savedInstanceState == null) {
-            LoginFragment loginFragment =new LoginFragment();
+            LoginFragment loginFragment = new LoginFragment();
             android.support.v4.app.FragmentManager fm = getSupportFragmentManager();
             fm.beginTransaction().replace(R.id.login_content_pane, loginFragment, LoginFragment.TAG)
                     .commit();
@@ -25,4 +28,6 @@ public class LoginActivity extends AppCompatActivity {
 
 
     }
+
+
 }

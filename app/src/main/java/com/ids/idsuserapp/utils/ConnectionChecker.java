@@ -1,6 +1,9 @@
 package com.ids.idsuserapp.utils;
 
+import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
@@ -11,6 +14,7 @@ import android.net.NetworkInfo;
 public class ConnectionChecker {
 
     private static ConnectionChecker INSTANCE = null;
+
 
 
     private ConnectionChecker() {};

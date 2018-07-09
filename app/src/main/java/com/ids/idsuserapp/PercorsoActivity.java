@@ -139,43 +139,49 @@ public class PercorsoActivity extends AppCompatActivity implements BluetoothLoca
                 locatorThread.interrupt();
                 bluetoothLocator.stopScan();
             } else if (index != -1) {
-                Beacon nextBeacon = percorso.get(index + 1);
-                Toast.makeText(this, "Prosegui verso " + nextBeacon.getNome(), Toast.LENGTH_LONG).show();
+                if (userPositionBeacon != null) {
+                    if (index != -1) {
+                        Beacon nextBeacon = percorso.get(index + 1);
+                        Toast.makeText(this, "Prosegui verso " + nextBeacon.getNome(), Toast.LENGTH_LONG).show();
 //                getIndicazioni(userPositionBeacon, nextBeacon);
-            } else {
-                dijkstra.inizio(userPositionBeacon);
-                dijkstra.ricerca(destinazione);
-                Beacon nextBeacon = percorso.get(1);
-                Toast.makeText(this, "Prosegui verso " + nextBeacon.getNome(), Toast.LENGTH_LONG).show();
+                    } else if (userPositionBeacon.equals(destinazione)) {
+                        Toast.makeText(this, "Sei giunto a destinazione", Toast.LENGTH_LONG).show();
+                        locatorThread.interrupt();
+                        bluetoothLocator.stopScan();
+                    } else {
+                        dijkstra.inizio(userPositionBeacon);
+                        dijkstra.ricerca(destinazione);
+                        Beacon nextBeacon = percorso.get(1);
+                        Toast.makeText(this, "Prosegui verso " + nextBeacon.getNome(), Toast.LENGTH_LONG).show();
 //            getIndicazioni(userPositionBeacon, nextBeacon);
+                    }
+                }
             }
-        }
-    }
 
-    private void setCurrentPosition() {
-        userPosition = (String) bluetoothLocator.getStrongestBeacon().get("nome");
-        setUserBeacon();
-        locationText.setText(userPosition);
-    }
+            private void setCurrentPosition () {
+                userPosition = (String) bluetoothLocator.getStrongestBeacon().get("nome");
+                setUserBeacon();
+                locationText.setText(userPosition);
+            }
 
-    @Override
-    public void sendCurrentPosition(String device) {
-        if (bluetoothLocator.isBeacon(device)) {
-            setCurrentPosition();
-            nextStep();
-        }
-    }
+            @Override
+            public void sendCurrentPosition (String device){
+                if (bluetoothLocator.isBeacon(device)) {
+                    setCurrentPosition();
+                    nextStep();
+                }
+            }
 
 
-    //segmento di codice utile all unlock automaitico
+            //segmento di codice utile all unlock automaitico
 //        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
 //                + WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD|
 //                + WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED|
 //                + WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
 
 
-    //questo metodo permette alla app di sottoscriversi al topic emergenza, questo permette a firebase
-    // di mandare messaggi broadcast alle istanze della app
+            //questo metodo permette alla app di sottoscriversi al topic emergenza, questo permette a firebase
+            // di mandare messaggi broadcast alle istanze della app
 //    private void subscribeTopic(final String topic){
 //        FirebaseMessaging.getInstance().subscribeToTopic(topic)
 //                .addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -194,118 +200,120 @@ public class PercorsoActivity extends AppCompatActivity implements BluetoothLoca
 //    }
 
 
-    // @TODO Esternalizzare
-    private class MinimumPathListener implements TaskListener<List<Percorso>> {
-        @Override
-        public void onTaskSuccess(List<Percorso> searchResult) {
-            solutionPaths = searchResult;
-            if (selectedSolution == null)
-                selectedSolution = new Percorso(solutionPaths.get(0));
-            Percorso pathToDraw = new Percorso(selectedSolution.subList(indiciNavigazione.current, selectedSolution.size() - 1));
-            PercorsoMultipiano multiFloorSolution = pathToDraw.toMultiFloorPath();
+            // @TODO Esternalizzare
+            private class MinimumPathListener implements TaskListener<List<Percorso>> {
+                @Override
+                public void onTaskSuccess(List<Percorso> searchResult) {
+                    solutionPaths = searchResult;
+                    if (selectedSolution == null)
+                        selectedSolution = new Percorso(solutionPaths.get(0));
+                    Percorso pathToDraw = new Percorso(selectedSolution.subList(indiciNavigazione.current, selectedSolution.size() - 1));
+                    PercorsoMultipiano multiFloorSolution = pathToDraw.toMultiFloorPath();
 
-            try {
-                holder.mapView.drawRoute(multiFloorSolution);
-            } catch (OriginNotSettedException | DestinationNotSettedException e) {
-                e.printStackTrace();
-            }
+                    try {
+                        holder.mapView.drawRoute(multiFloorSolution);
+                    } catch (OriginNotSettedException | DestinationNotSettedException e) {
+                        e.printStackTrace();
+                    }
 
-        }
-
-        @Override
-        public void onTaskError(Exception e) {
-            Log.e(TAG, "Errore nel calcolo del percorso minimo", e);
-        }
-
-        @Override
-        public void onTaskComplete() {
-        }
-
-        @Override
-        public void onTaskCancelled() {
-
-        }
-    }
-
-    private class NavigationButtonAvantiListener implements View.OnClickListener {
-
-        @Override
-        public void onClick(View v) {
-            if (!holder.fabButtonIndietro.isClickable()) {
-                holder.fabButtonIndietro.setEnabled(true);
-                holder.fabButtonIndietro.setClickable(true);
-            }
-            indiciNavigazione = new IndiciNavigazione(indiciNavigazione.next, indiciNavigazione.next + 1);
-            holder.setupMapView();
-        }
-    }
-
-    private class NavigationButtonIndietroListener implements View.OnClickListener {
-
-        @Override
-        public void onClick(View v) {
-            if (!holder.fabButtonAvanti.isClickable()) {
-                holder.fabButtonAvanti.setEnabled(true);
-                holder.fabButtonAvanti.setClickable(true);
-            }
-            indiciNavigazione = new IndiciNavigazione(indiciNavigazione.current - 1, indiciNavigazione.current);
-            holder.setupMapView();
-        }
-    }
-
-    private void openNavigatorFragment() {
-        NavigatorFragment navigatorFragment = NavigatorFragment.newInstance(selectedSolution, emergency, offline);
-        NavigationActivity navActivity = new NavigationActivity();
-        navActivity.changeFragment(navigatorFragment);
-    }
-
-
-    public class ViewHolderPercorso extends BaseFragment.ViewHolder {
-        public final MapView mapView;
-        public final FloatingActionButton fabButtonAvanti;
-        public final FloatingActionButton fabButtonIndietro;
-
-
-        public ViewHolderPercorso() {
-            fabButtonAvanti = findViewById(R.id.navigation_fab_avanti);
-            fabButtonIndietro = findViewById(R.id.navigation_fab_indietro);
-            fabButtonAvanti.setOnClickListener(new NavigationButtonAvantiListener());
-            fabButtonIndietro.setOnClickListener(new NavigationButtonIndietroListener());
-
-            mapView = findViewById(R.id.navigation_map_image_percorso);
-            setupMapView();
-
-        }
-
-        public void setupMapView() {
-            Beacon currentBeacon;
-            if (selectedSolution != null) {
-                if (indiciNavigazione.current == 0) {
-                    fabButtonIndietro.setClickable(false);
-                    fabButtonIndietro.setEnabled(false);
                 }
-                if (indiciNavigazione.current == selectedSolution.size() - 2) {
-                    //fine
-                    fabButtonAvanti.setClickable(false);
-                    fabButtonAvanti.setEnabled(false);
-                }
-                currentBeacon = selectedSolution.get(indiciNavigazione.current);
-                if (currentBeacon != destinazione)
-                    launchSearchPathTask(currentBeacon);
-            } else {
-                currentBeacon = origine;
-                indiciNavigazione = new IndiciNavigazione(0, 1);
-                launchSearchPathTask(currentBeacon);
-                fabButtonIndietro.setClickable(false);
-                fabButtonIndietro.setEnabled(false);
-            }
-        }
 
-        private void launchSearchPathTask(Beacon currentBeacon) {
-            MinimumPathTask minimumPathTask = new MinimumPathTask(getBaseContext(), new MinimumPathListener(), arcoViewModel);
-            minimumPathTask.execute(currentBeacon, destinazione);
+                @Override
+                public void onTaskError(Exception e) {
+                    Log.e(TAG, "Errore nel calcolo del percorso minimo", e);
+                }
+
+                @Override
+                public void onTaskComplete() {
+                }
+
+                @Override
+                public void onTaskCancelled() {
+
+                }
+            }
+
+            private class NavigationButtonAvantiListener implements View.OnClickListener {
+
+                @Override
+                public void onClick(View v) {
+                    if (!holder.fabButtonIndietro.isClickable()) {
+                        holder.fabButtonIndietro.setEnabled(true);
+                        holder.fabButtonIndietro.setClickable(true);
+                    }
+                    indiciNavigazione = new IndiciNavigazione(indiciNavigazione.next, indiciNavigazione.next + 1);
+                    holder.setupMapView();
+                }
+            }
+
+            private class NavigationButtonIndietroListener implements View.OnClickListener {
+
+                @Override
+                public void onClick(View v) {
+                    if (!holder.fabButtonAvanti.isClickable()) {
+                        holder.fabButtonAvanti.setEnabled(true);
+                        holder.fabButtonAvanti.setClickable(true);
+                    }
+                    indiciNavigazione = new IndiciNavigazione(indiciNavigazione.current - 1, indiciNavigazione.current);
+                    holder.setupMapView();
+                }
+            }
+
+            private void openNavigatorFragment () {
+                NavigatorFragment navigatorFragment = NavigatorFragment.newInstance(selectedSolution, emergency, offline);
+                NavigationActivity navActivity = new NavigationActivity();
+                navActivity.changeFragment(navigatorFragment);
+            }
+
+
+            public class ViewHolderPercorso extends BaseFragment.ViewHolder {
+                public final MapView mapView;
+                public final FloatingActionButton fabButtonAvanti;
+                public final FloatingActionButton fabButtonIndietro;
+
+
+                public ViewHolderPercorso() {
+                    fabButtonAvanti = findViewById(R.id.navigation_fab_avanti);
+                    fabButtonIndietro = findViewById(R.id.navigation_fab_indietro);
+                    fabButtonAvanti.setOnClickListener(new NavigationButtonAvantiListener());
+                    fabButtonIndietro.setOnClickListener(new NavigationButtonIndietroListener());
+
+                    mapView = findViewById(R.id.navigation_map_image_percorso);
+                    setupMapView();
+
+                }
+
+                public void setupMapView() {
+                    Beacon currentBeacon;
+                    if (selectedSolution != null) {
+                        if (indiciNavigazione.current == 0) {
+                            fabButtonIndietro.setClickable(false);
+                            fabButtonIndietro.setEnabled(false);
+                        }
+                        if (indiciNavigazione.current == selectedSolution.size() - 2) {
+                            //fine
+                            fabButtonAvanti.setClickable(false);
+                            fabButtonAvanti.setEnabled(false);
+                        }
+                        currentBeacon = selectedSolution.get(indiciNavigazione.current);
+                        if (currentBeacon != destinazione)
+                            launchSearchPathTask(currentBeacon);
+                    } else {
+                        currentBeacon = origine;
+                        indiciNavigazione = new IndiciNavigazione(0, 1);
+                        launchSearchPathTask(currentBeacon);
+                        fabButtonIndietro.setClickable(false);
+                        fabButtonIndietro.setEnabled(false);
+                    }
+                }
+
+                private void launchSearchPathTask(Beacon currentBeacon) {
+                    MinimumPathTask minimumPathTask = new MinimumPathTask(getBaseContext(), new MinimumPathListener(), arcoViewModel);
+                    minimumPathTask.execute(currentBeacon, destinazione);
+                }
+            }
+
+
         }
     }
-
-
 }

@@ -1,8 +1,12 @@
-package com.ids.idsuserapp.autentication;
+package com.ids.idsuserapp.authentication;
 
+import android.content.DialogInterface;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+import com.ids.idsuserapp.HomeActivity;
+import com.ids.idsuserapp.MainActivity;
 import com.ids.idsuserapp.R;
 
 public class RegistrationActivity extends AppCompatActivity {
@@ -22,4 +26,6 @@ public class RegistrationActivity extends AppCompatActivity {
 
 
     }
+
+
 }

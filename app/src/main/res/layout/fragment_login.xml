@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="#B30000"
     android:orientation="vertical"
     android:scrollbarAlwaysDrawVerticalTrack="true">
@@ -21,6 +22,7 @@
         android:textStyle="bold" />
 
     <RelativeLayout
+        android:id="@+id/relative_layout"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/registration_title"
@@ -52,7 +54,6 @@
                     android:text="a@a.a"
                     android:textSize="18sp" />
             </android.support.design.widget.TextInputLayout>
-
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -76,6 +77,8 @@
                 android:backgroundTint="#ffffff"
                 android:text="LOGIN"
                 android:textColor="#B30000" />
+
+
         </LinearLayout>
     </RelativeLayout>
 

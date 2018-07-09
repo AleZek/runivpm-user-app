@@ -24,7 +24,6 @@ import com.ids.idsuserapp.viewmodel.BeaconViewModel;
 import org.apache.commons.lang3.SerializationUtils;
 
 import java.util.ArrayList;
-
 import ir.mirrajabi.searchdialog.SimpleSearchDialogCompat;
 import ir.mirrajabi.searchdialog.core.BaseSearchDialogCompat;
 import ir.mirrajabi.searchdialog.core.SearchResultListener;
@@ -327,6 +326,12 @@ public class HomeFragment extends BaseFragment {
         }
 
 
+
+
+
+
+
+
         @SuppressWarnings("unchecked")
         public <T extends View> T find(View view, int id) {
             View resultView = view.findViewById(id);
@@ -365,8 +370,8 @@ public class HomeFragment extends BaseFragment {
             }
         }
 
-    }
 
+    }
 
     private void disableVisualizzaPercorsoButtonState() {
         holder.visualizzaPercorsoButton.setVisibility(View.GONE);
@@ -417,4 +422,6 @@ public class HomeFragment extends BaseFragment {
         origin = null;
         destination = null;
     }
+
+
 }

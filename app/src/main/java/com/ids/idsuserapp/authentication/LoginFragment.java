@@ -1,8 +1,12 @@
-package com.ids.idsuserapp.autentication;
+package com.ids.idsuserapp.authentication;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -10,14 +14,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
+import android.widget.Toast;
 
+import android.app.ProgressDialog;
 import com.ids.idsuserapp.R;
 import com.ids.idsuserapp.entityhandlers.UserRequestHandler;
 import com.ids.idsuserapp.percorso.BaseFragment;
+import com.ids.idsuserapp.threads.LocatorThread;
 import com.ids.idsuserapp.utils.ConnectionChecker;
+import com.ids.idsuserapp.utils.PermissionsUtil;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -38,7 +49,10 @@ public class LoginFragment extends Fragment {
     private String email;
     //private EmailAutocompleter emailAutocompleter;
 
-    private ViewHolder holder;
+    private PermissionsUtil permissionsUtil;
+
+
+    private LoginFragment.ViewHolder holder;
     public LoginFragment() {
         // Required empty public constructor
     }
@@ -63,15 +77,16 @@ public class LoginFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            email = getArguments().getString(EMAIL);
-        }
+            email = getArguments().getString(EMAIL); }
+
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_login, container, false);
-        holder = new ViewHolder(view);
+        holder = new LoginFragment.ViewHolder(view);
         return view;
     }
 
@@ -89,6 +104,10 @@ public class LoginFragment extends Fragment {
         public final EditText pwdTxt;
         public final Button loginButton;
         public UserRequestHandler userRequestHandler;
+        private ProgressBar progressbar;
+        final RelativeLayout layout;
+
+
 
 
         public ViewHolder(View view) {
@@ -97,9 +116,13 @@ public class LoginFragment extends Fragment {
             emailTxt = view.findViewById(R.id.email_txt);
             pwdTxt = view.findViewById(R.id.pwd_txt);
             loginButton = view.findViewById(R.id.login_btn);
+            layout = view.findViewById(R.id.relative_layout);
+
+
 
 
             userRequestHandler = new UserRequestHandler(getContext());
+
 
 
             loginButton.setOnClickListener(new View.OnClickListener() {
@@ -151,18 +174,17 @@ public class LoginFragment extends Fragment {
                         String pas = pwdTxt.getText().toString();
 
 
-                        if (ConnectionChecker.getInstance().isNetworkAvailable(getContext()))
-                            userRequestHandler.loginUserServer(new_mail,pas);
-
-
-                    }
+                        if (ConnectionChecker.getInstance().isNetworkAvailable(getContext())){
+                            ProgressDialog progressDialog = new ProgressDialog(getActivity());
+                            progressDialog.setTitle("Login");
+                            progressDialog.setMessage("Login in corso..");
+                            progressDialog.show();
+                            //progressbar.setVisibility(View.VISIBLE);
+                         userRequestHandler.loginUserServer(new_mail,pas);}
+                         }
 
                 }
-            });
-
-
-        }
-
-        }
-    }
+                            });
+            }
+            }}
 
