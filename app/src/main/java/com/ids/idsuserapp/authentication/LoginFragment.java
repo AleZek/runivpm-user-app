@@ -22,7 +22,9 @@ import android.app.ProgressDialog;
 import com.ids.idsuserapp.R;
 import com.ids.idsuserapp.entityhandlers.UserRequestHandler;
 import com.ids.idsuserapp.percorso.BaseFragment;
+import com.ids.idsuserapp.threads.LocatorThread;
 import com.ids.idsuserapp.utils.ConnectionChecker;
+import com.ids.idsuserapp.utils.PermissionsUtil;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -46,6 +48,9 @@ public class LoginFragment extends Fragment {
 
     private String email;
     //private EmailAutocompleter emailAutocompleter;
+
+    private PermissionsUtil permissionsUtil;
+
 
     private LoginFragment.ViewHolder holder;
     public LoginFragment() {
@@ -72,8 +77,9 @@ public class LoginFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            email = getArguments().getString(EMAIL);
-        }
+            email = getArguments().getString(EMAIL); }
+
+
     }
 
     @Override
@@ -110,8 +116,6 @@ public class LoginFragment extends Fragment {
             emailTxt = view.findViewById(R.id.email_txt);
             pwdTxt = view.findViewById(R.id.pwd_txt);
             loginButton = view.findViewById(R.id.login_btn);
-            progressbar = view.findViewById(R.id.progress_bar);
-            progressbar.setVisibility(View.GONE);
             layout = view.findViewById(R.id.relative_layout);
 
 
@@ -169,29 +173,18 @@ public class LoginFragment extends Fragment {
 
                         String pas = pwdTxt.getText().toString();
 
-                       progressbar.setVisibility(View.VISIBLE);
 
-
-                        if (ConnectionChecker.getInstance().isNetworkAvailable(getContext()))
-                            userRequestHandler.loginUserServer(new_mail,pas);
-
-                    }
+                        if (ConnectionChecker.getInstance().isNetworkAvailable(getContext())){
+                            ProgressDialog progressDialog = new ProgressDialog(getActivity());
+                            progressDialog.setTitle("Login");
+                            progressDialog.setMessage("Login in corso..");
+                            progressDialog.show();
+                            //progressbar.setVisibility(View.VISIBLE);
+                         userRequestHandler.loginUserServer(new_mail,pas);}
+                         }
 
                 }
-            });
-
-
-            /*@Override
-            public void onBackPressed() {
-                Intent intent = new Intent(Intent.ACTION_MAIN);
-                intent.addCategory(Intent.CATEGORY_HOME);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(intent);
-                super.onBackPressed();
-            }*/
-
-        }
-
-        }
-    }
+                            });
+            }
+            }}
 
