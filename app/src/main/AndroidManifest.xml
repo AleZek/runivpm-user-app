@@ -43,7 +43,7 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".authentication.LoginActivity" />
         <activity android:name=".authentication.RegistrationActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+            />
         <service
             android:name=".services.LocatorService"
             android:enabled="true"

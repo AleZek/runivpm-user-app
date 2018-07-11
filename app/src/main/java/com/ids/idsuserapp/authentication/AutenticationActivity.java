@@ -18,39 +18,13 @@ public class AutenticationActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_autentication);
-
-
-      /*  button1 = findViewById(R.id.login_btn);
-        button1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(AutenticationActivity.this, LoginActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        button2 = findViewById(R.id.register_btn);
-        button2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(AutenticationActivity.this, RegistrationActivity.class);
-                startActivity(intent);
-            }
-        });
-
-*
-*/
-
-
         if (savedInstanceState == null) {
             AutenticationFragment autenticationFragment =new AutenticationFragment();
             android.support.v4.app.FragmentManager fm = getSupportFragmentManager();
             fm.beginTransaction().replace(R.id.autentication_content_pane, autenticationFragment, AutenticationFragment.TAG)
                     .commit();
         }
-
-
-    }
+        }
 
     /**
      * Cambia il fragment

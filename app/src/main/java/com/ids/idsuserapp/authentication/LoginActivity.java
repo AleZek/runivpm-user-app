@@ -23,11 +23,4 @@ public class LoginActivity extends AppCompatActivity {
             android.support.v4.app.FragmentManager fm = getSupportFragmentManager();
             fm.beginTransaction().replace(R.id.login_content_pane, loginFragment, LoginFragment.TAG)
                     .commit();
-        }
-
-
-
-    }
-
-
-}
+        }}}
