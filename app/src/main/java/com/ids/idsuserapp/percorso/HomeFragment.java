@@ -1,5 +1,9 @@
 package com.ids.idsuserapp.percorso;
 
+import android.arch.lifecycle.LifecycleOwner;
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -17,6 +21,7 @@ import com.ids.idsuserapp.HomeActivity;
 import com.ids.idsuserapp.PercorsoActivity;
 import com.ids.idsuserapp.R;
 import com.ids.idsuserapp.SearchModel;
+import com.ids.idsuserapp.adapters.BeaconRecyclerAdapter;
 import com.ids.idsuserapp.db.entity.Beacon;
 import com.ids.idsuserapp.fragment.SelezionaMappaFragment;
 import com.ids.idsuserapp.viewmodel.BeaconViewModel;
@@ -24,6 +29,8 @@ import com.ids.idsuserapp.viewmodel.BeaconViewModel;
 import org.apache.commons.lang3.SerializationUtils;
 
 import java.util.ArrayList;
+import java.util.List;
+
 import ir.mirrajabi.searchdialog.SimpleSearchDialogCompat;
 import ir.mirrajabi.searchdialog.core.BaseSearchDialogCompat;
 import ir.mirrajabi.searchdialog.core.SearchResultListener;
@@ -67,6 +74,8 @@ public class HomeFragment extends BaseFragment {
         final View view = inflater.inflate(R.layout.fragment_home, container, false);
         holder = new ViewHolder(view);
         toggleConfirmButtonState();
+
+
         return view;
     }
 
@@ -213,6 +222,7 @@ public class HomeFragment extends BaseFragment {
         public final Button selezionaOrigineButton;
         public final Button selezionaDestinazioneButton;
         public BeaconViewModel mBeaconViewModel;
+        public BeaconRecyclerAdapter beaconRecyclerAdapter;
 
         public ViewHolder(View v) {
             toolbar = find(v, (R.id.navigation_toolbar));
@@ -314,15 +324,13 @@ public class HomeFragment extends BaseFragment {
 
         private ArrayList<SearchModel> initData() {
             ArrayList<SearchModel> items = new ArrayList<>();
-            items.add(new SearchModel("beacon1"));
-            items.add(new SearchModel("beacon2"));
-            items.add(new SearchModel("beacon3"));
-            items.add(new SearchModel("beacon4"));
-            items.add(new SearchModel("beacon5"));
-            items.add(new SearchModel("beacon6"));
-            items.add(new SearchModel("beacon7"));
-
-            return items;
+            mBeaconViewModel = ViewModelProviders.of(getActivity()).get(BeaconViewModel.class);
+            beaconRecyclerAdapter = new BeaconRecyclerAdapter(getContext());
+            List<Beacon> beacons = mBeaconViewModel.getAllSynchronous();
+            for (int i = 0; i < beacons.size(); i++) {
+                items.add(new SearchModel(beacons.get(i).getNome()));
+            }
+            return items;w
         }
 
 

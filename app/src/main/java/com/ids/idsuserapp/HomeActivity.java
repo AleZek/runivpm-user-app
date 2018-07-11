@@ -61,8 +61,6 @@ public class HomeActivity extends AppCompatActivity implements DataRetriever {
     public static final String OFFLINE_USAGE = "offline_usage";
 
 
-
-
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,7 +77,7 @@ public class HomeActivity extends AppCompatActivity implements DataRetriever {
         if (ConnectionChecker.getInstance().isNetworkAvailable(getApplicationContext()))
             getDatasetFromServer();
         permissionsUtil = new PermissionsUtil(this);
-        if(permissionsUtil.requestEnableBt())
+        if (permissionsUtil.requestEnableBt())
             startLocatorService(LocatorThread.STANDARD_MODE);
         setupMessageReception(savedInstanceState);
 
@@ -128,7 +126,6 @@ public class HomeActivity extends AppCompatActivity implements DataRetriever {
             fm.beginTransaction().replace(R.id.navigation_content_pane, homeFragment, HomeFragment.TAG)
                     .commit();
         }
-
 
 
     }
@@ -234,3 +231,4 @@ public class HomeActivity extends AppCompatActivity implements DataRetriever {
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
     }
+}
