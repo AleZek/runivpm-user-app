@@ -8,6 +8,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 
 public class StopEmergencyActivity extends AppCompatActivity {
@@ -22,6 +23,15 @@ public class StopEmergencyActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         setBackButton();
+        overrideUnlockScreen();
+    }
+
+    private void overrideUnlockScreen() {
+        //segmento di codice utile all unlock automaitico
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
+                + WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD|
+                + WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED|
+                + WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
     }
 
     private void setBackButton() {
