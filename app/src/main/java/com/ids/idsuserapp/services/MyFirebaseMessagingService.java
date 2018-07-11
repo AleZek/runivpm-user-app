@@ -1,4 +1,4 @@
-package com.ids.idsuserapp.utils;
+package com.ids.idsuserapp.services;
 
 import android.app.KeyguardManager;
 import android.content.ComponentName;
@@ -11,6 +11,7 @@ import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.ids.idsuserapp.HomeActivity;
 import com.ids.idsuserapp.MainActivity;
+import com.ids.idsuserapp.PercorsoActivity;
 
 /** da usare se si voglio effettuare delle implementazioni custom sui metodi di FirebaseMessagingService.
  * Qui dovrebbero essere implementati i metodi che scattano alla ricezione del messaggio  quando la app
@@ -26,6 +27,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         // TODO(developer): Handle FCM messages here.
         // Not getting messages here? See why this may be: https://goo.gl/39bRNJ
         Log.d(TAG, "From: " + remoteMessage.getFrom());
+        
 
         // Check if message contains a data payload.
         if (remoteMessage.getData().size() > 0) {
@@ -49,8 +51,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         // Also if you intend on generating your own notifications as a result of a received FCM
         // message, here is where that should be initiated. See sendNotification method below.
         Log.d(TAG, "arriva all'interno del onMessaggeReceived");
-        Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
+        Intent intent = new Intent(getApplicationContext(), PercorsoActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        intent.putExtra("emergency","true");
         startActivity(intent);
         // da qui in poi puo essere inutile perche il resto avviene nella activity
         //il il wakelock del powermanager è utile al risveglio automatico del telefono in caso di emergenza

@@ -33,6 +33,7 @@ import com.ids.idsuserapp.percorso.BaseFragment;
 import com.ids.idsuserapp.percorso.HomeFragment;
 import com.ids.idsuserapp.percorso.Tasks.TaskListener;
 import com.ids.idsuserapp.services.LocatorService;
+import com.ids.idsuserapp.services.NodesUpdateService;
 import com.ids.idsuserapp.threads.LocatorThread;
 import com.ids.idsuserapp.utils.ConnectionChecker;
 import com.ids.idsuserapp.utils.PermissionsUtil;
@@ -66,7 +67,7 @@ public class HomeActivity extends AppCompatActivity implements DataRetriever{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        setupMessageReception(savedInstanceState);
+
         setupViewModels();
         setupDataHandlers();
 //        startLocatorThread();
@@ -78,6 +79,7 @@ public class HomeActivity extends AppCompatActivity implements DataRetriever{
         permissionsUtil = new PermissionsUtil(this);
         if(permissionsUtil.requestEnableBt())
             startLocatorService(LocatorThread.STANDARD_MODE);
+        setupMessageReception(savedInstanceState);
     }
 
     private void setupMessageReception(Bundle savedInstanceState) {
@@ -104,6 +106,7 @@ public class HomeActivity extends AppCompatActivity implements DataRetriever{
                 if (key.equals("emergency")) {
                     emergency = true;
                 }
+
                 String value = getIntent().getExtras().getString(key);
                 Log.d(TAG, "Key: " + key + " Value: " + value);
             }
@@ -117,11 +120,7 @@ public class HomeActivity extends AppCompatActivity implements DataRetriever{
                     .commit();
         }
 
-        //segmento di codice utile all unlock automaitico
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
-                + WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD|
-                + WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED|
-                + WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
+
 
     }
 
@@ -167,7 +166,13 @@ public class HomeActivity extends AppCompatActivity implements DataRetriever{
 
     @Override
     public void retrieveArchi() {
+        startNodesUpdateService();
         arcoDataHandler.retrieveArchiDataset();
+    }
+
+    private void startNodesUpdateService() {
+        Intent serviceIntent = new Intent(this, NodesUpdateService.class);
+        startService(serviceIntent);
     }
 
     /**

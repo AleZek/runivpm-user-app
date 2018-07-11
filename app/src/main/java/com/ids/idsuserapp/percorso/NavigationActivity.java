@@ -77,7 +77,7 @@ public class NavigationActivity extends AppCompatActivity {
 
         Log.d(TAG, String.valueOf(emergency));
         if (savedInstanceState == null) {
-            HomeFragment homeFragment = HomeFragment.newInstance(emergency, offline);
+            HomeFragment homeFragment = HomeFragment.newInstance(false, offline);
             FragmentManager fm = getSupportFragmentManager();
             fm.beginTransaction().replace(R.id.navigation_content_pane, homeFragment, HomeFragment.TAG)
                     .commit();
@@ -131,7 +131,7 @@ public class NavigationActivity extends AppCompatActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             // TODO andrebbe gestito meglio, al momento ci si puo imbattere in stackoverflow
-            HomeFragment homeFragment = HomeFragment.newInstance(true, false);
+            HomeFragment homeFragment = HomeFragment.newInstance(false, false);
             FragmentManager fm = getSupportFragmentManager();
             fm.beginTransaction().replace(R.id.navigation_content_pane, homeFragment, HomeFragment.TAG)
                     .commit();

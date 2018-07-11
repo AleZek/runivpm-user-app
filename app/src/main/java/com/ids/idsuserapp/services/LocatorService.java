@@ -2,10 +2,13 @@ package com.ids.idsuserapp.services;
 
 import android.app.Service;
 import android.bluetooth.BluetoothDevice;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.IBinder;
 import android.util.Log;
 
+import com.ids.idsuserapp.R;
 import com.ids.idsuserapp.entityhandlers.ServerUserLocator;
 import com.ids.idsuserapp.threads.LocatorThread;
 import com.ids.idsuserapp.utils.BluetoothLocator;
@@ -48,7 +51,19 @@ public class LocatorService extends Service implements BluetoothLocator.LocatorC
     @Override
     public void sendCurrentPosition(BluetoothDevice device) {
         serverUserLocator.sendPosition(device.toString());
+        savePositionLocally(device.toString());
         Log.v("locator", "callback chiamata");
+    }
+
+    private void savePositionLocally(String device){
+        SharedPreferences sharedPref = this.getSharedPreferences(
+                this.getString(R.string.local_position), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+
+
+            editor.putString("position", device);
+            editor.apply();
+
     }
 
 

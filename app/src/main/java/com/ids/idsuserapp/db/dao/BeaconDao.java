@@ -53,4 +53,6 @@ public interface BeaconDao {
     List<Beacon> getAllSynchronously();
     @Query("SELECT * FROM beacon WHERE floor=:floor AND x>(:x0-:radius) AND x<(:x0+:radius) AND y<(:y0+:radius) AND y>(:y0-:radius)")
     public List<Beacon> ottieniBeacon(int floor, int x0, int y0, int radius);
+    @Query("SELECT * FROM beacon WHERE type=:type")
+    List<Beacon> findByType(String type);
 }

@@ -46,12 +46,12 @@
             android:name=".services.LocatorService"
             android:enabled="true"
             android:exported="true" />
-        <service android:name=".utils.MyFirebaseMessagingService">
+        <service android:name=".services.MyFirebaseMessagingService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-        <service android:name=".utils.MyFirebaseInstanceIdService">
+        <service android:name=".services.MyFirebaseInstanceIdService">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
