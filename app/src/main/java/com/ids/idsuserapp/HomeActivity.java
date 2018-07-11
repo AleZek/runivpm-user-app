@@ -56,6 +56,7 @@ public class HomeActivity extends AppCompatActivity implements DataRetriever {
     private static final int PERMISSION_REQUEST_COARSE_LOCATION = 124;
     private static final int BT_ENABLED = 1;
     private boolean offline;
+    private boolean emergency = false;
     public static final String OFFLINE_USAGE = "offline_usage";
 
 
@@ -81,6 +82,13 @@ public class HomeActivity extends AppCompatActivity implements DataRetriever {
             permissionsUtil = new PermissionsUtil(this);
             if (permissionsUtil.requestEnableBt())
                 startLocatorService(LocatorThread.STANDARD_MODE);
+        }
+
+        if (savedInstanceState == null) {
+            HomeFragment homeFragment = HomeFragment.newInstance(emergency, offline);
+            FragmentManager fm = getSupportFragmentManager();
+            fm.beginTransaction().replace(R.id.navigation_content_pane, homeFragment, HomeFragment.TAG)
+                    .commit();
         }
 
 
