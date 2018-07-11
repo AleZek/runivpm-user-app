@@ -34,6 +34,10 @@ public class BeaconRepository {
     public List<Beacon> getAllSynchronously() { return mBeaconDao.getAllSynchronously();
     }
 
+    public List<Beacon> getByType(String type) {
+       return mBeaconDao.findByType(type);
+    }
+
     private static class insertAsyncTask extends AsyncTask<Beacon, Void, Void> {
 
         private BeaconDao mAsyncTaskDao;

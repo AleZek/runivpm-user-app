@@ -1,27 +1,17 @@
 package com.ids.idsuserapp.services;
 
 import android.app.Service;
-import android.arch.persistence.room.Room;
+import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
-import android.os.Binder;
-import android.os.Handler;
+import android.content.SharedPreferences;
 import android.os.IBinder;
 import android.util.Log;
 
-import com.ids.idsuserapp.db.AppRoomDatabase;
-import com.ids.idsuserapp.db.dao.MappaDao;
-import com.ids.idsuserapp.db.entity.Beacon;
-import com.ids.idsuserapp.db.entity.Mappa;
+import com.ids.idsuserapp.R;
 import com.ids.idsuserapp.entityhandlers.ServerUserLocator;
 import com.ids.idsuserapp.threads.LocatorThread;
 import com.ids.idsuserapp.utils.BluetoothLocator;
-import com.ids.idsuserapp.viewmodel.BeaconViewModel;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 public class LocatorService extends Service implements BluetoothLocator.LocatorCallbacks {
     LocatorThread locatorThread;
@@ -59,9 +49,21 @@ public class LocatorService extends Service implements BluetoothLocator.LocatorC
     }
 
     @Override
-    public void sendCurrentPosition(String device) {
-        serverUserLocator.sendPosition(device);
+    public void sendCurrentPosition(BluetoothDevice device) {
+        serverUserLocator.sendPosition(device.toString());
+        savePositionLocally(device.toString());
         Log.v("locator", "callback chiamata");
+    }
+
+    private void savePositionLocally(String device){
+        SharedPreferences sharedPref = this.getSharedPreferences(
+                this.getString(R.string.local_position), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+
+
+            editor.putString("position", device);
+            editor.apply();
+
     }
 
 

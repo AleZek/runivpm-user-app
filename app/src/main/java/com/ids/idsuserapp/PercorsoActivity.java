@@ -1,18 +1,24 @@
 package com.ids.idsuserapp;
 
+import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ids.idsuserapp.db.entity.Beacon;
 import com.ids.idsuserapp.db.entity.Tronco;
+import com.ids.idsuserapp.entityhandlers.ServerUserLocator;
 import com.ids.idsuserapp.fragment.NavigatorFragment;
 import com.ids.idsuserapp.percorso.BaseFragment;
+import com.ids.idsuserapp.percorso.HomeFragment;
 import com.ids.idsuserapp.percorso.NavigationActivity;
 import com.ids.idsuserapp.percorso.Tasks.MinimumPathTask;
 import com.ids.idsuserapp.percorso.Tasks.TaskListener;
@@ -31,6 +37,7 @@ import com.ids.idsuserapp.wayfinding.PercorsoMultipiano;
 
 import org.apache.commons.lang3.SerializationUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class PercorsoActivity extends AppCompatActivity implements BluetoothLocator.LocatorCallbacks {
@@ -40,6 +47,7 @@ public class PercorsoActivity extends AppCompatActivity implements BluetoothLoca
     BluetoothLocator bluetoothLocator;
     LocatorThread locatorThread;
     Percorso percorso;
+    ServerUserLocator serverUserLocator;
     Dijkstra dijkstra;
     Beacon origine;
     Beacon destinazione;
@@ -69,16 +77,51 @@ public class PercorsoActivity extends AppCompatActivity implements BluetoothLoca
         beaconViewModel = new BeaconViewModel(getApplication());
         arcoViewModel = new ArcoViewModel(getApplication());
 
+        setupMessageReception(savedInstanceState);
         setOrigineDestinazione(getIntent());
         holder = new ViewHolderPercorso();
+        holder.setupMapView();
+
 
         startLocatorThread();
         setBluetoothLocator();
 
-        setDijkstra();
-        percorso = dijkstra.ricerca(destinazione);
-        Log.v("percorso", percorso.toString());
+    }
+    private void setupMessageReception(Bundle savedInstanceState) {
+        offline = true;
 
+         /* if (!offline) {
+          // Handle deviceToken for pushNotification
+            // [START handle_device_token]
+            SaveDeviceTokenTask task = new SaveDeviceTokenTask(this, new TaskListener<Void>() {
+                @Override
+                public void onTaskSuccess(Void aVoid) {
+                    Log.d(TAG, "Device key save succesfully");
+                }
+
+                @Override
+                public void onTaskError(Exception e) {
+                    Log.e(TAG, "Save deviceKey error", e);
+                }
+*/
+        emergency = false;
+        if (getIntent().getExtras() != null) {
+            for (String key : getIntent().getExtras().keySet()) {
+                if (key.equals("emergency"))
+                    emergency = true;
+
+                String value = getIntent().getExtras().getString(key);
+                Log.d(TAG, "Key: " + key + " Value: " + value);
+
+            }
+        }
+
+
+        //segmento di codice utile all unlock automaitico
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
+                + WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD|
+                + WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED|
+                + WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
 
     }
 
@@ -90,6 +133,8 @@ public class PercorsoActivity extends AppCompatActivity implements BluetoothLoca
     }
 
     private void startLocatorThread() {
+        serverUserLocator = new ServerUserLocator(getApplicationContext());
+        int mode = emergency ? LocatorThread.EMERGENCY_MODE : LocatorThread.NAVIGATION_MODE;
         locatorThread = new LocatorThread(this, LocatorThread.NAVIGATION_MODE);
         locatorThread.start();
     }
@@ -101,11 +146,15 @@ public class PercorsoActivity extends AppCompatActivity implements BluetoothLoca
         try {
             serializedDataOrigine = data.getByteArrayExtra("beaconOrigine");
             serializedDataDestinazione = data.getByteArrayExtra("beaconDestinazione");
-            if (serializedDataOrigine == null || serializedDataDestinazione == null) {
-                throw new NullPointerException("Null array data");
+            if (serializedDataOrigine != null) {
+                origine = (Beacon) SerializationUtils.deserialize(serializedDataOrigine);
+                if(serializedDataDestinazione != null)
+                    destinazione = (Beacon) SerializationUtils.deserialize(serializedDataDestinazione);
+            }else if(emergency){
+                SharedPreferences locationShared = getSharedPreferences(getString(R.string.local_position), MODE_PRIVATE);
+                String device = locationShared.getString("position", "");
+                origine = beaconViewModel.findByDevice(device);
             }
-            origine = (Beacon) SerializationUtils.deserialize(serializedDataOrigine);
-            destinazione = (Beacon) SerializationUtils.deserialize(serializedDataDestinazione);
         } catch (NullPointerException ee) {
             Log.e(TAG, "NullPointer", ee);
         }
@@ -131,46 +180,38 @@ public class PercorsoActivity extends AppCompatActivity implements BluetoothLoca
 
     // index = -1 indica che il beacon non era nel percorso indicato e che ho sbagliato strada, quindi ricalcolo
 
-    public void nextStep() {
-        int index = percorso.indexOf(userPositionBeacon);
-        if (userPositionBeacon != null) {
-            if (userPositionBeacon.equals(destinazione)) {
+    public void nextStepBeacon(Beacon currentBeacon) {
+        int index = selectedSolution.indexOf(currentBeacon);
+        if (selectedSolution != null) {
+            if (currentBeacon.equals(destinazione)) {
                 Toast.makeText(this, "Sei giunto a destinazione", Toast.LENGTH_LONG).show();
                 locatorThread.interrupt();
                 bluetoothLocator.stopScan();
             } else if (index != -1) {
-                if (userPositionBeacon != null) {
-                    if (index != -1) {
-                        Beacon nextBeacon = percorso.get(index + 1);
-                        Toast.makeText(this, "Prosegui verso " + nextBeacon.getNome(), Toast.LENGTH_LONG).show();
-//                getIndicazioni(userPositionBeacon, nextBeacon);
-                    } else if (userPositionBeacon.equals(destinazione)) {
-                        Toast.makeText(this, "Sei giunto a destinazione", Toast.LENGTH_LONG).show();
-                        locatorThread.interrupt();
-                        bluetoothLocator.stopScan();
-                    } else {
-                        dijkstra.inizio(userPositionBeacon);
-                        dijkstra.ricerca(destinazione);
-                        Beacon nextBeacon = percorso.get(1);
-                        Toast.makeText(this, "Prosegui verso " + nextBeacon.getNome(), Toast.LENGTH_LONG).show();
+                indiciNavigazione = new IndiciNavigazione(selectedSolution.indexOf(currentBeacon), selectedSolution.indexOf(currentBeacon) + 1);
+                holder.launchSearchPathTask(currentBeacon);
+            } else {
+                selectedSolution = null;
+                holder.launchSearchPathTask(currentBeacon);
 //            getIndicazioni(userPositionBeacon, nextBeacon);
-                    }
-                }
             }
         }
     }
 
-    private void setCurrentPosition() {
-        userPosition = (String) bluetoothLocator.getStrongestBeacon().get("nome");
-        setUserBeacon();
-        locationText.setText(userPosition);
+    private void setCurrentPosition(String device) {
+        Beacon location = beaconViewModel.findByDevice(device);
+        nextStepBeacon(location);
+
     }
 
     @Override
-    public void sendCurrentPosition(String device) {
-        if (bluetoothLocator.isBeacon(device)) {
-            setCurrentPosition();
-            nextStep();
+    public void sendCurrentPosition(BluetoothDevice device) {
+        //Testing con device
+        ArrayList<String> devices = new ArrayList<>();
+        if (bluetoothLocator.isBeacon(device) || devices.indexOf(device) != -1) {
+            serverUserLocator.sendPosition(device.toString());
+            setCurrentPosition(device.toString());
+            bluetoothLocator.getStrongestBeacon().put("scanNumber", 0);
         }
     }
 
@@ -207,8 +248,10 @@ public class PercorsoActivity extends AppCompatActivity implements BluetoothLoca
         @Override
         public void onTaskSuccess(List<Percorso> searchResult) {
             solutionPaths = searchResult;
-            if (selectedSolution == null)
+            if (selectedSolution == null || emergency) {
                 selectedSolution = new Percorso(solutionPaths.get(0));
+                indiciNavigazione = new IndiciNavigazione(0,1);
+            }
             Percorso pathToDraw = new Percorso(selectedSolution.subList(indiciNavigazione.current, selectedSolution.size() - 1));
             PercorsoMultipiano multiFloorSolution = pathToDraw.toMultiFloorPath();
 
@@ -240,11 +283,23 @@ public class PercorsoActivity extends AppCompatActivity implements BluetoothLoca
         @Override
         public void onClick(View v) {
             if (!holder.fabButtonIndietro.isClickable()) {
-                holder.fabButtonIndietro.setEnabled(true);
-                holder.fabButtonIndietro.setClickable(true);
+                holderButtonEnabled("Indietro", true);
             }
             indiciNavigazione = new IndiciNavigazione(indiciNavigazione.next, indiciNavigazione.next + 1);
             holder.setupMapView();
+        }
+    }
+
+    private void holderButtonEnabled(String bottone, boolean stato) {
+        switch (bottone) {
+            case "Indietro":
+                holder.fabButtonIndietro.setEnabled(stato);
+                holder.fabButtonIndietro.setClickable(stato);
+                break;
+            case "Avanti":
+                holder.fabButtonAvanti.setEnabled(stato);
+                holder.fabButtonAvanti.setClickable(stato);
+                break;
         }
     }
 
@@ -253,8 +308,7 @@ public class PercorsoActivity extends AppCompatActivity implements BluetoothLoca
         @Override
         public void onClick(View v) {
             if (!holder.fabButtonAvanti.isClickable()) {
-                holder.fabButtonAvanti.setEnabled(true);
-                holder.fabButtonAvanti.setClickable(true);
+                holderButtonEnabled("Avanti", true);
             }
             indiciNavigazione = new IndiciNavigazione(indiciNavigazione.current - 1, indiciNavigazione.current);
             holder.setupMapView();
@@ -289,28 +343,26 @@ public class PercorsoActivity extends AppCompatActivity implements BluetoothLoca
             Beacon currentBeacon;
             if (selectedSolution != null) {
                 if (indiciNavigazione.current == 0) {
-                    fabButtonIndietro.setClickable(false);
-                    fabButtonIndietro.setEnabled(false);
+                    holderButtonEnabled("Indietro", false);
                 }
-                if (indiciNavigazione.current == selectedSolution.size() - 2) {
-                    //fine
-                    fabButtonAvanti.setClickable(false);
-                    fabButtonAvanti.setEnabled(false);
+                if (indiciNavigazione.current >= selectedSolution.size() - 2) {
+                    holderButtonEnabled("Avanti", false);
                 }
                 currentBeacon = selectedSolution.get(indiciNavigazione.current);
                 if (currentBeacon != destinazione)
                     launchSearchPathTask(currentBeacon);
             } else {
-                currentBeacon = origine;
-                indiciNavigazione = new IndiciNavigazione(0, 1);
-                launchSearchPathTask(currentBeacon);
-                fabButtonIndietro.setClickable(false);
-                fabButtonIndietro.setEnabled(false);
+                firstPathSearch();
             }
         }
 
+        public void firstPathSearch() {
+            launchSearchPathTask(origine);
+            holderButtonEnabled("Indietro", false);
+        }
+
         private void launchSearchPathTask(Beacon currentBeacon) {
-            MinimumPathTask minimumPathTask = new MinimumPathTask(getBaseContext(), new MinimumPathListener(), arcoViewModel);
+            MinimumPathTask minimumPathTask = new MinimumPathTask(getBaseContext(), new MinimumPathListener(), arcoViewModel, beaconViewModel, emergency);
             minimumPathTask.execute(currentBeacon, destinazione);
         }
     }

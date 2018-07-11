@@ -15,6 +15,7 @@ public class BeaconViewModel extends AndroidViewModel {
 
     private BeaconRepository mBeaconRepository;
     public static String[] CAMPI = {"id","name","x","y","floor","width","mappa","device", "type", "meterx","metery"};
+    public static String USCITA = "U";
 
     public BeaconViewModel(Application application) {
         super(application);
@@ -45,6 +46,10 @@ public class BeaconViewModel extends AndroidViewModel {
 
     public List<Beacon> getBeaconsByFloor(int floor, int x0, int y0, int radius) {
         return mBeaconRepository.getBeaconsByFloor(floor, x0, y0, radius);
+    }
+
+    public List<Beacon> getUscite(){
+        return mBeaconRepository.getByType(USCITA);
     }
 
     public void deleteByMappa(int mappa_id) {

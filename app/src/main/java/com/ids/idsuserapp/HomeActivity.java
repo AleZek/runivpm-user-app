@@ -36,6 +36,7 @@ import com.ids.idsuserapp.services.LocatorService;
 import com.ids.idsuserapp.threads.LocatorThread;
 import com.ids.idsuserapp.percorso.Tasks.TaskListener;
 import com.ids.idsuserapp.services.LocatorService;
+import com.ids.idsuserapp.services.NodesUpdateService;
 import com.ids.idsuserapp.threads.LocatorThread;
 import com.ids.idsuserapp.utils.ConnectionChecker;
 import com.ids.idsuserapp.utils.PermissionsUtil;
@@ -60,30 +61,67 @@ public class HomeActivity extends AppCompatActivity implements DataRetriever {
     public static final String OFFLINE_USAGE = "offline_usage";
 
 
+
+
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-        if (savedInstanceState == null) {
-            HomeFragment homeFragment = new HomeFragment();
-            changeFragment(homeFragment);
-        }
-        permissionsUtil = new PermissionsUtil(this);
-        setupMessageReception(savedInstanceState);
+
+
         setupViewModels();
         setupDataHandlers();
 //        startLocatorThread();
 
         //controlla se la connessione ad internet è attiva dato l application context,
         //se si allora viene pulita la lista dei beacon e viene aggiornato il dataset
-        if (ConnectionChecker.getInstance().isNetworkAvailable(getApplicationContext())) {
+        if (ConnectionChecker.getInstance().isNetworkAvailable(getApplicationContext()))
             getDatasetFromServer();
-            permissionsUtil = new PermissionsUtil(this);
-            if (permissionsUtil.requestEnableBt())
-                startLocatorService(LocatorThread.STANDARD_MODE);
+        permissionsUtil = new PermissionsUtil(this);
+        if(permissionsUtil.requestEnableBt())
+            startLocatorService(LocatorThread.STANDARD_MODE);
+        setupMessageReception(savedInstanceState);
+
+        if (savedInstanceState == null) {
+            HomeFragment homeFragment = HomeFragment.newInstance(emergency, offline);
+            FragmentManager fm = getSupportFragmentManager();
+            fm.beginTransaction().replace(R.id.navigation_content_pane, homeFragment, HomeFragment.TAG)
+                    .commit();
+        }
+    }
+
+    private void setupMessageReception(Bundle savedInstanceState) {
+        offline = true;
+
+         /* if (!offline) {
+          // Handle deviceToken for pushNotification
+            // [START handle_device_token]
+            SaveDeviceTokenTask task = new SaveDeviceTokenTask(this, new TaskListener<Void>() {
+                @Override
+                public void onTaskSuccess(Void aVoid) {
+                    Log.d(TAG, "Device key save succesfully");
+                }
+
+                @Override
+                public void onTaskError(Exception e) {
+                    Log.e(TAG, "Save deviceKey error", e);
+                }
+*/
+
+        boolean emergency = false;
+        if (getIntent().getExtras() != null) {
+            for (String key : getIntent().getExtras().keySet()) {
+                if (key.equals("emergency")) {
+                    emergency = true;
+                }
+
+                String value = getIntent().getExtras().getString(key);
+                Log.d(TAG, "Key: " + key + " Value: " + value);
+            }
         }
 
+        Log.d(TAG, String.valueOf(emergency));
         if (savedInstanceState == null) {
             HomeFragment homeFragment = HomeFragment.newInstance(emergency, offline);
             FragmentManager fm = getSupportFragmentManager();
@@ -92,6 +130,13 @@ public class HomeActivity extends AppCompatActivity implements DataRetriever {
         }
 
 
+
+    }
+
+    private void startLocatorService(int mode) {
+        Intent serviceIntent = new Intent(this, LocatorService.class);
+        serviceIntent.setAction(Integer.toString(mode));
+        startService(serviceIntent);
     }
 
     private void setupDataHandlers() {
@@ -130,37 +175,13 @@ public class HomeActivity extends AppCompatActivity implements DataRetriever {
 
     @Override
     public void retrieveArchi() {
+        startNodesUpdateService();
         arcoDataHandler.retrieveArchiDataset();
     }
 
-    private void setupMessageReception(Bundle savedInstanceState) {
-        offline = true;
-
-         /* if (!offline) {
-          // Handle deviceToken for pushNotification
-            // [START handle_device_token]
-            SaveDeviceTokenTask task = new SaveDeviceTokenTask(this, new TaskListener<Void>() {
-                @Override
-                public void onTaskSuccess(Void aVoid) {
-                    Log.d(TAG, "Device key save succesfully");
-                }
-
-                @Override
-                public void onTaskError(Exception e) {
-                    Log.e(TAG, "Save deviceKey error", e);
-                }
-
-                @Override
-                public void onTaskComplete() {
-                }
-
-                @Override
-                public void onTaskCancelled() {
-                }
-            });
-            task.execute();
-            // [END handle_device_token]
-        }*/
+    private void startNodesUpdateService() {
+        Intent serviceIntent = new Intent(this, NodesUpdateService.class);
+        startService(serviceIntent);
     }
 
     /**
@@ -178,7 +199,6 @@ public class HomeActivity extends AppCompatActivity implements DataRetriever {
                 .commit();
     }
 
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -190,12 +210,6 @@ public class HomeActivity extends AppCompatActivity implements DataRetriever {
                     permissionsUtil.btAlert();
 
         }
-    }
-
-    private void startLocatorService(int mode) {
-        Intent serviceIntent = new Intent(this, LocatorService.class);
-        serviceIntent.setAction(Integer.toString(mode));
-        startService(serviceIntent);
     }
 
 
@@ -220,15 +234,3 @@ public class HomeActivity extends AppCompatActivity implements DataRetriever {
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
     }
-
-
-
-
-}
-
-
-
-
-
-
-
