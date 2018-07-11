@@ -12,6 +12,7 @@ import com.ids.idsuserapp.R;
 import com.ids.idsuserapp.entityhandlers.ServerUserLocator;
 import com.ids.idsuserapp.threads.LocatorThread;
 import com.ids.idsuserapp.utils.BluetoothLocator;
+import com.ids.idsuserapp.utils.ConnectionChecker;
 
 public class LocatorService extends Service implements BluetoothLocator.LocatorCallbacks {
     LocatorThread locatorThread;
@@ -50,20 +51,18 @@ public class LocatorService extends Service implements BluetoothLocator.LocatorC
 
     @Override
     public void sendCurrentPosition(BluetoothDevice device) {
-        serverUserLocator.sendPosition(device.toString());
+        if (ConnectionChecker.getInstance().isNetworkAvailable(this))
+            serverUserLocator.sendPosition(device.toString());
         savePositionLocally(device.toString());
         Log.v("locator", "callback chiamata");
     }
 
-    private void savePositionLocally(String device){
+    private void savePositionLocally(String device) {
         SharedPreferences sharedPref = this.getSharedPreferences(
                 this.getString(R.string.local_position), Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
-
-
-            editor.putString("position", device);
-            editor.apply();
-
+        editor.putString("position", device);
+        editor.apply();
     }
 
 

@@ -71,16 +71,20 @@ public class HomeActivity extends AppCompatActivity implements DataRetriever{
         setupViewModels();
         setupDataHandlers();
 //        startLocatorThread();
-
+        checkOfflineMode();
 
         //controlla se la connessione ad internet è attiva dato l application context,
         //se si allora viene pulita la lista dei beacon e viene aggiornato il dataset
-        if (ConnectionChecker.getInstance().isNetworkAvailable(getApplicationContext()) && !getIntent().hasExtra("stop"))
+        if (!offline && ConnectionChecker.getInstance().isNetworkAvailable(getApplicationContext()) && !getIntent().hasExtra("stop"))
             getDatasetFromServer();
         permissionsUtil = new PermissionsUtil(this);
         if(permissionsUtil.requestEnableBt())
             startLocatorService(LocatorThread.STANDARD_MODE);
         setupMessageReception(savedInstanceState);
+    }
+
+    private void checkOfflineMode() {
+        offline = getIntent().hasExtra("offline");
     }
 
     private void setupMessageReception(Bundle savedInstanceState) {

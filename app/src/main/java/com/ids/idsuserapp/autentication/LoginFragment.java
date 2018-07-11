@@ -153,8 +153,8 @@ public class LoginFragment extends Fragment {
 
                         if (ConnectionChecker.getInstance().isNetworkAvailable(getContext()))
                             userRequestHandler.loginUserServer(new_mail,pas);
-
-
+                        else
+                            showOfflineAlert();
                     }
 
                 }
@@ -163,6 +163,20 @@ public class LoginFragment extends Fragment {
 
         }
 
+        private void showOfflineAlert() {
+            AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
+            alertDialog.setTitle("oops!");
+            alertDialog.setMessage("Nessuna connessione a Internet. Connettersi a una rete e riprovare");
+            alertDialog.setButton("Ok",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            //dismiss the dialog
+                        }
+                    });
+
+            alertDialog.show();
         }
+
+    }
     }
 
