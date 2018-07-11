@@ -66,9 +66,7 @@ public class HomeActivity extends AppCompatActivity implements DataRetriever {
         setContentView(R.layout.activity_home);
         if (savedInstanceState == null) {
             HomeFragment homeFragment = new HomeFragment();
-            android.support.v4.app.FragmentManager fm = getSupportFragmentManager();
-            fm.beginTransaction().replace(R.id.fragment_layout, homeFragment, AutenticationFragment.TAG)
-                    .commit();
+            changeFragment(homeFragment);
         }
         permissionsUtil = new PermissionsUtil(this);
         setupMessageReception(savedInstanceState);
