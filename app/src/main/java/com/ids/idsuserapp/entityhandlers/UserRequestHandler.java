@@ -14,6 +14,7 @@ import com.android.volley.toolbox.Volley;
 import com.ids.idsuserapp.HomeActivity;
 import com.ids.idsuserapp.R;
 import com.ids.idsuserapp.autentication.LoginActivity;
+import com.ids.idsuserapp.utils.AuthenticatedJsonObjectRequest;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -74,6 +75,46 @@ public class UserRequestHandler {
     public void loginUserServer(String email, String password) {
         JsonObjectRequest newLoginJSONRequest = preparePostLoginRequest(email, password);
         serverRequestQueue.add(newLoginJSONRequest);
+    }
+
+    public void logoutUserServer() {
+        JsonObjectRequest logoutJSONRequest = preparePostLogoutRequest();
+        serverRequestQueue.add(logoutJSONRequest);
+    }
+
+    private AuthenticatedJsonObjectRequest preparePostLogoutRequest() {
+        String logout_url = context.getString(R.string.api_logout);
+
+        return new AuthenticatedJsonObjectRequest(context, Request.Method.POST, logout_url, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        SharedPreferences sharedPref = context.getSharedPreferences(
+                                context.getString(R.string.auth_preference), Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPref.edit();
+                            editor.putString("token", "");
+                            editor.apply();
+                        sharedPref = context.getSharedPreferences(
+                                context.getString(R.string.local_position), Context.MODE_PRIVATE);
+                        editor.putString("position", "");
+                        editor.apply();
+                        Intent intent = new Intent(context, HomeActivity.class);
+                        context.startActivity(intent);
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.v("VolleyError", error.toString());
+                int statusCode = error.networkResponse.statusCode;
+                switch (statusCode) {
+                    case 401:
+                        break;
+                }
+                error.printStackTrace();
+            }
+        });
+
     }
 
     public JsonObjectRequest preparePostLoginRequest(String email, String password) {

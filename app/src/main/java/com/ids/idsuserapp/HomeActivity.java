@@ -72,9 +72,10 @@ public class HomeActivity extends AppCompatActivity implements DataRetriever{
         setupDataHandlers();
 //        startLocatorThread();
 
+
         //controlla se la connessione ad internet è attiva dato l application context,
         //se si allora viene pulita la lista dei beacon e viene aggiornato il dataset
-        if (ConnectionChecker.getInstance().isNetworkAvailable(getApplicationContext()))
+        if (ConnectionChecker.getInstance().isNetworkAvailable(getApplicationContext()) && !getIntent().hasExtra("stop"))
             getDatasetFromServer();
         permissionsUtil = new PermissionsUtil(this);
         if(permissionsUtil.requestEnableBt())

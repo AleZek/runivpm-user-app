@@ -4,6 +4,7 @@ import android.app.KeyguardManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.nfc.Tag;
 import android.os.PowerManager;
 import android.util.Log;
 
@@ -12,6 +13,7 @@ import com.google.firebase.messaging.RemoteMessage;
 import com.ids.idsuserapp.HomeActivity;
 import com.ids.idsuserapp.MainActivity;
 import com.ids.idsuserapp.PercorsoActivity;
+import com.ids.idsuserapp.StopEmergencyActivity;
 
 /** da usare se si voglio effettuare delle implementazioni custom sui metodi di FirebaseMessagingService.
  * Qui dovrebbero essere implementati i metodi che scattano alla ricezione del messaggio  quando la app
@@ -51,9 +53,17 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         // Also if you intend on generating your own notifications as a result of a received FCM
         // message, here is where that should be initiated. See sendNotification method below.
         Log.d(TAG, "arriva all'interno del onMessaggeReceived");
-        Intent intent = new Intent(getApplicationContext(), PercorsoActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        intent.putExtra("emergency","true");
+        Log.v(TAG, remoteMessage.getData().get("Emergenza").toString());
+        Intent intent;
+        if (Boolean.parseBoolean(remoteMessage.getData().get("Emergenza"))) {
+            intent = new Intent(getApplicationContext(), PercorsoActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            intent.putExtra("emergency", "true");
+        } else {
+            intent = new Intent(getApplicationContext(), StopEmergencyActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            intent.putExtra("stop", "true");
+        }
         startActivity(intent);
         // da qui in poi puo essere inutile perche il resto avviene nella activity
         //il il wakelock del powermanager è utile al risveglio automatico del telefono in caso di emergenza

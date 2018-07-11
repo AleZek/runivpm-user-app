@@ -30,9 +30,9 @@
             android:name=".BeaconList"
             android:label="@string/title_activity_beacon_list"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".HomeActivity"
-            android:theme="@style/AppTheme.NoActionBar"/>
-
+        <activity
+            android:name=".HomeActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".LogoActivity"
             android:theme="@style/AppTheme.NoActionBar" />
@@ -41,7 +41,8 @@
             android:name=".autentication.AutenticationActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".autentication.LoginActivity" />
-        <activity android:name=".autentication.RegistrationActivity"/>
+        <activity android:name=".autentication.RegistrationActivity" />
+
         <service
             android:name=".services.LocatorService"
             android:enabled="true"
@@ -57,12 +58,14 @@
             </intent-filter>
         </service>
 
-
         <activity
             android:name=".PercorsoActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-
-        <activity android:name=".percorso.NavigationActivity"></activity>
+        <activity android:name=".percorso.NavigationActivity" />
+        <activity
+            android:name=".StopEmergencyActivity"
+            android:label="@string/title_activity_stop_emergency"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>
