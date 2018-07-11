@@ -15,7 +15,9 @@ import android.util.Log;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import com.ids.idsuserapp.authentication.AutenticationFragment;
 import com.ids.idsuserapp.db.entity.Tronco;
+
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -41,7 +43,7 @@ import com.ids.idsuserapp.viewmodel.ArcoViewModel;
 import com.ids.idsuserapp.viewmodel.BeaconViewModel;
 import com.ids.idsuserapp.viewmodel.MappaViewModel;
 
-public class HomeActivity extends AppCompatActivity implements DataRetriever{
+public class HomeActivity extends AppCompatActivity implements DataRetriever {
     public static final String TAG = HomeActivity.class.getSimpleName();
     private MappaViewModel mappaViewModel;
     private BeaconViewModel beaconViewModel;
@@ -57,13 +59,17 @@ public class HomeActivity extends AppCompatActivity implements DataRetriever{
     public static final String OFFLINE_USAGE = "offline_usage";
 
 
-
-
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+        if (savedInstanceState == null) {
+            HomeFragment homeFragment = new HomeFragment();
+            android.support.v4.app.FragmentManager fm = getSupportFragmentManager();
+            fm.beginTransaction().replace(R.id.fragment_layout, homeFragment, AutenticationFragment.TAG)
+                    .commit();
+        }
         permissionsUtil = new PermissionsUtil(this);
         setupMessageReception(savedInstanceState);
         setupViewModels();
@@ -74,63 +80,12 @@ public class HomeActivity extends AppCompatActivity implements DataRetriever{
         //se si allora viene pulita la lista dei beacon e viene aggiornato il dataset
         if (ConnectionChecker.getInstance().isNetworkAvailable(getApplicationContext())) {
             getDatasetFromServer();
-        permissionsUtil = new PermissionsUtil(this);
-        if(permissionsUtil.requestEnableBt())
-            startLocatorService(LocatorThread.STANDARD_MODE);
-    }
-
-    private void setupMessageReception(Bundle savedInstanceState) {
-        offline = true;
-            if(permissionsUtil.requestEnableBt())
+            permissionsUtil = new PermissionsUtil(this);
+            if (permissionsUtil.requestEnableBt())
                 startLocatorService(LocatorThread.STANDARD_MODE);
         }
 
-         /* if (!offline) {
-          // Handle deviceToken for pushNotification
-            // [START handle_device_token]
-            SaveDeviceTokenTask task = new SaveDeviceTokenTask(this, new TaskListener<Void>() {
-                @Override
-                public void onTaskSuccess(Void aVoid) {
-                    Log.d(TAG, "Device key save succesfully");
-                }
 
-                @Override
-                public void onTaskError(Exception e) {
-                    Log.e(TAG, "Save deviceKey error", e);
-                }
-*/
-
-        boolean emergency = false;
-        if (getIntent().getExtras() != null) {
-            for (String key : getIntent().getExtras().keySet()) {
-                if (key.equals("emergency")) {
-                    emergency = true;
-                }
-                String value = getIntent().getExtras().getString(key);
-                Log.d(TAG, "Key: " + key + " Value: " + value);
-            }
-        }
-
-        Log.d(TAG, String.valueOf(emergency));
-        if (savedInstanceState == null) {
-            HomeFragment homeFragment = HomeFragment.newInstance(emergency, offline);
-            FragmentManager fm = getSupportFragmentManager();
-            fm.beginTransaction().replace(R.id.navigation_content_pane, homeFragment, HomeFragment.TAG)
-                    .commit();
-        }
-
-        //segmento di codice utile all unlock automaitico
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
-                + WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD|
-                + WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED|
-                + WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
-
-    }
-
-    private void startLocatorService(int mode) {
-        Intent serviceIntent = new Intent(this, LocatorService.class);
-        serviceIntent.setAction(Integer.toString(mode));
-        startService(serviceIntent);
     }
 
     private void setupDataHandlers() {
@@ -201,6 +156,7 @@ public class HomeActivity extends AppCompatActivity implements DataRetriever{
             // [END handle_device_token]
         }*/
     }
+
     /**
      * Cambia il fragment
      *
@@ -216,28 +172,17 @@ public class HomeActivity extends AppCompatActivity implements DataRetriever{
                 .commit();
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode){
-            case BT_ENABLED:
-                if(resultCode == RESULT_OK)
-                    startLocatorService(LocatorThread.STANDARD_MODE);
-              else
-                permissionsUtil.btAlert();
-        }
-    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode){
+        switch (requestCode) {
             case BT_ENABLED:
-                if(resultCode == RESULT_OK)
+                if (resultCode == RESULT_OK)
                     startLocatorService(LocatorThread.STANDARD_MODE);
                 else
                     permissionsUtil.btAlert();
-                break;
+
         }
     }
 
@@ -249,7 +194,7 @@ public class HomeActivity extends AppCompatActivity implements DataRetriever{
 
 
     @Override
-    public void onBackPressed(){
+    public void onBackPressed() {
         final AlertDialog.Builder builder = new AlertDialog.Builder(HomeActivity.this);
         builder.setMessage("Sei sicuro di voler uscire?");
         builder.setCancelable(true);

@@ -19,6 +19,7 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import android.app.ProgressDialog;
+
 import com.ids.idsuserapp.R;
 import com.ids.idsuserapp.entityhandlers.UserRequestHandler;
 import com.ids.idsuserapp.percorso.BaseFragment;
@@ -33,7 +34,7 @@ import java.util.regex.Pattern;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
-
+ * <p>
  * to handle interaction events.
  * Use the {@link LoginFragment#newInstance} factory method to
  * create an instance of this fragment.
@@ -53,6 +54,7 @@ public class LoginFragment extends Fragment {
 
 
     private LoginFragment.ViewHolder holder;
+
     public LoginFragment() {
         // Required empty public constructor
     }
@@ -77,7 +79,8 @@ public class LoginFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            email = getArguments().getString(EMAIL); }
+            email = getArguments().getString(EMAIL);
+        }
 
 
     }
@@ -108,37 +111,29 @@ public class LoginFragment extends Fragment {
         final RelativeLayout layout;
 
 
-
-
         public ViewHolder(View view) {
-
-
             emailTxt = view.findViewById(R.id.email_txt);
             pwdTxt = view.findViewById(R.id.pwd_txt);
             loginButton = view.findViewById(R.id.login_btn);
             layout = view.findViewById(R.id.relative_layout);
 
 
-
-
             userRequestHandler = new UserRequestHandler(getContext());
-
 
 
             loginButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 
-                    String validemail = "[a-zA-Z0-9\\+\\.\\_\\%\\-\\+]{1,256}" +"\\@" +"[a-zA-Z0-9][a-zA-Z0-9\\-]{0,64}" +"(" +"\\." +"[a-zA-Z0-9][a-zA-Z0-9\\-]{0,25}" +")+";
-
+                    String validemail = "[a-zA-Z0-9\\+\\.\\_\\%\\-\\+]{1,256}" + "\\@" + "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,64}" + "(" + "\\." + "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,25}" + ")+";
 
 
                     String mail = emailTxt.getText().toString();
 
-                    Matcher matcher= Pattern.compile(validemail).matcher(mail);
+                    Matcher matcher = Pattern.compile(validemail).matcher(mail);
 
 
-                    if (!matcher.matches()){
+                    if (!matcher.matches()) {
                         AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
                         alertDialog.setTitle("oops!");
                         alertDialog.setMessage("Inserire email valida");
@@ -149,8 +144,7 @@ public class LoginFragment extends Fragment {
                                     }
                                 });
                         alertDialog.show();
-                    }
-                    else if(pwdTxt.getText().toString().equals("")){
+                    } else if (pwdTxt.getText().toString().equals("")) {
 
                         AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
                         alertDialog.setTitle("oops!");
@@ -163,28 +157,26 @@ public class LoginFragment extends Fragment {
                                 });
 
                         alertDialog.show();
-                    }
-
-
-
-                    else{
+                    } else {
 
                         String new_mail = emailTxt.getText().toString();
 
                         String pas = pwdTxt.getText().toString();
 
 
-                        if (ConnectionChecker.getInstance().isNetworkAvailable(getContext())){
+                        if (ConnectionChecker.getInstance().isNetworkAvailable(getContext())) {
                             ProgressDialog progressDialog = new ProgressDialog(getActivity());
                             progressDialog.setTitle("Login");
                             progressDialog.setMessage("Login in corso..");
                             progressDialog.show();
                             //progressbar.setVisibility(View.VISIBLE);
-                         userRequestHandler.loginUserServer(new_mail,pas);}
-                         }
+                            userRequestHandler.loginUserServer(new_mail, pas);
+                        }
+                    }
 
                 }
-                            });
-            }
-            }}
+            });
+        }
+    }
+}
 
