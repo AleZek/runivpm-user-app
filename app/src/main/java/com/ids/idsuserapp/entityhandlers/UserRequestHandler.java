@@ -1,5 +1,6 @@
 package com.ids.idsuserapp.entityhandlers;
 
+import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -15,7 +16,9 @@ import com.ids.idsuserapp.HomeActivity;
 import com.ids.idsuserapp.R;
 import com.ids.idsuserapp.authentication.AutenticationActivity;
 import com.ids.idsuserapp.authentication.LoginActivity;
+import com.ids.idsuserapp.db.entity.Beacon;
 import com.ids.idsuserapp.utils.AuthenticatedJsonObjectRequest;
+import com.ids.idsuserapp.viewmodel.BeaconViewModel;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -25,11 +28,13 @@ public class UserRequestHandler {
 
     private Context context;
     private ProgressInterface progressInterface;
+    private BeaconViewModel beaconViewModel;
     private com.android.volley.RequestQueue serverRequestQueue;
 
 
     public UserRequestHandler(Context context) {
         this.context = context;
+        beaconViewModel = new BeaconViewModel( (Application) context.getApplicationContext());
         if(context instanceof ProgressInterface)
             progressInterface = (ProgressInterface) context;
         serverRequestQueue = Volley.newRequestQueue(context);
@@ -185,6 +190,45 @@ public class UserRequestHandler {
             e.printStackTrace();
         }
         return loginUser;
+    }
+
+    public void sendPosition(String positionDevice) {
+        int positionId = getIdFromDevice(positionDevice);
+        JsonObjectRequest positionRequest = prepareSendPositionRequest(positionId);
+        serverRequestQueue.add(positionRequest);
+    }
+
+    public AuthenticatedJsonObjectRequest prepareSendPositionRequest(int positionId) {
+        String url = context.getString(R.string.api_user_locator);
+        JSONObject position = createPositionJson(positionId);
+        return new AuthenticatedJsonObjectRequest(context, Request.Method.POST, url, position,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(context, "RUNIVPM: errore di comunicazione con il server", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private JSONObject createPositionJson(int positionId) {
+        JSONObject position = new JSONObject();
+        try {
+            position.put("position", positionId);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return position;
+    }
+
+    private int getIdFromDevice(String device){
+        Beacon beacon = beaconViewModel.findByDevice(device);
+        if(beacon != null)
+            return beacon.getId();
+        else return 0;
     }
 
 

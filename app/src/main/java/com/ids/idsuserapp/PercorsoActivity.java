@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -15,10 +14,9 @@ import android.widget.Toast;
 
 import com.ids.idsuserapp.db.entity.Beacon;
 import com.ids.idsuserapp.db.entity.Tronco;
-import com.ids.idsuserapp.entityhandlers.ServerUserLocator;
+import com.ids.idsuserapp.entityhandlers.UserRequestHandler;
 import com.ids.idsuserapp.fragment.NavigatorFragment;
 import com.ids.idsuserapp.percorso.BaseFragment;
-import com.ids.idsuserapp.percorso.HomeFragment;
 import com.ids.idsuserapp.percorso.NavigationActivity;
 import com.ids.idsuserapp.percorso.Tasks.MinimumPathTask;
 import com.ids.idsuserapp.percorso.Tasks.TaskListener;
@@ -46,7 +44,7 @@ public class PercorsoActivity extends AppCompatActivity implements BluetoothLoca
     TextView locationText;
     BluetoothLocator bluetoothLocator;
     LocatorThread locatorThread;
-    ServerUserLocator serverUserLocator;
+    UserRequestHandler serverUserLocator;
     Dijkstra dijkstra;
     Beacon origine;
     Beacon destinazione;
@@ -133,7 +131,7 @@ public class PercorsoActivity extends AppCompatActivity implements BluetoothLoca
     }
 
     private void startLocatorThread() {
-        serverUserLocator = new ServerUserLocator(getApplicationContext());
+        serverUserLocator = new UserRequestHandler(getApplicationContext());
         int mode = emergency ? LocatorThread.EMERGENCY_MODE : LocatorThread.NAVIGATION_MODE;
         locatorThread = new LocatorThread(this, LocatorThread.NAVIGATION_MODE);
         locatorThread.start();

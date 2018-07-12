@@ -82,8 +82,10 @@ public class HomeActivity extends AppCompatActivity implements DataRetriever{
         //controlla se la connessione ad internet è attiva dato l application context,
         //se si allora viene pulita la lista dei beacon e viene aggiornato il dataset
         emergency = checkEmergency();
-        if(emergency)
+        if(emergency) {
             overrideUnlockScreen();
+
+        }
         if (!offline && ConnectionChecker.getInstance().isNetworkAvailable(getApplicationContext()) && !getIntent().hasExtra("stop"))
             getDatasetFromServer();
         permissionsUtil = new PermissionsUtil(this);

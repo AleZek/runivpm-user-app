@@ -9,14 +9,14 @@ import android.os.IBinder;
 import android.util.Log;
 
 import com.ids.idsuserapp.R;
-import com.ids.idsuserapp.entityhandlers.ServerUserLocator;
+import com.ids.idsuserapp.entityhandlers.UserRequestHandler;
 import com.ids.idsuserapp.threads.LocatorThread;
 import com.ids.idsuserapp.utils.BluetoothLocator;
 import com.ids.idsuserapp.utils.ConnectionChecker;
 
 public class LocatorService extends Service implements BluetoothLocator.LocatorCallbacks {
     LocatorThread locatorThread;
-    ServerUserLocator serverUserLocator;
+    UserRequestHandler serverUserLocator;
     int mode;
 
     public LocatorService() {
@@ -25,7 +25,7 @@ public class LocatorService extends Service implements BluetoothLocator.LocatorC
     @Override
     public void onCreate() {
         super.onCreate();
-        serverUserLocator = new ServerUserLocator(getApplication());
+        serverUserLocator = new UserRequestHandler(getApplication());
     }
 
     @Override
