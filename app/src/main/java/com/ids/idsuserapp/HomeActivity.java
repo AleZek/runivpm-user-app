@@ -1,5 +1,6 @@
 package com.ids.idsuserapp;
 
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -15,6 +16,7 @@ import android.util.Log;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import com.ids.idsuserapp.authentication.AutenticationActivity;
 import com.ids.idsuserapp.db.entity.Tronco;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -75,6 +77,7 @@ public class HomeActivity extends AppCompatActivity implements DataRetriever{
         setupDataHandlers();
 //        startLocatorThread();
         checkOfflineMode();
+//        checkExit();
 
         //controlla se la connessione ad internet è attiva dato l application context,
         //se si allora viene pulita la lista dei beacon e viene aggiornato il dataset
@@ -87,6 +90,14 @@ public class HomeActivity extends AppCompatActivity implements DataRetriever{
         if(permissionsUtil.requestEnableBt())
             startLocatorService(LocatorThread.STANDARD_MODE);
         setupMessageReception(savedInstanceState);
+    }
+
+    private void checkExit() {
+        if(getIntent().hasExtra("Exit")) {
+            Intent exitIntent = new Intent(this, AutenticationActivity.class);
+            exitIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(exitIntent);
+        }
     }
 
     private void overrideUnlockScreen() {
@@ -235,7 +246,10 @@ public class HomeActivity extends AppCompatActivity implements DataRetriever{
             public void onClick(DialogInterface dialog, int i) {
                 UserRequestHandler userRequestHandler = new UserRequestHandler(getApplicationContext());
                 userRequestHandler.logoutUserServer();
-                finish();
+                Intent intent = new Intent(getApplicationContext(), AutenticationActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.putExtra("Exit", true);
+                startActivity(intent);
             }
         });
 

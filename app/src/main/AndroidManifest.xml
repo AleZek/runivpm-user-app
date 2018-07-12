@@ -67,7 +67,8 @@
         <activity
             android:name=".StopEmergencyActivity"
             android:label="@string/title_activity_stop_emergency"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar"
+            android:noHistory="true"></activity>
     </application>
 
 </manifest>
