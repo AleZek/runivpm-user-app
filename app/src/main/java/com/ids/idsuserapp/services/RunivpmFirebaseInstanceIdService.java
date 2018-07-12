@@ -10,7 +10,7 @@ import com.google.firebase.iid.FirebaseInstanceIdService;
  * app, cancellazione dati etc. è bene quindi recuperare il token che serve a firebase per comunicare con il dispositivo
  * specifico.
 */
-public class MyFirebaseInstanceIdService extends FirebaseInstanceIdService {
+public class RunivpmFirebaseInstanceIdService extends FirebaseInstanceIdService {
     private static final String TAG = "MyFirebaseIIDService";
 
     @Override

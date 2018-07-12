@@ -25,8 +25,8 @@ import java.util.logging.SocketHandler;
  * è in foreground.
  *
  */
-public class MyFirebaseMessagingService extends FirebaseMessagingService {
-    private String TAG = "MyFirebaseMessagingService";
+public class RunivpmFirebaseMessagingService extends FirebaseMessagingService {
+    private String TAG = "RunivpmFirebaseMessagingService";
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.auth_preference), MODE_PRIVATE);

@@ -13,7 +13,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.ids.idsuserapp.HomeActivity;
 import com.ids.idsuserapp.R;
-import com.ids.idsuserapp.autentication.LoginActivity;
+import com.ids.idsuserapp.authentication.LoginActivity;
 import com.ids.idsuserapp.utils.AuthenticatedJsonObjectRequest;
 
 import org.json.JSONException;
@@ -92,10 +92,11 @@ public class UserRequestHandler {
                         SharedPreferences sharedPref = context.getSharedPreferences(
                                 context.getString(R.string.auth_preference), Context.MODE_PRIVATE);
                         SharedPreferences.Editor editor = sharedPref.edit();
-                            editor.putString("token", "");
-                            editor.apply();
+                        editor.putString("token", "");
+                        editor.apply();
                         sharedPref = context.getSharedPreferences(
                                 context.getString(R.string.local_position), Context.MODE_PRIVATE);
+                        editor = sharedPref.edit();
                         editor.putString("position", "");
                         editor.apply();
                         Intent intent = new Intent(context, HomeActivity.class);

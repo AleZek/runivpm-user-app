@@ -30,6 +30,7 @@ import com.ids.idsuserapp.entityhandlers.ArcoDataHandler;
 import com.ids.idsuserapp.entityhandlers.BeaconDataHandler;
 import com.ids.idsuserapp.entityhandlers.DataRetriever;
 import com.ids.idsuserapp.entityhandlers.MappaDataHandler;
+import com.ids.idsuserapp.entityhandlers.UserRequestHandler;
 import com.ids.idsuserapp.percorso.BaseFragment;
 import com.ids.idsuserapp.percorso.HomeFragment;
 import com.ids.idsuserapp.percorso.Tasks.TaskListener;
@@ -232,6 +233,8 @@ public class HomeActivity extends AppCompatActivity implements DataRetriever{
         builder.setPositiveButton("Sì", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int i) {
+                UserRequestHandler userRequestHandler = new UserRequestHandler(getApplicationContext());
+                userRequestHandler.logoutUserServer();
                 finish();
             }
         });

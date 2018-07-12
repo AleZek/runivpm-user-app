@@ -1,4 +1,4 @@
-package com.ids.idsuserapp.autentication;
+package com.ids.idsuserapp.authentication;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;

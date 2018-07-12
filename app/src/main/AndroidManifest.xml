@@ -38,21 +38,21 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".BeaconNavigationActivity" />
         <activity
-            android:name=".autentication.AutenticationActivity"
+            android:name=".authentication.AutenticationActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".autentication.LoginActivity" />
-        <activity android:name=".autentication.RegistrationActivity" />
+        <activity android:name=".authentication.LoginActivity" />
+        <activity android:name=".authentication.RegistrationActivity" />
 
         <service
             android:name=".services.LocatorService"
             android:enabled="true"
             android:exported="true" />
-        <service android:name=".services.MyFirebaseMessagingService">
+        <service android:name=".services.RunivpmFirebaseMessagingService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-        <service android:name=".services.MyFirebaseInstanceIdService">
+        <service android:name=".services.RunivpmFirebaseInstanceIdService">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
