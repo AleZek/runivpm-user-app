@@ -30,13 +30,12 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.auth_preference), MODE_PRIVATE);
-        Log.v(TAG, "aa");
-        boolean porco =  !sharedPreferences.getString("token","").equals("");
         if (remoteMessage.getData() != null && !sharedPreferences.getString("token","").equals("")) {
 
             Intent intent;
             if (Boolean.parseBoolean(remoteMessage.getData().get("Emergenza"))) {
                 SharedPreferences locationPref = getSharedPreferences(getString(R.string.local_position), MODE_PRIVATE);
+                locationPref.edit().putString("position", "B0:B4:48:C0:71:82").apply();
                 if(!locationPref.getString("position", "").equals(""))
                     intent = GetPercorsoIntent();
                 else

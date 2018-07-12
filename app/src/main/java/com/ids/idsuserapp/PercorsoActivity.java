@@ -76,10 +76,13 @@ public class PercorsoActivity extends AppCompatActivity implements BluetoothLoca
 
         setupMessageReception(savedInstanceState);
         setOrigineDestinazione(getIntent());
+        List<Beacon> beacon = beaconViewModel.getAllSynchronous();
+        beacon.toArray();
         holder = new ViewHolderPercorso();
         holder.setupMapView();
 
 
+        overrideUnlockScreen();
         startLocatorThread();
         setBluetoothLocator();
 
@@ -108,14 +111,10 @@ public class PercorsoActivity extends AppCompatActivity implements BluetoothLoca
                     if (key.equals("emergency"))
                         emergency = true;
 
-                    String value = getIntent().getExtras().getString(key);
-                    Log.d(TAG, "Key: " + key + " Value: " + value);
-
                 }
 
             }
 
-            overrideUnlockScreen();
     }
 
     private void overrideUnlockScreen() {

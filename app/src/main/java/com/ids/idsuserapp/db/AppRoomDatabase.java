@@ -34,38 +34,10 @@ public abstract class AppRoomDatabase extends RoomDatabase {
                     // Create database here
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                             AppRoomDatabase.class, "app_database").fallbackToDestructiveMigration()
-                            .addCallback(sRoomDatabaseCallback).allowMainThreadQueries().build();
+                            .allowMainThreadQueries().build();
                 }
             }
         }
         return INSTANCE;
-    }
-
-    private static Callback sRoomDatabaseCallback =
-            new Callback() {
-
-                @Override
-                public void onOpen(@NonNull SupportSQLiteDatabase db) {
-                    super.onOpen(db);
-                    new PopulateDbAsync(INSTANCE).execute();
-                }
-            };
-
-    private static class PopulateDbAsync extends AsyncTask<Void, Void, Void> {
-
-        private final BeaconDao mBeaconDao;
-        private final MappaDao mMappaDao;
-
-        PopulateDbAsync(AppRoomDatabase db) {
-            mBeaconDao = db.beaconDao();
-            mMappaDao = db.mappaDao();
-        }
-
-        @Override
-        protected Void doInBackground(final Void... params) {
-            mMappaDao.deleteAll();
-            return null;
-
-        }
     }
 }

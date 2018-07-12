@@ -53,6 +53,7 @@ public class HomeActivity extends AppCompatActivity implements DataRetriever{
     private ArcoDataHandler arcoDataHandler;
     private PermissionsUtil permissionsUtil;
     private LocatorThread locatorThread;
+    private boolean emergency;
     private static final int PERMISSION_REQUEST_COARSE_LOCATION = 124;
     private static final int BT_ENABLED = 1;
     private boolean offline;
@@ -75,12 +76,27 @@ public class HomeActivity extends AppCompatActivity implements DataRetriever{
 
         //controlla se la connessione ad internet è attiva dato l application context,
         //se si allora viene pulita la lista dei beacon e viene aggiornato il dataset
+        emergency = checkEmergency();
+        if(emergency)
+            overrideUnlockScreen();
         if (!offline && ConnectionChecker.getInstance().isNetworkAvailable(getApplicationContext()) && !getIntent().hasExtra("stop"))
             getDatasetFromServer();
         permissionsUtil = new PermissionsUtil(this);
         if(permissionsUtil.requestEnableBt())
             startLocatorService(LocatorThread.STANDARD_MODE);
         setupMessageReception(savedInstanceState);
+    }
+
+    private void overrideUnlockScreen() {
+        //segmento di codice utile all unlock automaitico
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
+                + WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD|
+                + WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED|
+                + WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
+    }
+
+    private boolean checkEmergency() {
+        return emergency = getIntent().hasExtra("emergency");
     }
 
     private void checkOfflineMode() {
