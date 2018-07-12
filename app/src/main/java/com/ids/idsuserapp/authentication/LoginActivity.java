@@ -7,7 +7,7 @@ import android.os.Bundle;
 import com.ids.idsuserapp.R;
 import com.ids.idsuserapp.entityhandlers.UserRequestHandler;
 
-public class LoginActivity extends AppCompatActivity implements UserRequestHandler.LoginProgressInterface{
+public class LoginActivity extends AppCompatActivity implements UserRequestHandler.ProgressInterface {
 
     ProgressDialog progressDialog;
 
@@ -31,10 +31,10 @@ public class LoginActivity extends AppCompatActivity implements UserRequestHandl
     }
 
     @Override
-    public void showProgressBar() {
+    public void showProgressBar(String title, String message) {
         progressDialog = new ProgressDialog(this);
-        progressDialog.setTitle("Login");
-        progressDialog.setMessage("Login in corso..");
+        progressDialog.setTitle(title);
+        progressDialog.setMessage(message);
         progressDialog.show();
     }
 

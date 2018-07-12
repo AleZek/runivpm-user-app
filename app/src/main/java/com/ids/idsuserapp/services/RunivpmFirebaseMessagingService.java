@@ -35,7 +35,6 @@ public class RunivpmFirebaseMessagingService extends FirebaseMessagingService {
             Intent intent;
             if (Boolean.parseBoolean(remoteMessage.getData().get("Emergenza"))) {
                 SharedPreferences locationPref = getSharedPreferences(getString(R.string.local_position), MODE_PRIVATE);
-                locationPref.edit().putString("position", "B0:B4:48:C0:71:82").apply();
                 if(!locationPref.getString("position", "").equals(""))
                     intent = GetPercorsoIntent();
                 else
