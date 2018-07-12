@@ -1,6 +1,7 @@
 package com.ids.idsuserapp.authentication;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -83,11 +84,14 @@ public class LoginFragment extends Fragment {
     }
 
 
+
+
     public class ViewHolder extends BaseFragment.ViewHolder {
 
         public final EditText emailTxt;
         public final EditText pwdTxt;
         public final Button loginButton;
+        public ProgressDialog progressDialog;
         public UserRequestHandler userRequestHandler;
 
 
@@ -97,6 +101,7 @@ public class LoginFragment extends Fragment {
             emailTxt = view.findViewById(R.id.email_txt);
             pwdTxt = view.findViewById(R.id.pwd_txt);
             loginButton = view.findViewById(R.id.login_btn);
+
 
 
             userRequestHandler = new UserRequestHandler(getContext());
@@ -151,8 +156,9 @@ public class LoginFragment extends Fragment {
                         String pas = pwdTxt.getText().toString();
 
 
-                        if (ConnectionChecker.getInstance().isNetworkAvailable(getContext()))
-                            userRequestHandler.loginUserServer(new_mail,pas);
+                        if (ConnectionChecker.getInstance().isNetworkAvailable(getContext())) {
+                            userRequestHandler.loginUserServer(new_mail, pas);
+                        }
                         else
                             showOfflineAlert();
                     }
@@ -162,6 +168,8 @@ public class LoginFragment extends Fragment {
 
 
         }
+
+
 
         private void showOfflineAlert() {
             AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();

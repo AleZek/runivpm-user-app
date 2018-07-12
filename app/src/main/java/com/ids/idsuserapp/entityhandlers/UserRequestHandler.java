@@ -23,11 +23,14 @@ public class UserRequestHandler {
 
 
     private Context context;
+    private LoginProgressInterface loginProgressInterface;
     private com.android.volley.RequestQueue serverRequestQueue;
 
 
     public UserRequestHandler(Context context) {
         this.context = context;
+        if(context instanceof LoginProgressInterface)
+            loginProgressInterface = (LoginProgressInterface) context;
         serverRequestQueue = Volley.newRequestQueue(context);
     }
 
@@ -43,7 +46,7 @@ public class UserRequestHandler {
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        Toast.makeText(context, "success", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, "Registrazione completata", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(context, LoginActivity.class);
                         context.startActivity(intent);
 
@@ -52,9 +55,16 @@ public class UserRequestHandler {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.v("VolleyError", error.toString());
+                int statusCode = error.networkResponse.statusCode;
+                switch (statusCode) {
+                    case 400:
+                        Toast.makeText(context, "Errore nella richiesta", Toast.LENGTH_SHORT).show();
+                        break;
+                    case 409:
+                        Toast.makeText(context, "Email già presente nel nostro sistema", Toast.LENGTH_SHORT).show();
+                        break;
+                }
                 error.printStackTrace();
-                Toast toast = Toast.makeText(context, "Errore!", Toast.LENGTH_SHORT);
-                toast.show();
             }
         });
     }
@@ -73,6 +83,7 @@ public class UserRequestHandler {
     }
 
     public void loginUserServer(String email, String password) {
+        loginProgressInterface.showProgressBar();
         JsonObjectRequest newLoginJSONRequest = preparePostLoginRequest(email, password);
         serverRequestQueue.add(newLoginJSONRequest);
     }
@@ -132,8 +143,10 @@ public class UserRequestHandler {
                             String token = response.get("token").toString();
                             editor.putString("token", token);
                             editor.apply();
+                            loginProgressInterface.hideProgressBar();
                         } catch (JSONException e) {
                             e.printStackTrace();
+                            loginProgressInterface.hideProgressBar();
                             Toast.makeText(context, "Errore nel login. Riprovare", Toast.LENGTH_SHORT).show();
                         }
                         Log.v("TOKEN", sharedPref.getString("token", ""));
@@ -148,6 +161,7 @@ public class UserRequestHandler {
                 int statusCode = error.networkResponse.statusCode;
                 switch (statusCode) {
                     case 401:
+                        loginProgressInterface.hideProgressBar();
                         Toast.makeText(context,"Credenziali errate.Riprovare", Toast.LENGTH_LONG).show();
                         break;
                 }
@@ -168,6 +182,14 @@ public class UserRequestHandler {
         }
         return loginUser;
     }
+
+
+    public interface LoginProgressInterface {
+        void showProgressBar();
+        void hideProgressBar();
+    }
+
+
 
 
 }

@@ -1,11 +1,15 @@
 package com.ids.idsuserapp.authentication;
 
+import android.app.ProgressDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import com.ids.idsuserapp.R;
+import com.ids.idsuserapp.entityhandlers.UserRequestHandler;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity implements UserRequestHandler.LoginProgressInterface{
+
+    ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,5 +28,18 @@ public class LoginActivity extends AppCompatActivity {
 
 
 
+    }
+
+    @Override
+    public void showProgressBar() {
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setTitle("Login");
+        progressDialog.setMessage("Login in corso..");
+        progressDialog.show();
+    }
+
+    @Override
+    public void hideProgressBar() {
+        progressDialog.dismiss();
     }
 }
