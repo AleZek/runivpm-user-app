@@ -46,15 +46,12 @@ public class PercorsoActivity extends AppCompatActivity implements BluetoothLoca
     TextView locationText;
     BluetoothLocator bluetoothLocator;
     LocatorThread locatorThread;
-    Percorso percorso;
     ServerUserLocator serverUserLocator;
     Dijkstra dijkstra;
     Beacon origine;
     Beacon destinazione;
     ArcoViewModel arcoViewModel;
     BeaconViewModel beaconViewModel;
-    String userPosition = "";
-    Beacon userPositionBeacon;
 
     private List<Percorso> solutionPaths = null;
     private Percorso selectedSolution;
@@ -80,6 +77,7 @@ public class PercorsoActivity extends AppCompatActivity implements BluetoothLoca
         setupMessageReception(savedInstanceState);
         setOrigineDestinazione(getIntent());
         holder = new ViewHolderPercorso();
+        holder.setupMapView();
 
 
         startLocatorThread();
@@ -87,9 +85,8 @@ public class PercorsoActivity extends AppCompatActivity implements BluetoothLoca
 
     }
 
-
     private void setupMessageReception(Bundle savedInstanceState) {
-        offline = true;
+            offline = true;
 
          /* if (!offline) {
           // Handle deviceToken for pushNotification
@@ -105,17 +102,19 @@ public class PercorsoActivity extends AppCompatActivity implements BluetoothLoca
                     Log.e(TAG, "Save deviceKey error", e);
                 }
 */
-        emergency = false;
-        if (getIntent().getExtras() != null) {
-            for (String key : getIntent().getExtras().keySet()) {
-                if (key.equals("emergency"))
-                    emergency = true;
+            emergency = false;
+            if (getIntent().getExtras() != null) {
+                for (String key : getIntent().getExtras().keySet()) {
+                    if (key.equals("emergency"))
+                        emergency = true;
 
-                String value = getIntent().getExtras().getString(key);
-                Log.d(TAG, "Key: " + key + " Value: " + value);
+                    String value = getIntent().getExtras().getString(key);
+                    Log.d(TAG, "Key: " + key + " Value: " + value);
+
+                }
 
             }
-        }
+
 
 
         //segmento di codice utile all unlock automaitico
@@ -125,6 +124,8 @@ public class PercorsoActivity extends AppCompatActivity implements BluetoothLoca
                 + WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
 
     }
+
+
 
 
     @Override
@@ -175,9 +176,6 @@ public class PercorsoActivity extends AppCompatActivity implements BluetoothLoca
         bluetoothLocator = locatorThread.getBluetoothLocator();
     }
 
-    private void setUserBeacon() {
-        userPositionBeacon = beaconViewModel.findByDevice(userPosition);
-    }
 
     // index = -1 indica che il beacon non era nel percorso indicato e che ho sbagliato strada, quindi ricalcolo
 
@@ -329,14 +327,14 @@ public class PercorsoActivity extends AppCompatActivity implements BluetoothLoca
         public final FloatingActionButton fabButtonIndietro;
 
 
-        public ViewHolderPercorso(View v) {
-            fabButtonAvanti = find(v, R.id.navigation_fab_avanti);
-            fabButtonIndietro = find(v,R.id.navigation_fab_indietro);
+        public ViewHolderPercorso() {
+            fabButtonAvanti = findViewById(R.id.navigation_fab_avanti);
+            fabButtonIndietro = findViewById(R.id.navigation_fab_indietro);
             fabButtonAvanti.setOnClickListener(new NavigationButtonAvantiListener());
             fabButtonIndietro.setOnClickListener(new NavigationButtonIndietroListener());
 
             mapView = findViewById(R.id.navigation_map_image_percorso);
-            setupMapView();
+
 
         }
 
