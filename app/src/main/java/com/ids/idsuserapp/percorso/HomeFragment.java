@@ -132,21 +132,10 @@ public class HomeFragment extends BaseFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         if (getArguments() != null) {
             offline = getArguments().getBoolean(OFFLINE);
         }
-
         setText();
-
-        /*if(!offline) {
-            NodesDownloaderTask nodesDownloaderTask = new NodesDownloaderTask(
-                    getContext(), new NodesDownloaderTaskListener());
-            nodesDownloaderTask.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR);
-            EdgesDownloaderTask task = new EdgesDownloaderTask(
-                    getContext(), new EdgesDownloaderTaskListener());
-            task.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR);
-        }*/
     }
 
     public void setText() {
@@ -159,7 +148,7 @@ public class HomeFragment extends BaseFragment {
 
         } else if (choosenOrigin && choosenDestination) {
             if (origin.getId() == destination.getId()) {
-                holder.infoTextView.setText("\n Devi selezionare due Beacon diversi per origine e destinazione");
+                holder.infoTextView.setText("\n Devi selezionare due Beacon diversi \nper origine e destinazione");
             } else {
                 holder.infoTextView.setText(
                         "\nOrigine selezionata: " +
@@ -290,16 +279,16 @@ public class HomeFragment extends BaseFragment {
                     new SimpleSearchDialogCompat(getActivity(), "Cerca", "Seleziona beacon", null, initData(), new SearchResultListener<Searchable>() {
                         @Override
                         public void onSelected(BaseSearchDialogCompat baseSearchDialogCompat, Searchable searchable, int i) {
-                            Toast.makeText(getActivity(), "Hai selezionato il " + searchable.getTitle(), Toast.LENGTH_SHORT).show();
+                            BeaconViewModel beacon = new BeaconViewModel(getActivity().getApplication());
+                            origin = beacon.findByName(searchable.getTitle());
+                            choosenOrigin = true;
+                            toggleConfirmButtonState();
+                            setText();
+                            toggleOrigine();
                             baseSearchDialogCompat.dismiss();
-
                         }
                     }).show();
-
-
                 }
-
-
             });
 
             selezionaBeaconDestinazioneButton.setOnClickListener(new View.OnClickListener() {
@@ -308,9 +297,13 @@ public class HomeFragment extends BaseFragment {
                     new SimpleSearchDialogCompat(getActivity(), "Cerca", "Seleziona beacon", null, initData(), new SearchResultListener<Searchable>() {
                         @Override
                         public void onSelected(BaseSearchDialogCompat baseSearchDialogCompat, Searchable searchable, int i) {
-                            Toast.makeText(getActivity(), "Hai selezionato il " + searchable.getTitle(), Toast.LENGTH_SHORT).show();
+                            BeaconViewModel beacon = new BeaconViewModel(getActivity().getApplication());
+                            destination = beacon.findByName(searchable.getTitle());
+                            choosenDestination = true;
+                            toggleConfirmButtonState();
+                            setText();
+                            toggleDestinazione();
                             baseSearchDialogCompat.dismiss();
-
                         }
                     }).show();
 
@@ -330,7 +323,7 @@ public class HomeFragment extends BaseFragment {
             for (int i = 0; i < beacons.size(); i++) {
                 items.add(new SearchModel(beacons.get(i).getNome()));
             }
-            return items;w
+            return items;
         }
 
 
@@ -340,15 +333,7 @@ public class HomeFragment extends BaseFragment {
 
 
 
-        @SuppressWarnings("unchecked")
-        public <T extends View> T find(View view, int id) {
-            View resultView = view.findViewById(id);
-            try {
-                return (T) resultView;
-            } catch (ClassCastException e) {
-                return null;
-            }
-        }
+
 
         public void toggleOrigine() {
             {
@@ -390,10 +375,10 @@ public class HomeFragment extends BaseFragment {
     }
 
     private void toggleConfirmButtonState() {
-        if (origin == null) {
+        if (!choosenOrigin) {
             disableVisualizzaPercorsoButtonState();
             disableVisualizzaUscitaButtonState();
-        } else if (destination == null) {
+        } else if (!choosenDestination) {
             disableVisualizzaPercorsoButtonState();
             holder.visualizzaUscitaVicinaButton.setVisibility(View.VISIBLE);
             holder.visualizzaUscitaVicinaButton.setTextColor(color(R.color.linkText));
@@ -408,7 +393,7 @@ public class HomeFragment extends BaseFragment {
         } else if (origin == destination) {
             disableVisualizzaPercorsoButtonState();
             disableVisualizzaUscitaButtonState();
-        }else {
+        }else{
             disableVisualizzaUscitaButtonState();
             holder.visualizzaPercorsoButton.setVisibility(View.VISIBLE);
             holder.visualizzaPercorsoButton.setTextColor(color(R.color.linkText));
@@ -429,6 +414,8 @@ public class HomeFragment extends BaseFragment {
         super.onDestroy();
         origin = null;
         destination = null;
+        choosenDestination = false;
+        choosenOrigin = false;
     }
 
 

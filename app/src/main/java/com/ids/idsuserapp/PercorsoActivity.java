@@ -80,13 +80,14 @@ public class PercorsoActivity extends AppCompatActivity implements BluetoothLoca
         setupMessageReception(savedInstanceState);
         setOrigineDestinazione(getIntent());
         holder = new ViewHolderPercorso();
-        holder.setupMapView();
 
 
         startLocatorThread();
         setBluetoothLocator();
 
     }
+
+
     private void setupMessageReception(Bundle savedInstanceState) {
         offline = true;
 
@@ -328,9 +329,9 @@ public class PercorsoActivity extends AppCompatActivity implements BluetoothLoca
         public final FloatingActionButton fabButtonIndietro;
 
 
-        public ViewHolderPercorso() {
-            fabButtonAvanti = findViewById(R.id.navigation_fab_avanti);
-            fabButtonIndietro = findViewById(R.id.navigation_fab_indietro);
+        public ViewHolderPercorso(View v) {
+            fabButtonAvanti = find(v, R.id.navigation_fab_avanti);
+            fabButtonIndietro = find(v,R.id.navigation_fab_indietro);
             fabButtonAvanti.setOnClickListener(new NavigationButtonAvantiListener());
             fabButtonIndietro.setOnClickListener(new NavigationButtonIndietroListener());
 
