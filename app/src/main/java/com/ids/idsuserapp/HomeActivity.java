@@ -20,8 +20,6 @@ import android.widget.Toast;
 import com.ids.idsuserapp.authentication.AutenticationActivity;
 import com.ids.idsuserapp.db.entity.Tronco;
 
-
-import com.ids.idsuserapp.authentication.RegistrationActivity;
 import com.ids.idsuserapp.entityhandlers.ArcoDataHandler;
 import com.ids.idsuserapp.entityhandlers.BeaconDataHandler;
 import com.ids.idsuserapp.entityhandlers.DataRetriever;

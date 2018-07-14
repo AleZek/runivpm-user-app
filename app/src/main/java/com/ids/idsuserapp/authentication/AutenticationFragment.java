@@ -133,7 +133,7 @@ public class AutenticationFragment extends Fragment {
           registerButton.setOnClickListener(new View.OnClickListener() {
               @Override
               public void onClick(View v) {
-                  Intent intent = new Intent(getActivity(),RegistrationActivity.class);
+                  Intent intent = new Intent(getActivity(), RegistrationActivity.class);
                   startActivity(intent);
               }
           });

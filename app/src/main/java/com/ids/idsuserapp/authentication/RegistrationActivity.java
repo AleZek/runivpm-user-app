@@ -1,4 +1,4 @@
-package com.ids.idsuserapp.autentication;
+package com.ids.idsuserapp.authentication;
 
 import android.app.ProgressDialog;
 import android.support.v7.app.AppCompatActivity;
