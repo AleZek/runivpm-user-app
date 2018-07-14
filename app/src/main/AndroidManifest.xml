@@ -29,11 +29,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:screenOrientation="portrait"
-            android:name=".BeaconList"
-            android:label="@string/title_activity_beacon_list"
-            android:theme="@style/AppTheme.NoActionBar" />
 
         <activity android:name=".HomeActivity"
             android:theme="@style/AppTheme.NoActionBar"
@@ -45,10 +40,6 @@
             android:theme="@style/AppTheme.NoActionBar"
             android:screenOrientation="portrait"
             />
-
-        <activity android:name=".BeaconNavigationActivity"
-            android:screenOrientation="portrait"
-            android:noHistory="true"/>
 
         <activity
             android:name=".authentication.AutenticationActivity"
@@ -86,11 +77,6 @@
             android:theme="@style/AppTheme.NoActionBar"
             android:screenOrientation="portrait"
             android:noHistory="true"/>
-
-        <activity android:name=".percorso.NavigationActivity"
-            android:screenOrientation="portrait"
-            android:noHistory="true"
-            />
 
         <activity
             android:name=".StopEmergencyActivity"

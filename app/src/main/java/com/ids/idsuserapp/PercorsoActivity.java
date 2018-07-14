@@ -13,10 +13,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ids.idsuserapp.db.entity.Beacon;
-import com.ids.idsuserapp.db.entity.Tronco;
 import com.ids.idsuserapp.entityhandlers.UserRequestHandler;
 import com.ids.idsuserapp.percorso.BaseFragment;
-import com.ids.idsuserapp.percorso.NavigationActivity;
 import com.ids.idsuserapp.percorso.Tasks.MinimumPathTask;
 import com.ids.idsuserapp.percorso.Tasks.TaskListener;
 import com.ids.idsuserapp.percorso.views.MapView;
@@ -27,7 +25,6 @@ import com.ids.idsuserapp.utils.BluetoothLocator;
 import com.ids.idsuserapp.viewmodel.ArcoViewModel;
 import com.ids.idsuserapp.viewmodel.BeaconViewModel;
 import com.ids.idsuserapp.wayfinding.Dijkstra;
-import com.ids.idsuserapp.wayfinding.Grafo;
 import com.ids.idsuserapp.wayfinding.IndiciNavigazione;
 import com.ids.idsuserapp.wayfinding.Percorso;
 import com.ids.idsuserapp.wayfinding.PercorsoMultipiano;
