@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -16,10 +15,7 @@ import android.widget.Toast;
 import com.ids.idsuserapp.db.entity.Beacon;
 import com.ids.idsuserapp.db.entity.Tronco;
 import com.ids.idsuserapp.entityhandlers.ServerUserLocator;
-import com.ids.idsuserapp.fragment.NavigatorFragment;
 import com.ids.idsuserapp.percorso.BaseFragment;
-import com.ids.idsuserapp.percorso.HomeFragment;
-import com.ids.idsuserapp.percorso.NavigationActivity;
 import com.ids.idsuserapp.percorso.Tasks.MinimumPathTask;
 import com.ids.idsuserapp.percorso.Tasks.TaskListener;
 import com.ids.idsuserapp.percorso.views.MapView;
@@ -145,13 +141,18 @@ public class PercorsoActivity extends AppCompatActivity implements BluetoothLoca
     private void setOrigineDestinazione(Intent data) {
         byte[] serializedDataOrigine;
         byte[] serializedDataDestinazione;
+        byte[] serializedDataSoloOrigine;
         try {
             serializedDataOrigine = data.getByteArrayExtra("beaconOrigine");
+            serializedDataSoloOrigine = data.getByteArrayExtra("beaconSoloOrigine");
             serializedDataDestinazione = data.getByteArrayExtra("beaconDestinazione");
             if (serializedDataOrigine != null) {
                 origine = (Beacon) SerializationUtils.deserialize(serializedDataOrigine);
                 if(serializedDataDestinazione != null)
                     destinazione = (Beacon) SerializationUtils.deserialize(serializedDataDestinazione);
+            }else if (serializedDataSoloOrigine != null){
+                origine = (Beacon) SerializationUtils.deserialize(serializedDataSoloOrigine);
+                destinazione = null;
             }else if(emergency){
                 SharedPreferences locationShared = getSharedPreferences(getString(R.string.local_position), MODE_PRIVATE);
                 String device = locationShared.getString("position", "");
@@ -162,20 +163,9 @@ public class PercorsoActivity extends AppCompatActivity implements BluetoothLoca
         }
     }
 
-    private void setDijkstra() {
-        List<Tronco> tronchi = arcoViewModel.getTronchi(); //classi con un arco e due beacon
-        Grafo grafo = new Grafo(tronchi);
-
-        dijkstra = new Dijkstra();
-        dijkstra.in(grafo);
-        dijkstra.inizio(origine);
-        dijkstra.setNormalizationBasis(1.0);
-    }
-
     private void setBluetoothLocator() {
         bluetoothLocator = locatorThread.getBluetoothLocator();
     }
-
 
     // index = -1 indica che il beacon non era nel percorso indicato e che ho sbagliato strada, quindi ricalcolo
 
@@ -312,12 +302,6 @@ public class PercorsoActivity extends AppCompatActivity implements BluetoothLoca
             indiciNavigazione = new IndiciNavigazione(indiciNavigazione.current - 1, indiciNavigazione.current);
             holder.setupMapView();
         }
-    }
-
-    private void openNavigatorFragment() {
-        NavigatorFragment navigatorFragment = NavigatorFragment.newInstance(selectedSolution, emergency, offline);
-        NavigationActivity navActivity = new NavigationActivity();
-        navActivity.changeFragment(navigatorFragment);
     }
 
 

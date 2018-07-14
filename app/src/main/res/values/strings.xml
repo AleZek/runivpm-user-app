@@ -45,6 +45,8 @@
     <string name="auth_preference">com.ids.idsuserapp.auth_file</string>
     <string name="emergency_subscribe_error">Errore di comunicazione con il server emergenze</string>
     <string name="local_position">com.ids.userapp.position</string>
+    <string name="emergency_dialog_title">Emergenza in corso!</string>
+    <string name="emergency_dialog_description">Ti guideremo verso l\'uscita più vicina</string>
 
 
 </resources>

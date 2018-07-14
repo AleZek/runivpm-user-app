@@ -6,6 +6,7 @@ import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -17,6 +18,8 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.ids.idsuserapp.HomeActivity;
 import com.ids.idsuserapp.PercorsoActivity;
 import com.ids.idsuserapp.R;
@@ -49,7 +52,7 @@ public class HomeFragment extends BaseFragment {
     private boolean visible = false;
     private boolean choosenOrigin = false;
     private boolean choosenDestination = false;
-
+    private boolean emergency = false;
 
     private static Beacon origin = null, destination = null;
     public static final String INTENT_KEY_POSITION = "position";
@@ -75,6 +78,9 @@ public class HomeFragment extends BaseFragment {
         holder = new ViewHolder(view);
         toggleConfirmButtonState();
 
+        if (getArguments().getBoolean(EMERGENCY)) {
+            holder.createEmergencyDialog();
+        }
 
         return view;
     }
@@ -330,7 +336,29 @@ public class HomeFragment extends BaseFragment {
 
 
 
+        public void createEmergencyDialog() {
+            new MaterialDialog.Builder(getContext())
+                    .title(getString(R.string.emergency_dialog_title))
+                    .content(getString(R.string.emergency_dialog_description))
+                    .positiveText(getString(R.string.action_confirm))
+                    .positiveColorRes(R.color.colorPrimary)
+                    .onPositive(new MaterialDialog.SingleButtonCallback() {
+                        @Override
+                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                            if (!emergency) {
+                                Toast.makeText(getContext(),"Fine Emergenza",Toast.LENGTH_SHORT).show();
+                            }
+                            Toast.makeText(getContext(),"Scegli l'origine per trovare l'uscita più vicina",Toast.LENGTH_SHORT).show();
 
+                            if(getArguments() != null) {
+                                getArguments().putBoolean(EMERGENCY, false);
+                            }
+                        }
+                    })
+                    .icon(getResources().getDrawable(R.drawable.ic_fire))
+                    .autoDismiss(true)
+                    .show();
+        }
 
 
 
@@ -386,7 +414,7 @@ public class HomeFragment extends BaseFragment {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(getActivity(), PercorsoActivity.class);
-                    intent.putExtra("beaconOrigine", SerializationUtils.serialize(origin));
+                    intent.putExtra("beaconSoloOrigine", SerializationUtils.serialize(origin));
                     startActivity(intent);
                 }
             });
