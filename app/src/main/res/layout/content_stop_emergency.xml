@@ -17,7 +17,8 @@
         android:layout_marginBottom="62dp"
         android:layout_weight="1"
         android:background="@drawable/borderless_white_button"
-        android:text="torna alla home"
+        android:text="Torna alla Home"
+        android:textColor="@color/linkText"
         tools:layout_editor_absoluteX="0dp"
         tools:layout_editor_absoluteY="394dp" />
 
