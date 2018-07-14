@@ -107,6 +107,7 @@ public class AutenticationFragment extends Fragment {
 
 
                    Intent intent = new Intent(getActivity(), HomeActivity.class);
+                   intent.putExtra("offline",true);
                    startActivity(intent);
                    }
            });

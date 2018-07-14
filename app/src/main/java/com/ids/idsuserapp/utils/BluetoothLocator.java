@@ -92,8 +92,10 @@ public class BluetoothLocator {
     }
 
     public void startScan(){
-        scanner.startScan(scanCallback);
-        scanning = true;
+        if(mBluetoothAdapter.isEnabled()) {
+            scanner.startScan(scanCallback);
+            scanning = true;
+        }
     }
 
     public void setupLocatorScanner(){

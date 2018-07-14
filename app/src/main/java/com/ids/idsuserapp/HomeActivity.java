@@ -1,6 +1,8 @@
 package com.ids.idsuserapp;
 
 import android.content.DialogInterface;
+import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -15,21 +17,16 @@ import android.util.Log;
 import android.view.WindowManager;
 import android.widget.Toast;
 
-import com.ids.idsuserapp.authentication.AutenticationFragment;
+import com.ids.idsuserapp.authentication.AutenticationActivity;
 import com.ids.idsuserapp.db.entity.Tronco;
 
-import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 
 import com.ids.idsuserapp.authentication.RegistrationActivity;
 import com.ids.idsuserapp.entityhandlers.ArcoDataHandler;
 import com.ids.idsuserapp.entityhandlers.BeaconDataHandler;
 import com.ids.idsuserapp.entityhandlers.DataRetriever;
 import com.ids.idsuserapp.entityhandlers.MappaDataHandler;
+import com.ids.idsuserapp.entityhandlers.UserRequestHandler;
 import com.ids.idsuserapp.percorso.BaseFragment;
 import com.ids.idsuserapp.percorso.HomeFragment;
 import com.ids.idsuserapp.services.LocatorService;
@@ -54,11 +51,13 @@ public class HomeActivity extends AppCompatActivity implements DataRetriever {
     private ArcoDataHandler arcoDataHandler;
     private PermissionsUtil permissionsUtil;
     private LocatorThread locatorThread;
+    private boolean emergency;
     private static final int PERMISSION_REQUEST_COARSE_LOCATION = 124;
     private static final int BT_ENABLED = 1;
     private boolean offline;
-    private boolean emergency = false;
     public static final String OFFLINE_USAGE = "offline_usage";
+
+
 
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -71,10 +70,17 @@ public class HomeActivity extends AppCompatActivity implements DataRetriever {
         setupViewModels();
         setupDataHandlers();
 //        startLocatorThread();
+        checkOfflineMode();
+//        checkExit();
 
         //controlla se la connessione ad internet è attiva dato l application context,
         //se si allora viene pulita la lista dei beacon e viene aggiornato il dataset
-        if (ConnectionChecker.getInstance().isNetworkAvailable(getApplicationContext()))
+        emergency = checkEmergency();
+        if(emergency) {
+            overrideUnlockScreen();
+
+        }
+        if (!offline && ConnectionChecker.getInstance().isNetworkAvailable(getApplicationContext()) && !getIntent().hasExtra("stop"))
             getDatasetFromServer();
         permissionsUtil = new PermissionsUtil(this);
         if (permissionsUtil.requestEnableBt())
@@ -87,6 +93,30 @@ public class HomeActivity extends AppCompatActivity implements DataRetriever {
             fm.beginTransaction().replace(R.id.navigation_content_pane, homeFragment, HomeFragment.TAG)
                     .commit();
         }
+    }
+
+    private void checkExit() {
+        if(getIntent().hasExtra("Exit")) {
+            Intent exitIntent = new Intent(this, AutenticationActivity.class);
+            exitIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(exitIntent);
+        }
+    }
+
+    private void overrideUnlockScreen() {
+        //segmento di codice utile all unlock automaitico
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
+                + WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD|
+                + WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED|
+                + WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
+    }
+
+    private boolean checkEmergency() {
+        return emergency = getIntent().hasExtra("emergency");
+    }
+
+    private void checkOfflineMode() {
+        offline = getIntent().hasExtra("offline");
     }
 
     private void setupMessageReception(Bundle savedInstanceState) {
@@ -126,6 +156,7 @@ public class HomeActivity extends AppCompatActivity implements DataRetriever {
             fm.beginTransaction().replace(R.id.navigation_content_pane, homeFragment, HomeFragment.TAG)
                     .commit();
         }
+
 
 
     }
@@ -209,16 +240,20 @@ public class HomeActivity extends AppCompatActivity implements DataRetriever {
         }
     }
 
-
     @Override
-    public void onBackPressed() {
+    public void onBackPressed(){
         final AlertDialog.Builder builder = new AlertDialog.Builder(HomeActivity.this);
         builder.setMessage("Sei sicuro di voler uscire?");
         builder.setCancelable(true);
         builder.setPositiveButton("Sì", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int i) {
-                finish();
+                UserRequestHandler userRequestHandler = new UserRequestHandler(getApplicationContext());
+                userRequestHandler.logoutUserServer();
+                Intent intent = new Intent(getApplicationContext(), AutenticationActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.putExtra("Exit", true);
+                startActivity(intent);
             }
         });
 

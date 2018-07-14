@@ -1,15 +1,18 @@
-package com.ids.idsuserapp.authentication;
+package com.ids.idsuserapp.autentication;
 
-import android.content.DialogInterface;
-import android.support.v7.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import com.ids.idsuserapp.HomeActivity;
 import com.ids.idsuserapp.MainActivity;
 import com.ids.idsuserapp.R;
+import com.ids.idsuserapp.authentication.RegistrationFragment;
+import com.ids.idsuserapp.entityhandlers.UserRequestHandler;
 
-public class RegistrationActivity extends AppCompatActivity {
+public class RegistrationActivity extends AppCompatActivity implements UserRequestHandler.ProgressInterface{
+
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,5 +30,16 @@ public class RegistrationActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public void showProgressBar(String title, String message) {
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setTitle(title);
+        progressDialog.setMessage(message);
+        progressDialog.show();
+    }
 
+    @Override
+    public void hideProgressBar() {
+        progressDialog.dismiss();
+    }
 }

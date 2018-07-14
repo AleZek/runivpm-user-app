@@ -14,8 +14,9 @@ import android.widget.Toast;
 
 import com.ids.idsuserapp.db.entity.Beacon;
 import com.ids.idsuserapp.db.entity.Tronco;
-import com.ids.idsuserapp.entityhandlers.ServerUserLocator;
+import com.ids.idsuserapp.entityhandlers.UserRequestHandler;
 import com.ids.idsuserapp.percorso.BaseFragment;
+import com.ids.idsuserapp.percorso.NavigationActivity;
 import com.ids.idsuserapp.percorso.Tasks.MinimumPathTask;
 import com.ids.idsuserapp.percorso.Tasks.TaskListener;
 import com.ids.idsuserapp.percorso.views.MapView;
@@ -42,7 +43,7 @@ public class PercorsoActivity extends AppCompatActivity implements BluetoothLoca
     TextView locationText;
     BluetoothLocator bluetoothLocator;
     LocatorThread locatorThread;
-    ServerUserLocator serverUserLocator;
+    UserRequestHandler serverUserLocator;
     Dijkstra dijkstra;
     Beacon origine;
     Beacon destinazione;
@@ -72,17 +73,20 @@ public class PercorsoActivity extends AppCompatActivity implements BluetoothLoca
 
         setupMessageReception(savedInstanceState);
         setOrigineDestinazione(getIntent());
+        List<Beacon> beacon = beaconViewModel.getAllSynchronous();
+        beacon.toArray();
         holder = new ViewHolderPercorso();
         holder.setupMapView();
 
 
+        overrideUnlockScreen();
         startLocatorThread();
         setBluetoothLocator();
 
     }
 
     private void setupMessageReception(Bundle savedInstanceState) {
-            offline = true;
+        offline = true;
 
          /* if (!offline) {
           // Handle deviceToken for pushNotification
@@ -98,30 +102,25 @@ public class PercorsoActivity extends AppCompatActivity implements BluetoothLoca
                     Log.e(TAG, "Save deviceKey error", e);
                 }
 */
-            emergency = false;
-            if (getIntent().getExtras() != null) {
-                for (String key : getIntent().getExtras().keySet()) {
-                    if (key.equals("emergency"))
-                        emergency = true;
-
-                    String value = getIntent().getExtras().getString(key);
-                    Log.d(TAG, "Key: " + key + " Value: " + value);
-
-                }
+        emergency = false;
+        if (getIntent().getExtras() != null) {
+            for (String key : getIntent().getExtras().keySet()) {
+                if (key.equals("emergency"))
+                    emergency = true;
 
             }
 
+        }
+    }
 
 
+    private void overrideUnlockScreen() {
         //segmento di codice utile all unlock automaitico
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
                 + WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD|
                 + WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED|
                 + WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
-
     }
-
-
 
 
     @Override
@@ -131,7 +130,7 @@ public class PercorsoActivity extends AppCompatActivity implements BluetoothLoca
     }
 
     private void startLocatorThread() {
-        serverUserLocator = new ServerUserLocator(getApplicationContext());
+        serverUserLocator = new UserRequestHandler(getApplicationContext());
         int mode = emergency ? LocatorThread.EMERGENCY_MODE : LocatorThread.NAVIGATION_MODE;
         locatorThread = new LocatorThread(this, LocatorThread.NAVIGATION_MODE);
         locatorThread.start();

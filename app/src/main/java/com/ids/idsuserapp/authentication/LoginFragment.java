@@ -1,6 +1,7 @@
 package com.ids.idsuserapp.authentication;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -106,6 +107,7 @@ public class LoginFragment extends Fragment {
         public final EditText emailTxt;
         public final EditText pwdTxt;
         public final Button loginButton;
+        public ProgressDialog progressDialog;
         public UserRequestHandler userRequestHandler;
         private ProgressBar progressbar;
         final RelativeLayout layout;
@@ -165,18 +167,34 @@ public class LoginFragment extends Fragment {
 
 
                         if (ConnectionChecker.getInstance().isNetworkAvailable(getContext())) {
-                            ProgressDialog progressDialog = new ProgressDialog(getActivity());
-                            progressDialog.setTitle("Login");
-                            progressDialog.setMessage("Login in corso..");
-                            progressDialog.show();
-                            //progressbar.setVisibility(View.VISIBLE);
                             userRequestHandler.loginUserServer(new_mail, pas);
                         }
+                        else
+                            showOfflineAlert();
                     }
 
                 }
             });
+
+
+        }
+
+
+
+        private void showOfflineAlert() {
+            AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
+            alertDialog.setTitle("oops!");
+            alertDialog.setMessage("Nessuna connessione a Internet. Connettersi a una rete e riprovare");
+            alertDialog.setButton("Ok",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            //dismiss the dialog
+                        }
+                    });
+
+            alertDialog.show();
+        }
+
         }
     }
-}
 

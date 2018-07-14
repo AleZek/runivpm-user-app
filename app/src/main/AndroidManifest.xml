@@ -40,31 +40,37 @@
         <activity
             android:name=".authentication.AutenticationActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-
-        <activity android:name=".authentication.LoginActivity" />
+        <activity android:name=".authentication.LoginActivity"
+            android:noHistory="true" />
         <activity android:name=".authentication.RegistrationActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+            android:noHistory="true"
+            />
         <service
             android:name=".services.LocatorService"
             android:enabled="true"
             android:exported="true" />
-        <service android:name=".services.MyFirebaseMessagingService">
+        <service android:name=".services.RunivpmFirebaseMessagingService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-        <service android:name=".services.MyFirebaseInstanceIdService">
+        <service android:name=".services.RunivpmFirebaseInstanceIdService">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
 
-
         <activity
             android:name=".PercorsoActivity"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".percorso.NavigationActivity" />
+        <activity
+            android:name=".StopEmergencyActivity"
+            android:label="@string/title_activity_stop_emergency"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:noHistory="true">
 
-        <activity android:name=".percorso.NavigationActivity"></activity>
+        </activity>
     </application>
 
 </manifest>
