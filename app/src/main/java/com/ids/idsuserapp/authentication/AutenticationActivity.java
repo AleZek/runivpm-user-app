@@ -52,9 +52,7 @@ public class AutenticationActivity extends AppCompatActivity{
             fm.beginTransaction().replace(R.id.autentication_content_pane, autenticationFragment, AutenticationFragment.TAG)
                     .commit();
         }
-
-
-    }
+        }
 
     /**
      * Cambia il fragment
