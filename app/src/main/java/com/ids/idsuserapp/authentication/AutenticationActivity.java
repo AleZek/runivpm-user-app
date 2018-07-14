@@ -93,6 +93,9 @@ public class AutenticationActivity extends AppCompatActivity{
         alertDialog.show();
     }
 
+
+
+
 }
 
 

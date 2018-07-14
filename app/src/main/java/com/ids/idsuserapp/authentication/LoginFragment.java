@@ -23,7 +23,6 @@ import java.util.regex.Pattern;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
-
  * to handle interaction events.
  * Use the {@link LoginFragment#newInstance} factory method to
  * create an instance of this fragment.
@@ -186,5 +185,4 @@ public class LoginFragment extends Fragment {
         }
 
     }
-    }
-
+}

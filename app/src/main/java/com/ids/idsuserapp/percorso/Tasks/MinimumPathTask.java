@@ -41,10 +41,15 @@ public class MinimumPathTask extends AsyncTask<Beacon, Void, Boolean> {
     protected Boolean doInBackground(Beacon... params) {
         try {
             Beacon origine = params[0];
+            Beacon destinazione = params[1];
             setDijkstra(origine);
             if(!emergency) {
-                Beacon destinazione = params[1];
-                searchResult = dijkstra.searchDoublePath(destinazione);
+                if(destinazione != null) {
+                    searchResult = dijkstra.searchDoublePath(destinazione);
+                }else {
+                    List<Beacon> uscite = beaconViewModel.getUscite();
+                    searchResult = dijkstra.searchNearestExits(uscite);
+                }
             }else {
                 List<Beacon> uscite = beaconViewModel.getUscite();
                 searchResult = dijkstra.searchNearestExits(uscite);

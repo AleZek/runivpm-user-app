@@ -30,9 +30,9 @@
             android:name=".BeaconList"
             android:label="@string/title_activity_beacon_list"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".HomeActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".HomeActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
+
         <activity
             android:name=".LogoActivity"
             android:theme="@style/AppTheme.NoActionBar" />
@@ -68,7 +68,9 @@
             android:name=".StopEmergencyActivity"
             android:label="@string/title_activity_stop_emergency"
             android:theme="@style/AppTheme.NoActionBar"
-            android:noHistory="true"></activity>
+            android:noHistory="true">
+
+        </activity>
     </application>
 
 </manifest>

@@ -1,5 +1,6 @@
 package com.ids.idsuserapp;
 
+import android.content.DialogInterface;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -18,16 +19,7 @@ import android.widget.Toast;
 
 import com.ids.idsuserapp.authentication.AutenticationActivity;
 import com.ids.idsuserapp.db.entity.Tronco;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.text.Layout;
-import android.util.Log;
-import android.view.View;
-import android.widget.Button;
 
-import com.ids.idsuserapp.db.entity.Beacon;
 import com.ids.idsuserapp.entityhandlers.ArcoDataHandler;
 import com.ids.idsuserapp.entityhandlers.BeaconDataHandler;
 import com.ids.idsuserapp.entityhandlers.DataRetriever;
@@ -35,6 +27,8 @@ import com.ids.idsuserapp.entityhandlers.MappaDataHandler;
 import com.ids.idsuserapp.entityhandlers.UserRequestHandler;
 import com.ids.idsuserapp.percorso.BaseFragment;
 import com.ids.idsuserapp.percorso.HomeFragment;
+import com.ids.idsuserapp.services.LocatorService;
+import com.ids.idsuserapp.threads.LocatorThread;
 import com.ids.idsuserapp.percorso.Tasks.TaskListener;
 import com.ids.idsuserapp.services.LocatorService;
 import com.ids.idsuserapp.services.NodesUpdateService;
@@ -45,9 +39,7 @@ import com.ids.idsuserapp.viewmodel.ArcoViewModel;
 import com.ids.idsuserapp.viewmodel.BeaconViewModel;
 import com.ids.idsuserapp.viewmodel.MappaViewModel;
 
-import org.apache.commons.lang3.SerializationUtils;
-
-public class HomeActivity extends AppCompatActivity implements DataRetriever{
+public class HomeActivity extends AppCompatActivity implements DataRetriever {
     public static final String TAG = HomeActivity.class.getSimpleName();
     private MappaViewModel mappaViewModel;
     private BeaconViewModel beaconViewModel;
@@ -84,9 +76,16 @@ public class HomeActivity extends AppCompatActivity implements DataRetriever{
         if (!offline && ConnectionChecker.getInstance().isNetworkAvailable(getApplicationContext()) && !getIntent().hasExtra("stop"))
             getDatasetFromServer();
         permissionsUtil = new PermissionsUtil(this);
-        if(permissionsUtil.requestEnableBt())
+        if (permissionsUtil.requestEnableBt())
             startLocatorService(LocatorThread.STANDARD_MODE);
         setupMessageReception(savedInstanceState);
+
+        if (savedInstanceState == null) {
+            HomeFragment homeFragment = HomeFragment.newInstance(emergency, offline);
+            FragmentManager fm = getSupportFragmentManager();
+            fm.beginTransaction().replace(R.id.navigation_content_pane, homeFragment, HomeFragment.TAG)
+                    .commit();
+        }
     }
 
 
@@ -200,12 +199,13 @@ public class HomeActivity extends AppCompatActivity implements DataRetriever{
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode){
+        switch (requestCode) {
             case BT_ENABLED:
-                if(resultCode == RESULT_OK)
+                if (resultCode == RESULT_OK)
                     startLocatorService(LocatorThread.STANDARD_MODE);
-              else
-                permissionsUtil.btAlert();
+                else
+                    permissionsUtil.btAlert();
+
         }
     }
 

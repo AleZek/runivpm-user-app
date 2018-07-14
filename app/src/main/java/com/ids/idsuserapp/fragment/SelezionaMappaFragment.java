@@ -316,4 +316,8 @@ public class SelezionaMappaFragment extends BaseFragment {
         }
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+    }
 }
