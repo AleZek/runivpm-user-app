@@ -3,11 +3,7 @@ package com.ids.idsuserapp.authentication;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -15,27 +11,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
-import android.widget.Toast;
-
-import android.app.ProgressDialog;
 
 import com.ids.idsuserapp.R;
 import com.ids.idsuserapp.entityhandlers.UserRequestHandler;
 import com.ids.idsuserapp.percorso.BaseFragment;
-import com.ids.idsuserapp.threads.LocatorThread;
 import com.ids.idsuserapp.utils.ConnectionChecker;
-import com.ids.idsuserapp.utils.PermissionsUtil;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * <p>
  * to handle interaction events.
  * Use the {@link LoginFragment#newInstance} factory method to
  * create an instance of this fragment.
@@ -51,11 +38,7 @@ public class LoginFragment extends Fragment {
     private String email;
     //private EmailAutocompleter emailAutocompleter;
 
-    private PermissionsUtil permissionsUtil;
-
-
-    private LoginFragment.ViewHolder holder;
-
+    private ViewHolder holder;
     public LoginFragment() {
         // Required empty public constructor
     }
@@ -82,15 +65,13 @@ public class LoginFragment extends Fragment {
         if (getArguments() != null) {
             email = getArguments().getString(EMAIL);
         }
-
-
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_login, container, false);
-        holder = new LoginFragment.ViewHolder(view);
+        holder = new ViewHolder(view);
         return view;
     }
 
@@ -102,6 +83,8 @@ public class LoginFragment extends Fragment {
     }
 
 
+
+
     public class ViewHolder extends BaseFragment.ViewHolder {
 
         public final EditText emailTxt;
@@ -109,15 +92,15 @@ public class LoginFragment extends Fragment {
         public final Button loginButton;
         public ProgressDialog progressDialog;
         public UserRequestHandler userRequestHandler;
-        private ProgressBar progressbar;
-        final RelativeLayout layout;
 
 
         public ViewHolder(View view) {
+
+
             emailTxt = view.findViewById(R.id.email_txt);
             pwdTxt = view.findViewById(R.id.pwd_txt);
             loginButton = view.findViewById(R.id.login_btn);
-            layout = view.findViewById(R.id.relative_layout);
+
 
 
             userRequestHandler = new UserRequestHandler(getContext());
@@ -127,15 +110,16 @@ public class LoginFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
 
-                    String validemail = "[a-zA-Z0-9\\+\\.\\_\\%\\-\\+]{1,256}" + "\\@" + "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,64}" + "(" + "\\." + "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,25}" + ")+";
+                    String validemail = "[a-zA-Z0-9\\+\\.\\_\\%\\-\\+]{1,256}" +"\\@" +"[a-zA-Z0-9][a-zA-Z0-9\\-]{0,64}" +"(" +"\\." +"[a-zA-Z0-9][a-zA-Z0-9\\-]{0,25}" +")+";
+
 
 
                     String mail = emailTxt.getText().toString();
 
-                    Matcher matcher = Pattern.compile(validemail).matcher(mail);
+                    Matcher matcher= Pattern.compile(validemail).matcher(mail);
 
 
-                    if (!matcher.matches()) {
+                    if (!matcher.matches()){
                         AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
                         alertDialog.setTitle("oops!");
                         alertDialog.setMessage("Inserire email valida");
@@ -146,7 +130,8 @@ public class LoginFragment extends Fragment {
                                     }
                                 });
                         alertDialog.show();
-                    } else if (pwdTxt.getText().toString().equals("")) {
+                    }
+                    else if(pwdTxt.getText().toString().equals("")){
 
                         AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
                         alertDialog.setTitle("oops!");
@@ -159,7 +144,11 @@ public class LoginFragment extends Fragment {
                                 });
 
                         alertDialog.show();
-                    } else {
+                    }
+
+
+
+                    else{
 
                         String new_mail = emailTxt.getText().toString();
 
@@ -195,6 +184,5 @@ public class LoginFragment extends Fragment {
             alertDialog.show();
         }
 
-        }
     }
-
+}

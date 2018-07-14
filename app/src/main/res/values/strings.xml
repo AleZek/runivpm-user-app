@@ -47,7 +47,7 @@
     <string name="local_position">com.ids.userapp.position</string>
     <string name="emergency_dialog_title">Emergenza in corso!</string>
     <string name="emergency_dialog_description">Ti guideremo verso l\'uscita più vicina</string>
-    <string name="title_activity_stop_emergency">StopEmergencyActivity</string>
+    <string name="title_activity_stop_emergency">Cessata Emergenza</string>
     <string name="api_logout">http://159.89.102.18/api/logout</string>
 
 
