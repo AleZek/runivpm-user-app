@@ -75,16 +75,11 @@ public class HomeActivity extends AppCompatActivity implements DataRetriever{
 
         setupViewModels();
         setupDataHandlers();
-//        startLocatorThread();
         checkOfflineMode();
-//        checkExit();
 
-        //controlla se la connessione ad internet è attiva dato l application context,
-        //se si allora viene pulita la lista dei beacon e viene aggiornato il dataset
         emergency = checkEmergency();
         if(emergency) {
             overrideUnlockScreen();
-
         }
         if (!offline && ConnectionChecker.getInstance().isNetworkAvailable(getApplicationContext()) && !getIntent().hasExtra("stop"))
             getDatasetFromServer();
@@ -94,13 +89,6 @@ public class HomeActivity extends AppCompatActivity implements DataRetriever{
         setupMessageReception(savedInstanceState);
     }
 
-    private void checkExit() {
-        if(getIntent().hasExtra("Exit")) {
-            Intent exitIntent = new Intent(this, AutenticationActivity.class);
-            exitIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(exitIntent);
-        }
-    }
 
     private void overrideUnlockScreen() {
         //segmento di codice utile all unlock automaitico
@@ -121,21 +109,6 @@ public class HomeActivity extends AppCompatActivity implements DataRetriever{
     private void setupMessageReception(Bundle savedInstanceState) {
         offline = true;
 
-         /* if (!offline) {
-          // Handle deviceToken for pushNotification
-            // [START handle_device_token]
-            SaveDeviceTokenTask task = new SaveDeviceTokenTask(this, new TaskListener<Void>() {
-                @Override
-                public void onTaskSuccess(Void aVoid) {
-                    Log.d(TAG, "Device key save succesfully");
-                }
-
-                @Override
-                public void onTaskError(Exception e) {
-                    Log.e(TAG, "Save deviceKey error", e);
-                }
-*/
-
         boolean emergency = false;
         if (getIntent().getExtras() != null) {
             for (String key : getIntent().getExtras().keySet()) {
@@ -148,7 +121,6 @@ public class HomeActivity extends AppCompatActivity implements DataRetriever{
             }
         }
 
-        Log.d(TAG, String.valueOf(emergency));
         if (savedInstanceState == null) {
             HomeFragment homeFragment = HomeFragment.newInstance(emergency, offline);
             FragmentManager fm = getSupportFragmentManager();
@@ -181,7 +153,6 @@ public class HomeActivity extends AppCompatActivity implements DataRetriever{
     @Override
     protected void onDestroy() {
         super.onDestroy();
-//        locatorThread.interrupt();
     }
 
     private void getDatasetFromServer() {

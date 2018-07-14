@@ -1,10 +1,12 @@
 package com.ids.idsuserapp;
 
 import android.bluetooth.BluetoothDevice;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -12,6 +14,7 @@ import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.ids.idsuserapp.authentication.AutenticationActivity;
 import com.ids.idsuserapp.db.entity.Beacon;
 import com.ids.idsuserapp.db.entity.Tronco;
 import com.ids.idsuserapp.entityhandlers.UserRequestHandler;
@@ -88,21 +91,6 @@ public class PercorsoActivity extends AppCompatActivity implements BluetoothLoca
 
     private void setupMessageReception(Bundle savedInstanceState) {
             offline = true;
-
-         /* if (!offline) {
-          // Handle deviceToken for pushNotification
-            // [START handle_device_token]
-            SaveDeviceTokenTask task = new SaveDeviceTokenTask(this, new TaskListener<Void>() {
-                @Override
-                public void onTaskSuccess(Void aVoid) {
-                    Log.d(TAG, "Device key save succesfully");
-                }
-
-                @Override
-                public void onTaskError(Exception e) {
-                    Log.e(TAG, "Save deviceKey error", e);
-                }
-*/
             emergency = false;
             if (getIntent().getExtras() != null) {
                 for (String key : getIntent().getExtras().keySet()) {
@@ -188,7 +176,6 @@ public class PercorsoActivity extends AppCompatActivity implements BluetoothLoca
             } else {
                 selectedSolution = null;
                 holder.launchSearchPathTask(currentBeacon);
-//            getIndicazioni(userPositionBeacon, nextBeacon);
             }
         }
     }
@@ -210,34 +197,6 @@ public class PercorsoActivity extends AppCompatActivity implements BluetoothLoca
         }
     }
 
-
-    //segmento di codice utile all unlock automaitico
-//        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
-//                + WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD|
-//                + WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED|
-//                + WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
-
-
-    //questo metodo permette alla app di sottoscriversi al topic emergenza, questo permette a firebase
-    // di mandare messaggi broadcast alle istanze della app
-//    private void subscribeTopic(final String topic){
-//        FirebaseMessaging.getInstance().subscribeToTopic(topic)
-//                .addOnCompleteListener(new OnCompleteListener<Void>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<Void> task) {
-//                        String msg = "Sottoscrizione avvenuta a ";
-//                        if (!task.isSuccessful()) {
-//                            msg = "sottoscrizione fallita a ";
-//                        }
-//                        Log.d(TAG, msg + topic); // sono mostrati dei messaggi nel log e nella app se la sottoscrizione avviene o meno
-//                        Toast.makeText(MainActivity.this, msg + topic, Toast.LENGTH_SHORT).show();
-//                    }
-//                });
-//
-//
-//    }
-
-
     // @TODO Esternalizzare
     private class MinimumPathListener implements TaskListener<List<Percorso>> {
         @Override
@@ -252,11 +211,37 @@ public class PercorsoActivity extends AppCompatActivity implements BluetoothLoca
 
             try {
                 holder.mapView.drawRoute(multiFloorSolution);
+                if (indiciNavigazione.current == selectedSolution.size() -2)
+                    showFinishDialog();
             } catch (OriginNotSettedException | DestinationNotSettedException e) {
                 e.printStackTrace();
             }
 
         }
+
+        private void showFinishDialog() {
+            final AlertDialog.Builder builder = new AlertDialog.Builder(PercorsoActivity.this);
+            builder.setMessage("Sei giunto a destinazione. Clicca OK per tornare alla home");
+            builder.setCancelable(true);
+            builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int i) {
+                    Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
+                }
+            });
+
+            builder.setNegativeButton("Annulla", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int i) {
+                    dialog.cancel();
+                }
+            });
+            AlertDialog alertDialog = builder.create();
+            alertDialog.show();
+        }
+
 
         @Override
         public void onTaskError(Exception e) {
