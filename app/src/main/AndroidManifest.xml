@@ -39,12 +39,12 @@
         <activity android:name=".BeaconNavigationActivity" />
         <activity
             android:name=".authentication.AutenticationActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:noHistory="true"/>
         <activity android:name=".authentication.LoginActivity"
             android:noHistory="true" />
         <activity android:name=".authentication.RegistrationActivity"
-            android:noHistory="true"
-            />
+            android:noHistory="true"/>
         <service
             android:name=".services.LocatorService"
             android:enabled="true"

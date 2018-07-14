@@ -77,6 +77,7 @@ public class AutenticationActivity extends AppCompatActivity{
         builder.setPositiveButton("Sì", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int i) {
+
                 finish();
             }
         });
