@@ -26,8 +26,6 @@ public class MappaDataHandler {
     private MappaViewModel mappaViewModel;
     private DataRetriever dataRetriever;
     private com.android.volley.RequestQueue serverRequestQueue;
-    private Uri nuovaMappaFilePath;
-
 
     public MappaDataHandler(Context context, MappaViewModel mappaViewModel) {
         this.context = context;
@@ -149,9 +147,6 @@ public class MappaDataHandler {
         return datiNuovaMappa;
     }
 
-    public void setNuovaMappaFilePath(Uri nuovaMappaFilePath) {
-        this.nuovaMappaFilePath = nuovaMappaFilePath;
-    }
 
 
 
