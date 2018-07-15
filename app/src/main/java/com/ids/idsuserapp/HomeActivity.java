@@ -46,6 +46,10 @@ import com.ids.idsuserapp.viewmodel.MappaViewModel;
 
 import org.apache.commons.lang3.SerializationUtils;
 
+import java.time.chrono.HijrahChronology;
+
+import static com.ids.idsuserapp.R.id.frag_home;
+
 public class HomeActivity extends AppCompatActivity implements DataRetriever{
     public static final String TAG = HomeActivity.class.getSimpleName();
     private MappaViewModel mappaViewModel;
@@ -81,10 +85,6 @@ public class HomeActivity extends AppCompatActivity implements DataRetriever{
         emergency = checkEmergency();
         if(emergency) {
             overrideUnlockScreen();
-
-
-
-
 
         }
         if (!offline && ConnectionChecker.getInstance().isNetworkAvailable(getApplicationContext()) && !getIntent().hasExtra("stop"))
@@ -213,6 +213,7 @@ public class HomeActivity extends AppCompatActivity implements DataRetriever{
     public void changeFragment(BaseFragment fragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        HomeFragment homeFragment = new HomeFragment();
 
         fragmentTransaction.replace(R.id.navigation_content_pane, fragment)
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
@@ -220,7 +221,7 @@ public class HomeActivity extends AppCompatActivity implements DataRetriever{
                 .commit();
         Bundle data = new Bundle();
         data.putBoolean("emergenza", emergency);
-        fragment.setArguments(data);
+        homeFragment.setArguments(data);
     }
 
     @Override

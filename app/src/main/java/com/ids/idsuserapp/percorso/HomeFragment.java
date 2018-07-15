@@ -41,7 +41,6 @@ public class HomeFragment extends BaseFragment {
     public static final int ORIGIN_SELECTION_REQUEST_CODE = 200;
     public static final int DESTINATION_SELECTION_REQUEST_CODE = 201;
     public static final String EMERGENCY_ACTION = "emergency_action";
-    private boolean emergenza = false;
 
     private boolean visible = false;
     private boolean choosenOrigin = false;
@@ -134,7 +133,7 @@ public class HomeFragment extends BaseFragment {
 
         if (getArguments() != null) {
             offline = getArguments().getBoolean(OFFLINE);
-            emergenza = getArguments().getBoolean(EMERGENCY);
+            //emergenza = getArguments().getBoolean(EMERGENCY);
         }
 
         setText();
@@ -336,6 +335,9 @@ public class HomeFragment extends BaseFragment {
 
 
 
+
+
+
         @SuppressWarnings("unchecked")
         public <T extends View> T find(View view, int id) {
             View resultView = view.findViewById(id);
@@ -374,16 +376,13 @@ public class HomeFragment extends BaseFragment {
             }
         }
 
-        public void setEmergencyMode(){
 
-            if(emergenza){
-
+            public void emergencyMode() {
                 emergency_img.setVisibility(View.VISIBLE);
                 emergency_txt.setVisibility(View.VISIBLE);
                 selezionaDestinazioneButton.setVisibility(View.GONE);
                 naviga_txt.setVisibility(View.GONE);
 
-            }
         }
 
 
