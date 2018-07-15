@@ -185,7 +185,7 @@ public class PercorsoActivity extends AppCompatActivity implements BluetoothLoca
     private void setCurrentPosition(String device) {
         Beacon location = beaconViewModel.findByDevice(device);
         nextStepBeacon(location);
-
+        serverUserLocator.sendPosition(device);
     }
 
     @Override

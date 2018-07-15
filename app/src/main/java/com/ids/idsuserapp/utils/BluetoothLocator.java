@@ -155,8 +155,10 @@ public class BluetoothLocator {
 
     public boolean isBeacon(BluetoothDevice resultDevice) {
         String deviceName = resultDevice.getName();
-        //testing
-        String testdev = "54:50:3A:26:65:F8";
-        return resultDevice != null && deviceName!= null && (deviceName.equals("CC2650 SensorTag") || resultDevice.getAddress().equals(testdev));
+        ArrayList<String> devices = new ArrayList<>();
+        devices.add("JULIA:b94b2e5dd49a9980:0:2");
+        devices.add("Moto G (5S) Plus");
+
+        return resultDevice != null && deviceName!= null && (deviceName.equals("CC2650 SensorTag") || devices.indexOf(resultDevice.getName()) != -1 );
     }
 }

@@ -18,6 +18,7 @@ import com.ids.idsuserapp.authentication.AutenticationActivity;
 import com.ids.idsuserapp.authentication.LoginActivity;
 import com.ids.idsuserapp.db.entity.Beacon;
 import com.ids.idsuserapp.utils.AuthenticatedJsonObjectRequest;
+import com.ids.idsuserapp.utils.ConnectionChecker;
 import com.ids.idsuserapp.viewmodel.BeaconViewModel;
 
 import org.json.JSONException;
@@ -201,8 +202,10 @@ public class UserRequestHandler {
 
     public void sendPosition(String positionDevice) {
         int positionId = getIdFromDevice(positionDevice);
-        JsonObjectRequest positionRequest = prepareSendPositionRequest(positionId);
-        serverRequestQueue.add(positionRequest);
+        if(ConnectionChecker.getInstance().isNetworkAvailable(context)) {
+            JsonObjectRequest positionRequest = prepareSendPositionRequest(positionId);
+            serverRequestQueue.add(positionRequest);
+        }
     }
 
     public AuthenticatedJsonObjectRequest prepareSendPositionRequest(int positionId) {

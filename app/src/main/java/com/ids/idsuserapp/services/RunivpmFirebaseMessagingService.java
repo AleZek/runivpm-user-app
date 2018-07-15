@@ -45,13 +45,13 @@ public class RunivpmFirebaseMessagingService extends FirebaseMessagingService {
             startActivity(intent);
             // da qui in poi puo essere inutile perche il resto avviene nella activity
             //il il wakelock del powermanager è utile al risveglio automatico del telefono in caso di emergenza
-            PowerManager pm = (PowerManager) getApplicationContext().getSystemService(Context.POWER_SERVICE);
-            PowerManager.WakeLock wakeLock = pm.newWakeLock((PowerManager.SCREEN_BRIGHT_WAKE_LOCK | PowerManager.FULL_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP), "TAG");
-            wakeLock.acquire();
-            //utile allo sblocco automatico del telefono nel caso di emergenza
-            KeyguardManager keyguardManager = (KeyguardManager) getApplicationContext().getSystemService(Context.KEYGUARD_SERVICE);
-            KeyguardManager.KeyguardLock keyguardLock = keyguardManager.newKeyguardLock("TAG");
-            keyguardLock.disableKeyguard();
+//            PowerManager pm = (PowerManager) getApplicationContext().getSystemService(Context.POWER_SERVICE);
+//            PowerManager.WakeLock wakeLock = pm.newWakeLock((PowerManager.SCREEN_BRIGHT_WAKE_LOCK | PowerManager.FULL_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP), "TAG");
+//            wakeLock.acquire();
+//            //utile allo sblocco automatico del telefono nel caso di emergenza
+//            KeyguardManager keyguardManager = (KeyguardManager) getApplicationContext().getSystemService(Context.KEYGUARD_SERVICE);
+//            KeyguardManager.KeyguardLock keyguardLock = keyguardManager.newKeyguardLock("TAG");
+//            keyguardLock.disableKeyguard();
         }
 
     }
@@ -74,6 +74,7 @@ public class RunivpmFirebaseMessagingService extends FirebaseMessagingService {
         Intent intent = new Intent(getApplicationContext(), PercorsoActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         intent.putExtra("emergency", true);
+        intent.putExtra("offline", true);
         return intent;
     }
 
