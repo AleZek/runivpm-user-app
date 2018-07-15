@@ -9,7 +9,7 @@ import com.ids.idsuserapp.authentication.AuthenticationActivity;
 
 public class LogoActivity extends AppCompatActivity {
 
-    private static int SPLASH_TIME_OUT = 8000;
+    private static int SPLASH_TIME_OUT = 4000;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
