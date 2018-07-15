@@ -377,7 +377,7 @@ public class HomeFragment extends BaseFragment {
 
                         }
                     })
-                    .icon(getResources().getDrawable(R.drawable.ic_fire))
+                    .icon(getResources().getDrawable(R.drawable.emergency_small))
                     .autoDismiss(true)
                     .show();
         }
