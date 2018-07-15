@@ -42,7 +42,7 @@
             />
 
         <activity
-            android:name=".authentication.AutenticationActivity"
+            android:name=".authentication.AuthenticationActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:noHistory="true"
             android:screenOrientation="portrait"/>
@@ -76,7 +76,7 @@
             android:name=".PercorsoActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:screenOrientation="portrait"
-            android:noHistory="true"/>
+            />
 
         <activity
             android:name=".StopEmergencyActivity"

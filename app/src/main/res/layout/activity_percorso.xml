@@ -34,15 +34,30 @@
 
 
     </RelativeLayout>
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:padding="@dimen/fab_margin"
-        android:clipToPadding="false">
 
+    <LinearLayout
+        android:layout_width="385dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:clipToPadding="false"
+        android:orientation="horizontal"
+        android:padding="@dimen/fab_margin">
+
+        <Button
+            android:id="@+id/back_button_percorso"
+            android:layout_width="218dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/borderless_white_button"
+            android:padding="16dp"
+            android:text="@string/action_back"
+            android:textAllCaps="true" />
+
+        <Space
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/navigation_fab_indietro"
@@ -50,14 +65,18 @@
             android:layout_height="wrap_content"
             android:src="@drawable/ic_turn_back_left"
             android:tint="@color/colorWhite"
-            app:backgroundTint="@color/colorPrimary"/>
+            app:backgroundTint="@color/colorPrimary" />
+
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/navigation_fab_avanti"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_turn_back_right"
             android:tint="@color/colorWhite"
-            app:backgroundTint="@color/colorPrimary"/>
+            app:backgroundTint="@color/colorPrimary" />
+
     </LinearLayout>
+
+
 
 </RelativeLayout>

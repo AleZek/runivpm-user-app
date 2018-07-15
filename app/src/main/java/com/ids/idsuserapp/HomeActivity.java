@@ -222,15 +222,15 @@ public class HomeActivity extends AppCompatActivity implements DataRetriever{
     public void changeFragment(BaseFragment fragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        HomeFragment homeFragment = new HomeFragment();
+        //HomeFragment homeFragment = new HomeFragment();
 
         fragmentTransaction.replace(R.id.navigation_content_pane, fragment)
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                 .addToBackStack(fragment.TAG)
                 .commit();
-        Bundle data = new Bundle();
-        data.putBoolean("emergenza", emergency);
-        homeFragment.setArguments(data);
+       // Bundle data = new Bundle();
+        //data.putBoolean("emergenza", emergency);
+        //homeFragment.setArguments(data);
     }
 
     @Override
