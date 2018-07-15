@@ -1,6 +1,7 @@
 package com.ids.idsuserapp.threads;
 
 import android.content.Context;
+import android.os.Handler;
 import android.util.Log;
 
 import com.ids.idsuserapp.utils.BluetoothLocator;
@@ -29,8 +30,9 @@ public class LocatorThread extends Thread {
         running = true;
         bluetoothLocator.setupLocatorScanner();
         while(running){
-            bluetoothLocator.startScan();
             try {
+                sleep(300);
+                bluetoothLocator.startScan();
                 sleep(mode);
             } catch (InterruptedException e) {
                 e.printStackTrace();

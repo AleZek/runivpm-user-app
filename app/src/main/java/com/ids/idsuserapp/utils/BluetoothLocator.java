@@ -2,6 +2,7 @@ package com.ids.idsuserapp.utils;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothManager;
 import android.bluetooth.le.BluetoothLeScanner;
 import android.bluetooth.le.ScanCallback;
@@ -15,8 +16,11 @@ import com.ids.idsuserapp.db.entity.Beacon;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import static android.bluetooth.le.ScanSettings.SCAN_MODE_LOW_POWER;
+import static java.lang.Thread.sleep;
 
 public class BluetoothLocator {
     private Context context;
@@ -27,12 +31,29 @@ public class BluetoothLocator {
     private HashMap strongestBeacon;
     private ArrayList<String> beaconWhiteList;
     private boolean scanning;
+    static String TAG = "BTLocator";
 
     public BluetoothLocator(Context context) {
         this.context = context;
         setBtManager();
         initializeStrongestBeacon();
+        enableBTAndWait();
+
         scanner = mBluetoothAdapter.getBluetoothLeScanner();
+        Log.v(TAG,scanner.toString());
+    }
+
+    private void enableBTAndWait() {
+        if (!mBluetoothAdapter.isEnabled()) {
+            mBluetoothAdapter.enable();
+            while(!mBluetoothAdapter.isEnabled()){
+                try {
+                    sleep(300);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
     private void setBtManager() {
@@ -42,58 +63,28 @@ public class BluetoothLocator {
         }
     }
 
-    private ScanSettings generateNavigationScanSettings() {
-        return new ScanSettings.Builder().setScanMode(SCAN_MODE_LOW_POWER).build();
-    }
-
-    public void setBeaconWhiteList(List<Beacon> beacons) {
-        beaconWhiteList = new ArrayList<>();
-        for(Beacon beacon : beacons){
-            String currDevice = beacon.getDevice();
-            if (!currDevice.equals("null"))
-                beaconWhiteList.add(currDevice);
-        }
-    }
-
-    //    private void generateNavigationScanCallback() {
-//        scanCallback = new ScanCallback() {
-//            @Override
-//            public void onScanResult(int callbackType, ScanResult result) {
-//                super.onScanResult(callbackType, result);
-//                if (result.getDevice() != null) {
-//                    positionUpdaters.readScannedDevice(result);
-//                    if (positionChanged())
-//                        positionUpdaters.nextStep();
-//                }
-//            }
-//
-//            @Override
-//            public void onScanFailed(int errorCode) {
-//                super.onScanFailed(errorCode);
-//            }
-//        };
-//    }
-//
-//
-//    public void setupNavigationScanner() {
-//        positionUpdaters = (NavigationCallbacks) context;
-//        ScanSettings scanSettings = generateNavigationScanSettings();
-//
-//        scanner = mBluetoothAdapter.getBluetoothLeScanner();
-//
-//        startScan();
-//    }
-
     public void stopScan(){
         if (scanning){
-            scanner.stopScan(scanCallback);
             scanning = false;
+            scanner.stopScan(scanCallback);
         }
     }
 
     public void startScan(){
         if(mBluetoothAdapter.isEnabled()) {
+//            Timer timer = new Timer();
+//            timer.schedule(new TimerTask() {
+//                @Override
+//                public void run() {
+//                    scanner.startScan(scanCallback);
+//                    scanning = true;
+//                }
+//            }, 2000);
             scanner.startScan(scanCallback);
+            scanning = true;
+
+        }else if(!scanning){
+            enableBTAndWait();
             scanning = true;
         }
     }
@@ -107,14 +98,18 @@ public class BluetoothLocator {
         scanCallback = new ScanCallback() {
             @Override
             public void onScanResult(int callbackType, ScanResult result) {
-                super.onScanResult(callbackType, result);
-                BluetoothDevice scannedDevice = result.getDevice();
-                setStrongestBeacon(scannedDevice.toString(), result.getRssi());
-                if(positionChanged()) {
-                    if(isBeacon(scannedDevice)) {
-                        locatorCallbacks.sendCurrentPosition(scannedDevice);
-                        scanner.flushPendingScanResults(scanCallback);
-                        stopScan();
+                if(scanning) {
+                    super.onScanResult(callbackType, result);
+                    BluetoothDevice scannedDevice = result.getDevice();
+                    setStrongestBeacon(scannedDevice.toString(), result.getRssi());
+                    if (positionChanged()) {
+                        if (isBeacon(scannedDevice)) {
+                            Log.v(TAG, context.toString());
+                            locatorCallbacks.sendCurrentPosition(scannedDevice);
+
+//                            scanner.flushPendingScanResults(scanCallback);
+                            stopScan();
+                        }
                     }
                 }
             }
@@ -146,7 +141,7 @@ public class BluetoothLocator {
     }
 
     public boolean positionChanged() {
-        return (int) strongestBeacon.get("scanNumber") == 5;
+        return (int) strongestBeacon.get("scanNumber") >= 5;
     }
 
     public HashMap getStrongestBeacon() {
@@ -155,10 +150,12 @@ public class BluetoothLocator {
 
     public boolean isBeacon(BluetoothDevice resultDevice) {
         String deviceName = resultDevice.getName();
-        ArrayList<String> devices = new ArrayList<>();
-        devices.add("JULIA:b94b2e5dd49a9980:0:2");
-        devices.add("Moto G (5S) Plus");
-
-        return resultDevice != null && deviceName!= null && (deviceName.equals("CC2650 SensorTag") || devices.indexOf(resultDevice.getName()) != -1 );
+        return resultDevice != null && deviceName!= null && (deviceName.equals("CC2650 SensorTag"));
     }
+
+    public BluetoothAdapter getmBluetoothAdapter() {
+        return mBluetoothAdapter;
+    }
+
+
 }

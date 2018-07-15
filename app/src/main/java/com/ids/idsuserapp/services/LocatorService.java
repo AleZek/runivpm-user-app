@@ -18,6 +18,7 @@ public class LocatorService extends Service implements BluetoothLocator.LocatorC
     LocatorThread locatorThread;
     UserRequestHandler serverUserLocator;
     int mode;
+    private boolean offline;
     static String TAG = "LocatorService";
 
     public LocatorService() {
@@ -39,6 +40,7 @@ public class LocatorService extends Service implements BluetoothLocator.LocatorC
     public int onStartCommand(Intent intent, int flags, int startId) {
         super.onStartCommand(intent, flags, startId);
         mode = Integer.parseInt(intent.getAction());
+        offline = intent.getBooleanExtra("offline", false);
         locatorThread = new LocatorThread(this, LocatorThread.STANDARD_MODE);
         locatorThread.start();
         return START_STICKY;
@@ -53,9 +55,10 @@ public class LocatorService extends Service implements BluetoothLocator.LocatorC
 
     @Override
     public void sendCurrentPosition(BluetoothDevice device) {
-        if (ConnectionChecker.getInstance().isNetworkAvailable(this))
+        if (ConnectionChecker.getInstance().isNetworkAvailable(this) && !offline)
             serverUserLocator.sendPosition(device.toString());
         savePositionLocally(device.toString());
+        locatorThread.getBluetoothLocator().getStrongestBeacon().put("scanNumber", 0);
         Log.v(TAG, "callback chiamata");
     }
 

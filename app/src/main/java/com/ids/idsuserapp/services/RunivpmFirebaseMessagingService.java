@@ -67,6 +67,7 @@ public class RunivpmFirebaseMessagingService extends FirebaseMessagingService {
         Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         intent.putExtra("emergency", true);
+        intent.putExtra("offline", false);
         return intent;
     }
 
@@ -74,7 +75,7 @@ public class RunivpmFirebaseMessagingService extends FirebaseMessagingService {
         Intent intent = new Intent(getApplicationContext(), PercorsoActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         intent.putExtra("emergency", true);
-        intent.putExtra("offline", true);
+        intent.putExtra("offline", false);
         return intent;
     }
 

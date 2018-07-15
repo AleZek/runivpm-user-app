@@ -105,7 +105,7 @@ public class HomeActivity extends AppCompatActivity implements DataRetriever{
     }
 
     private boolean checkEmergency() {
-        return emergency = getIntent().hasExtra("emergency");
+        return emergency = getIntent().hasExtra("emergency") && (Boolean) getIntent().getExtras().get("emergency");
     }
 
     private void checkOfflineMode() {
@@ -136,6 +136,7 @@ public class HomeActivity extends AppCompatActivity implements DataRetriever{
     private void startLocatorService(int mode) {
         Intent serviceIntent = new Intent(this, LocatorService.class);
         serviceIntent.setAction(Integer.toString(mode));
+        serviceIntent.putExtra("offline", offline);
         startService(serviceIntent);
     }
 

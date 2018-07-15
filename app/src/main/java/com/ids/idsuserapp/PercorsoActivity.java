@@ -88,15 +88,15 @@ public class PercorsoActivity extends AppCompatActivity implements BluetoothLoca
     }
 
     private void checkOfflineMode(Bundle savedInstanceState) {
-           offline = (Boolean) getIntent().getExtras().get("offline");
+        offline = (Boolean) getIntent().getExtras().get("offline");
     }
 
     private void setupMessageReception(Bundle savedInstanceState) {
-            emergency = false;
-            if (getIntent().getExtras() != null) {
-                for (String key : getIntent().getExtras().keySet()) {
-                    if (key.equals("emergency"))
-                        emergency = true;
+        emergency = false;
+        if (getIntent().getExtras() != null) {
+            for (String key : getIntent().getExtras().keySet()) {
+                if (key.equals("emergency"))
+                    emergency = true;
 
             }
 
@@ -106,9 +106,9 @@ public class PercorsoActivity extends AppCompatActivity implements BluetoothLoca
     private void overrideUnlockScreen() {
         //segmento di codice utile all unlock automaitico
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
-                + WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD|
-                + WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED|
-                + WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
+                + WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD |
+                +WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED |
+                +WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
     }
 
 
@@ -116,8 +116,9 @@ public class PercorsoActivity extends AppCompatActivity implements BluetoothLoca
     protected void onDestroy() {
         super.onDestroy();
         locatorThread.interrupt();
-        Intent intent = new Intent(this, LocatorService.class);
-        stopService(intent);
+
+        bluetoothLocator.getmBluetoothAdapter().disable();
+        bluetoothLocator.getmBluetoothAdapter().enable();
     }
 
     private void startLocatorThread() {
@@ -138,12 +139,12 @@ public class PercorsoActivity extends AppCompatActivity implements BluetoothLoca
             serializedDataDestinazione = data.getByteArrayExtra("beaconDestinazione");
             if (serializedDataOrigine != null) {
                 origine = (Beacon) SerializationUtils.deserialize(serializedDataOrigine);
-                if(serializedDataDestinazione != null)
+                if (serializedDataDestinazione != null)
                     destinazione = (Beacon) SerializationUtils.deserialize(serializedDataDestinazione);
-            }else if (serializedDataSoloOrigine != null){
+            } else if (serializedDataSoloOrigine != null) {
                 origine = (Beacon) SerializationUtils.deserialize(serializedDataSoloOrigine);
                 destinazione = null;
-            }else if(emergency){
+            } else if (emergency) {
                 SharedPreferences locationShared = getSharedPreferences(getString(R.string.local_position), MODE_PRIVATE);
                 String device = locationShared.getString("position", "");
                 origine = beaconViewModel.findByDevice(device);
@@ -160,8 +161,9 @@ public class PercorsoActivity extends AppCompatActivity implements BluetoothLoca
     // index = -1 indica che il beacon non era nel percorso indicato e che ho sbagliato strada, quindi ricalcolo
 
     public void nextStepBeacon(Beacon currentBeacon) {
-        int index = selectedSolution.indexOf(currentBeacon);
+
         if (selectedSolution != null) {
+            int index = selectedSolution.indexOf(currentBeacon);
             if (currentBeacon.equals(destinazione)) {
                 locatorThread.interrupt();
                 bluetoothLocator.stopScan();
@@ -182,19 +184,22 @@ public class PercorsoActivity extends AppCompatActivity implements BluetoothLoca
 
     private void setCurrentPosition(String device) {
         Beacon location = beaconViewModel.findByDevice(device);
-        nextStepBeacon(location);
-        serverUserLocator.sendPosition(device);
+        if (location != null) {
+            nextStepBeacon(location);
+            if(!offline)
+                serverUserLocator.sendPosition(device);
+        }
     }
 
     @Override
     public void sendCurrentPosition(BluetoothDevice device) {
-        //Testing con device
-        ArrayList<String> devices = new ArrayList<>();
-        if (bluetoothLocator.isBeacon(device) || devices.indexOf(device) != -1) {
-            serverUserLocator.sendPosition(device.toString());
-            setCurrentPosition(device.toString());
-            bluetoothLocator.getStrongestBeacon().put("scanNumber", 0);
+        if (!offline){
+        serverUserLocator.sendPosition(device.toString());
         }
+        setCurrentPosition(device.toString());
+        Log.v(TAG, "callback");
+        bluetoothLocator.getStrongestBeacon().put("scanNumber", 0);
+
     }
 
     // @TODO Esternalizzare
@@ -204,14 +209,14 @@ public class PercorsoActivity extends AppCompatActivity implements BluetoothLoca
             solutionPaths = searchResult;
             if (selectedSolution == null || emergency) {
                 selectedSolution = new Percorso(solutionPaths.get(0));
-                indiciNavigazione = new IndiciNavigazione(0,1);
+                indiciNavigazione = new IndiciNavigazione(0, 1);
             }
-            Percorso pathToDraw = new Percorso(selectedSolution.subList(indiciNavigazione.current, selectedSolution.size() ));
+            Percorso pathToDraw = new Percorso(selectedSolution.subList(indiciNavigazione.current, selectedSolution.size()));
             PercorsoMultipiano multiFloorSolution = pathToDraw.toMultiFloorPath();
 
             try {
                 holder.mapView.drawRoute(multiFloorSolution);
-                if (indiciNavigazione.current == selectedSolution.size() -1)
+                if (indiciNavigazione.current == selectedSolution.size() - 1)
                     showFinishDialog();
             } catch (OriginNotSettedException | DestinationNotSettedException e) {
                 e.printStackTrace();
@@ -291,19 +296,19 @@ public class PercorsoActivity extends AppCompatActivity implements BluetoothLoca
             if (!holder.fabButtonAvanti.isClickable()) {
                 holderButtonEnabled("Avanti", true);
             }
-            indiciNavigazione = new IndiciNavigazione(indiciNavigazione.current - 1, indiciNavigazione.current);
+            if (indiciNavigazione.current > 0)
+                indiciNavigazione = new IndiciNavigazione(indiciNavigazione.current - 1, indiciNavigazione.current);
             holder.setupMapView();
         }
     }
+
     private class IndietroButtonListener implements View.OnClickListener {
 
         @Override
         public void onClick(View v) {
-            Intent intent =  new Intent(getBaseContext(), HomeActivity.class);
-            startActivity(intent);
             origine = null;
             destinazione = null;
-
+            goHome();
         }
     }
 
@@ -359,28 +364,16 @@ public class PercorsoActivity extends AppCompatActivity implements BluetoothLoca
 
     @Override
     public void onBackPressed(){
-        final AlertDialog.Builder builder = new AlertDialog.Builder(PercorsoActivity.this);
-        builder.setMessage("Sei sicuro di voler uscire?");
-        builder.setCancelable(true);
-        builder.setPositiveButton("Sì", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int i) {
-                UserRequestHandler userRequestHandler = new UserRequestHandler(getApplicationContext());
-                userRequestHandler.logoutUserServer();
-                Intent intent = new Intent(getApplicationContext(), AuthenticationActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                intent.putExtra("Exit", true);
-                startActivity(intent);
-            }
-        });
+            goHome();
 
-        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int i) {
-                dialog.cancel();
-            }
-        });
-        AlertDialog alertDialog = builder.create();
-        alertDialog.show();
+    }
+
+    public void goHome(){
+        Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.putExtra("offline", offline);
+        intent.putExtra("emergency", emergency);
+        finish();
+        startActivity(intent);
     }
 }

@@ -95,8 +95,8 @@ public class MappaDataHandler {
     }
 
     private void retrieveMappaImageData(String mappa_id, String image_name) {
-        JsonObjectRequest get_mappa_image_request = prepareGetMappaImageRequest(mappa_id, image_name);
-        serverRequestQueue.add(get_mappa_image_request);
+//        JsonObjectRequest get_mappa_image_request = prepareGetMappaImageRequest(mappa_id, image_name);
+//        serverRequestQueue.add(get_mappa_image_request);
     }
 
     public AuthenticatedJsonObjectRequest prepareGetMappaImageRequest(String mappa_id, final String image_name) {
