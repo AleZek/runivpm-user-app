@@ -17,8 +17,6 @@ public class LoginActivity extends AppCompatActivity implements UserRequestHandl
         setContentView(R.layout.activity_login);
 
 
-
-
         if (savedInstanceState == null) {
             LoginFragment loginFragment =new LoginFragment();
             android.support.v4.app.FragmentManager fm = getSupportFragmentManager();

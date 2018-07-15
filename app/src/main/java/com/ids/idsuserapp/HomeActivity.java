@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
@@ -12,7 +14,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.WindowManager;
 
-import com.ids.idsuserapp.authentication.AutenticationActivity;
+import com.ids.idsuserapp.authentication.AuthenticationActivity;
+import com.ids.idsuserapp.db.entity.Tronco;
+
+import com.ids.idsuserapp.db.entity.Beacon;
 import com.ids.idsuserapp.entityhandlers.ArcoDataHandler;
 import com.ids.idsuserapp.entityhandlers.BeaconDataHandler;
 import com.ids.idsuserapp.entityhandlers.DataRetriever;
@@ -29,7 +34,12 @@ import com.ids.idsuserapp.viewmodel.ArcoViewModel;
 import com.ids.idsuserapp.viewmodel.BeaconViewModel;
 import com.ids.idsuserapp.viewmodel.MappaViewModel;
 
-public class HomeActivity extends AppCompatActivity implements DataRetriever {
+import org.apache.commons.lang3.SerializationUtils;
+
+import java.time.chrono.HijrahChronology;
+
+
+public class HomeActivity extends AppCompatActivity implements DataRetriever{
     public static final String TAG = HomeActivity.class.getSimpleName();
     private MappaViewModel mappaViewModel;
     private BeaconViewModel beaconViewModel;
@@ -78,6 +88,13 @@ public class HomeActivity extends AppCompatActivity implements DataRetriever {
         }
     }
 
+    private void checkExit() {
+        if(getIntent().hasExtra("Exit")) {
+            Intent exitIntent = new Intent(this, AuthenticationActivity.class);
+            exitIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(exitIntent);
+        }
+    }
 
     private void overrideUnlockScreen() {
         //segmento di codice utile all unlock automaitico
@@ -110,12 +127,7 @@ public class HomeActivity extends AppCompatActivity implements DataRetriever {
             }
         }
 
-        if (savedInstanceState == null) {
-            HomeFragment homeFragment = HomeFragment.newInstance(emergency, offline);
-            FragmentManager fm = getSupportFragmentManager();
-            fm.beginTransaction().replace(R.id.navigation_content_pane, homeFragment, HomeFragment.TAG)
-                    .commit();
-        }
+
 
 
 
@@ -179,7 +191,6 @@ public class HomeActivity extends AppCompatActivity implements DataRetriever {
     public void changeFragment(BaseFragment fragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-
         fragmentTransaction.replace(R.id.navigation_content_pane, fragment)
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                 .addToBackStack(fragment.TAG)
@@ -189,13 +200,12 @@ public class HomeActivity extends AppCompatActivity implements DataRetriever {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode) {
+        switch (requestCode){
             case BT_ENABLED:
-                if (resultCode == RESULT_OK)
+                if(resultCode == RESULT_OK)
                     startLocatorService(LocatorThread.STANDARD_MODE);
-                else
-                    permissionsUtil.btAlert();
-
+              else
+                permissionsUtil.btAlert();
         }
     }
 
@@ -209,7 +219,7 @@ public class HomeActivity extends AppCompatActivity implements DataRetriever {
             public void onClick(DialogInterface dialog, int i) {
                 UserRequestHandler userRequestHandler = new UserRequestHandler(getApplicationContext());
                 userRequestHandler.logoutUserServer();
-                Intent intent = new Intent(getApplicationContext(), AutenticationActivity.class);
+                Intent intent = new Intent(getApplicationContext(), AuthenticationActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 intent.putExtra("Exit", true);
                 startActivity(intent);

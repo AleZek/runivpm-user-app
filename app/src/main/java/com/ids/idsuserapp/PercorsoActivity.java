@@ -11,15 +11,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.ids.idsuserapp.authentication.AutenticationActivity;
+import com.ids.idsuserapp.authentication.AuthenticationActivity;
 import com.ids.idsuserapp.db.entity.Beacon;
-import com.ids.idsuserapp.db.entity.Tronco;
 import com.ids.idsuserapp.entityhandlers.UserRequestHandler;
 import com.ids.idsuserapp.percorso.BaseFragment;
-import com.ids.idsuserapp.percorso.NavigationActivity;
 import com.ids.idsuserapp.percorso.Tasks.MinimumPathTask;
 import com.ids.idsuserapp.percorso.Tasks.TaskListener;
 import com.ids.idsuserapp.percorso.views.MapView;
@@ -31,7 +30,6 @@ import com.ids.idsuserapp.utils.BluetoothLocator;
 import com.ids.idsuserapp.viewmodel.ArcoViewModel;
 import com.ids.idsuserapp.viewmodel.BeaconViewModel;
 import com.ids.idsuserapp.wayfinding.Dijkstra;
-import com.ids.idsuserapp.wayfinding.Grafo;
 import com.ids.idsuserapp.wayfinding.IndiciNavigazione;
 import com.ids.idsuserapp.wayfinding.Percorso;
 import com.ids.idsuserapp.wayfinding.PercorsoMultipiano;
@@ -297,19 +295,34 @@ public class PercorsoActivity extends AppCompatActivity implements BluetoothLoca
             holder.setupMapView();
         }
     }
+    private class IndietroButtonListener implements View.OnClickListener {
+
+        @Override
+        public void onClick(View v) {
+            Intent intent =  new Intent(getBaseContext(), HomeActivity.class);
+            startActivity(intent);
+            origine = null;
+            destinazione = null;
+
+        }
+    }
 
 
     public class ViewHolderPercorso extends BaseFragment.ViewHolder {
         public final MapView mapView;
         public final FloatingActionButton fabButtonAvanti;
         public final FloatingActionButton fabButtonIndietro;
+        public final Button indietroButton;
 
 
         public ViewHolderPercorso() {
             fabButtonAvanti = findViewById(R.id.navigation_fab_avanti);
             fabButtonIndietro = findViewById(R.id.navigation_fab_indietro);
+            indietroButton = findViewById(R.id.back_button_percorso);
             fabButtonAvanti.setOnClickListener(new NavigationButtonAvantiListener());
             fabButtonIndietro.setOnClickListener(new NavigationButtonIndietroListener());
+            indietroButton.setOnClickListener(new IndietroButtonListener());
+
 
             mapView = findViewById(R.id.navigation_map_image_percorso);
 
@@ -344,5 +357,30 @@ public class PercorsoActivity extends AppCompatActivity implements BluetoothLoca
         }
     }
 
+    @Override
+    public void onBackPressed(){
+        final AlertDialog.Builder builder = new AlertDialog.Builder(PercorsoActivity.this);
+        builder.setMessage("Sei sicuro di voler uscire?");
+        builder.setCancelable(true);
+        builder.setPositiveButton("Sì", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int i) {
+                UserRequestHandler userRequestHandler = new UserRequestHandler(getApplicationContext());
+                userRequestHandler.logoutUserServer();
+                Intent intent = new Intent(getApplicationContext(), AuthenticationActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.putExtra("Exit", true);
+                startActivity(intent);
+            }
+        });
 
+        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int i) {
+                dialog.cancel();
+            }
+        });
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
 }

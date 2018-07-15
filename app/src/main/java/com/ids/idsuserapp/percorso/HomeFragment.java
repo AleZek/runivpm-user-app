@@ -7,6 +7,7 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.speech.tts.TextToSpeech;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -15,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -74,12 +76,17 @@ public class HomeFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         final View view = inflater.inflate(R.layout.fragment_home, container, false);
         holder = new ViewHolder(view);
         toggleConfirmButtonState();
 
         if (getArguments().getBoolean(EMERGENCY)) {
-            holder.createEmergencyDialog();
+            emergency = true;
+
+            holder.emergencyMode();
+            if (origin == null)
+                holder.createEmergencyDialog();
         }
 
         return view;
@@ -138,45 +145,58 @@ public class HomeFragment extends BaseFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+
         if (getArguments() != null) {
             offline = getArguments().getBoolean(OFFLINE);
+            //emergenza = getArguments().getBoolean(EMERGENCY);
         }
         setText();
     }
 
     public void setText() {
-        holder.infoTextView.setText("\n Seleziona origine e destinazione per visualizzare il percorso");
-        if (choosenOrigin && !choosenDestination) {
-            holder.infoTextView.setText("\nOrigine selezionata: " +
-                    "\n Piano:" + origin.getFloor().toString() +
-                    "\n Beacon: " + origin.getNome().toString() +
-                    "\n\n Seleziona anche la destinazione se vuoi visualizzare il percorso.");
+        if (!emergency) {
+            holder.infoTextView.setText("\n Seleziona origine e destinazione per visualizzare il percorso");
+            if (choosenOrigin && !choosenDestination) {
+                holder.infoTextView.setText("\nOrigine selezionata: " +
+                        "\n Piano:" + origin.getFloor().toString() +
+                        "\n Beacon: " + origin.getNome().toString() +
+                        "\n\n Seleziona anche la destinazione se vuoi visualizzare il percorso.");
 
-        } else if (choosenOrigin && choosenDestination) {
-            if (origin.getId() == destination.getId()) {
-                holder.infoTextView.setText("\n Devi selezionare due Beacon diversi \nper origine e destinazione");
-            } else {
+            } else if (choosenOrigin && choosenDestination) {
+                if (origin.getId() == destination.getId()) {
+                    holder.infoTextView.setText("\n Devi selezionare due Beacon diversi \nper origine e destinazione");
+                } else {
+                    holder.infoTextView.setText(
+                            "\nOrigine selezionata: " +
+                                    "\n Piano:" + origin.getFloor().toString() +
+                                    "\n Beacon scelto: " + origin.getNome().toString() +
+                                    "\n\n Destinazione selezionata: " +
+                                    "\n Piano: " + destination.getFloor().toString() +
+                                    "\n Beacon scelto: " + destination.getNome().toString());
+                }
+            } else if (choosenDestination && !choosenOrigin) {
+                holder.infoTextView.setText("\nDestinazione selezionata: " +
+                        "\n Piano:" + destination.getFloor().toString() +
+                        "\n Beacon: " + destination.getNome().toString() +
+                        "\n\n Seleziona origine per poter visualizzare il percorso.");
+            } else if (choosenOrigin && choosenDestination) {
                 holder.infoTextView.setText(
-                        "\nOrigine selezionata: " +
+                        "\n Origine selezionata: " +
                                 "\n Piano:" + origin.getFloor().toString() +
                                 "\n Beacon scelto: " + origin.getNome().toString() +
                                 "\n\n Destinazione selezionata: " +
                                 "\n Piano: " + destination.getFloor().toString() +
                                 "\n Beacon scelto: " + destination.getNome().toString());
             }
-        } else if (choosenDestination && !choosenOrigin) {
-            holder.infoTextView.setText("\nDestinazione selezionata: " +
-                    "\n Piano:" + destination.getFloor().toString() +
-                    "\n Beacon: " + destination.getNome().toString() +
-                    "\n\n Seleziona origine per poter visualizzare il percorso.");
-        } else if (choosenOrigin && choosenDestination) {
-            holder.infoTextView.setText(
-                    "\n Origine selezionata: " +
-                            "\n Piano:" + origin.getFloor().toString() +
-                            "\n Beacon scelto: " + origin.getNome().toString() +
-                            "\n\n Destinazione selezionata: " +
-                            "\n Piano: " + destination.getFloor().toString() +
-                            "\n Beacon scelto: " + destination.getNome().toString());
+        } else {
+            if (choosenOrigin) {
+                holder.infoTextView.setText("\nOrigine selezionata: " +
+                        "\n Piano:" + origin.getFloor().toString() +
+                        "\n Beacon: " + origin.getNome().toString());
+            } else {
+                holder.infoTextView.setText("\n Seleziona l'origine per visualizzare l'uscita più vicina!");
+            }
         }
 
     }
@@ -213,6 +233,9 @@ public class HomeFragment extends BaseFragment {
         public final Button visualizzaPercorsoButton;
         public final Button visualizzaUscitaVicinaButton;
         public TextView infoTextView;
+        public final ImageView emergency_img;
+        public final TextView emergency_txt;
+        public final TextView naviga_txt;
 
         public final Button selezionaOrigineButton;
         public final Button selezionaDestinazioneButton;
@@ -225,6 +248,10 @@ public class HomeFragment extends BaseFragment {
             selezionaMappaDestinazioneButton = find(v, R.id.scegli_da_mappa_destinazione_button);
             selezionaBeaconOrigineButton = find(v, R.id.scegli_da_beacon_origine_button);
             selezionaBeaconDestinazioneButton = find(v, R.id.scegli_da_beacon_destinazione_button);
+            emergency_img = find(v, R.id.emergenza_img);
+            emergency_txt = find(v, R.id.emergenza);
+            naviga_txt = find(v, R.id.navigation_toolbar_textview_title);
+
 
             selezionaMappaOrigineLayout = find(v, R.id.scegli_da_mappa_origine_layout);
             selezionaMappaDestinazioneLayout = find(v, R.id.scegli_da_mappa_destinazione_layout);
@@ -292,9 +319,14 @@ public class HomeFragment extends BaseFragment {
                             setText();
                             toggleOrigine();
                             baseSearchDialogCompat.dismiss();
+
                         }
                     }).show();
+
+
                 }
+
+
             });
 
             selezionaBeaconDestinazioneButton.setOnClickListener(new View.OnClickListener() {
@@ -333,9 +365,6 @@ public class HomeFragment extends BaseFragment {
         }
 
 
-
-
-
         public void createEmergencyDialog() {
             new MaterialDialog.Builder(getContext())
                     .title(getString(R.string.emergency_dialog_title))
@@ -345,23 +374,13 @@ public class HomeFragment extends BaseFragment {
                     .onPositive(new MaterialDialog.SingleButtonCallback() {
                         @Override
                         public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                            if (!emergency) {
-                                Toast.makeText(getContext(),"Fine Emergenza",Toast.LENGTH_SHORT).show();
-                            }
-                            Toast.makeText(getContext(),"Scegli l'origine per trovare l'uscita più vicina",Toast.LENGTH_SHORT).show();
 
-                            if(getArguments() != null) {
-                                getArguments().putBoolean(EMERGENCY, false);
-                            }
                         }
                     })
                     .icon(getResources().getDrawable(R.drawable.ic_fire))
                     .autoDismiss(true)
                     .show();
         }
-
-
-
 
         public void toggleOrigine() {
             {
@@ -392,7 +411,17 @@ public class HomeFragment extends BaseFragment {
         }
 
 
+        public void emergencyMode() {
+            emergency_img.setVisibility(View.VISIBLE);
+            emergency_txt.setVisibility(View.VISIBLE);
+            selezionaDestinazioneButton.setVisibility(View.GONE);
+            naviga_txt.setVisibility(View.GONE);
+
+        }
+
+
     }
+
 
     private void disableVisualizzaPercorsoButtonState() {
         holder.visualizzaPercorsoButton.setVisibility(View.GONE);
@@ -422,7 +451,7 @@ public class HomeFragment extends BaseFragment {
         } else if (origin == destination) {
             disableVisualizzaPercorsoButtonState();
             disableVisualizzaUscitaButtonState();
-        }else{
+        } else {
             disableVisualizzaUscitaButtonState();
             holder.visualizzaPercorsoButton.setVisibility(View.VISIBLE);
             holder.visualizzaPercorsoButton.setTextColor(color(R.color.linkText));

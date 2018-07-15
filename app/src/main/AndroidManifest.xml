@@ -7,8 +7,8 @@
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
@@ -18,42 +18,54 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        >
         <activity android:name=".MainActivity">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN"
+                    android:screenOrientation="portrait"
+                    android:noHistory="true"/>
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".BeaconList"
-            android:label="@string/title_activity_beacon_list"
-            android:theme="@style/AppTheme.NoActionBar" />
+
         <activity android:name=".HomeActivity"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar"
+            android:noHistory="true"
+            android:screenOrientation="portrait"/>
 
         <activity
             android:name=".LogoActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".BeaconNavigationActivity" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait"
+            />
+
         <activity
-            android:name=".authentication.AutenticationActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:name=".authentication.AuthenticationActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:noHistory="true"
+            android:screenOrientation="portrait"/>
+
         <activity android:name=".authentication.LoginActivity"
-            android:noHistory="true" />
+            android:noHistory="true"
+            android:screenOrientation="portrait"/>
+
         <activity android:name=".authentication.RegistrationActivity"
             android:noHistory="true"
-            />
+            android:screenOrientation="portrait"/>
+
         <service
             android:name=".services.LocatorService"
             android:enabled="true"
             android:exported="true" />
+
         <service android:name=".services.RunivpmFirebaseMessagingService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
+
         <service android:name=".services.RunivpmFirebaseInstanceIdService">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
@@ -62,15 +74,17 @@
 
         <activity
             android:name=".PercorsoActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".percorso.NavigationActivity" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait"
+            />
+
         <activity
             android:name=".StopEmergencyActivity"
             android:label="@string/title_activity_stop_emergency"
             android:theme="@style/AppTheme.NoActionBar"
-            android:noHistory="true">
+            android:noHistory="true"
+            android:screenOrientation="portrait"/>
 
-        </activity>
     </application>
 
 </manifest>
