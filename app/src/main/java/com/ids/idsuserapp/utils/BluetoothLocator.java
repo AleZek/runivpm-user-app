@@ -155,6 +155,8 @@ public class BluetoothLocator {
 
     public boolean isBeacon(BluetoothDevice resultDevice) {
         String deviceName = resultDevice.getName();
-        return resultDevice != null && deviceName!= null && deviceName.equals("CC2650 SensorTag");
+        //testing
+        String testdev = "54:50:3A:26:65:F8";
+        return resultDevice != null && deviceName!= null && (deviceName.equals("CC2650 SensorTag") || resultDevice.getAddress().equals(testdev));
     }
 }

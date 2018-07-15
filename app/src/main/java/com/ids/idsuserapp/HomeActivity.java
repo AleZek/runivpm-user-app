@@ -1,25 +1,18 @@
 package com.ids.idsuserapp;
 
 import android.content.DialogInterface;
-import android.app.Activity;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.WindowManager;
-import android.widget.Toast;
 
 import com.ids.idsuserapp.authentication.AutenticationActivity;
-import com.ids.idsuserapp.db.entity.Tronco;
-
 import com.ids.idsuserapp.entityhandlers.ArcoDataHandler;
 import com.ids.idsuserapp.entityhandlers.BeaconDataHandler;
 import com.ids.idsuserapp.entityhandlers.DataRetriever;
@@ -27,9 +20,6 @@ import com.ids.idsuserapp.entityhandlers.MappaDataHandler;
 import com.ids.idsuserapp.entityhandlers.UserRequestHandler;
 import com.ids.idsuserapp.percorso.BaseFragment;
 import com.ids.idsuserapp.percorso.HomeFragment;
-import com.ids.idsuserapp.services.LocatorService;
-import com.ids.idsuserapp.threads.LocatorThread;
-import com.ids.idsuserapp.percorso.Tasks.TaskListener;
 import com.ids.idsuserapp.services.LocatorService;
 import com.ids.idsuserapp.services.NodesUpdateService;
 import com.ids.idsuserapp.threads.LocatorThread;
@@ -102,7 +92,7 @@ public class HomeActivity extends AppCompatActivity implements DataRetriever {
     }
 
     private void checkOfflineMode() {
-        offline = getIntent().hasExtra("offline");
+        offline = getIntent().getBooleanExtra("offline", false);
     }
 
     private void setupMessageReception(Bundle savedInstanceState) {

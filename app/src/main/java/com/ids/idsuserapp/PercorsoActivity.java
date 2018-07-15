@@ -81,17 +81,18 @@ public class PercorsoActivity extends AppCompatActivity implements BluetoothLoca
         holder = new ViewHolderPercorso();
         holder.setupMapView();
 
-
+        checkOfflineMode(savedInstanceState);
         overrideUnlockScreen();
         startLocatorThread();
         setBluetoothLocator();
 
     }
 
+    private void checkOfflineMode(Bundle savedInstanceState) {
+           offline = (Boolean) getIntent().getExtras().get("offline");
+    }
+
     private void setupMessageReception(Bundle savedInstanceState) {
-            offline = true;
-
-
             emergency = false;
             if (getIntent().getExtras() != null) {
                 for (String key : getIntent().getExtras().keySet()) {
@@ -221,6 +222,7 @@ public class PercorsoActivity extends AppCompatActivity implements BluetoothLoca
                 @Override
                 public void onClick(DialogInterface dialog, int i) {
                     Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
+                    intent.putExtra("offline", offline);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
                 }

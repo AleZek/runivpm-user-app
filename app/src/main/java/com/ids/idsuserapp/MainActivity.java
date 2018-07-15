@@ -25,29 +25,6 @@ public class MainActivity extends AppCompatActivity {
         subscribeTopic("emergenza1");
         setContentView(R.layout.activity_main);
 
-        PermissionsUtil permissionsUtil = new PermissionsUtil(this);
-        permissionsUtil.handleFilePermissions();
-        permissionsUtil.handleLocationPermissions();
-        permissionsUtil.requestEnableBt();
-
-        //controlla se la connessione ad internet è attiva dato l application context,
-        //se si allora viene pulita la lista dei beacon e viene aggiornato il dataset
-//        if (ConnectionChecker.getInstance().isNetworkAvailable(getApplicationContext()))
-//        ;
-
-//        List<Tronco> tronchi = arcoViewModel.getTronchi();
-
-//        Grafo grafo = new Grafo(tronchi);
-
-
-        //segmento di codice utile all unlock automaitico
-//        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
-//                + WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD|
-//                + WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED|
-//                + WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
-
-
-
         Intent logoIntent = new Intent(MainActivity.this,LogoActivity.class);
         logoIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(logoIntent);
@@ -61,13 +38,12 @@ public class MainActivity extends AppCompatActivity {
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
-                        String msg = "Sottoscrizione avvenuta a ";
+
                         if (!task.isSuccessful()) {
                             Log.d(TAG, getString(R.string.emergency_subscribe_error)); // sono mostrati dei messaggi nel log e nella app se la sottoscrizione avviene o meno
                             Toast.makeText(MainActivity.this, R.string.emergency_subscribe_error, Toast.LENGTH_SHORT).show();
                         }
-                        Log.d(TAG, msg + topic); // sono mostrati dei messaggi nel log e nella app se la sottoscrizione avviene o meno
-                        Toast.makeText(MainActivity.this, msg + topic, Toast.LENGTH_SHORT).show();
+
                     }
                 });
 
