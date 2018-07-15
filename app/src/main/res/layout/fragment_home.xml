@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -134,4 +135,35 @@
         android:background="@drawable/borderless_white_button"
         android:layout_weight="1"
         android:text="Visualizza Percorso" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:visibility="visible">
+
+        <ImageView
+            android:id="@+id/emergenza_img"
+            android:layout_width="54dp"
+            android:layout_height="40dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginEnd="78dp"
+            android:layout_marginTop="24dp"
+            android:src="@drawable/emergency"
+            android:visibility="invisible" />
+
+        <TextView
+            android:id="@+id/emergenza"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/emergenza_img"
+            android:layout_toStartOf="@+id/emergenza_img"
+            android:text="EMERGENZA"
+            android:textColor="@android:color/background_dark"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:visibility="invisible" />
+    </RelativeLayout>
 </RelativeLayout>

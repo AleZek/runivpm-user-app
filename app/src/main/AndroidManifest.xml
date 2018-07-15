@@ -38,8 +38,9 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".BeaconNavigationActivity" />
         <activity
-            android:name=".authentication.AutenticationActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:name=".authentication.AuthenticationActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:noHistory="true"/>
         <activity android:name=".authentication.LoginActivity"
             android:noHistory="true" />
         <activity android:name=".authentication.RegistrationActivity"

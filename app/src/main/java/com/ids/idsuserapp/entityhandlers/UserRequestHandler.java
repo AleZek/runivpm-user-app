@@ -13,6 +13,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.ids.idsuserapp.HomeActivity;
 import com.ids.idsuserapp.R;
+import com.ids.idsuserapp.authentication.AuthenticationActivity;
 import com.ids.idsuserapp.authentication.LoginActivity;
 import com.ids.idsuserapp.utils.AuthenticatedJsonObjectRequest;
 
@@ -113,7 +114,7 @@ public class UserRequestHandler {
                         editor = sharedPref.edit();
                         editor.putString("position", "");
                         editor.apply();
-                        Intent intent = new Intent(context, HomeActivity.class);
+                        Intent intent = new Intent(context, AuthenticationActivity.class);
                         context.startActivity(intent);
 
                     }

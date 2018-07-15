@@ -10,7 +10,7 @@ import com.ids.idsuserapp.R;
 import com.ids.idsuserapp.percorso.BaseFragment;
 import com.ids.idsuserapp.utils.PermissionsUtil;
 
-public class AutenticationActivity extends AppCompatActivity{
+public class AuthenticationActivity extends AppCompatActivity{
 
     //private Button button1;
     //private Button button2;
@@ -28,7 +28,7 @@ public class AutenticationActivity extends AppCompatActivity{
         button1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(AutenticationActivity.this, LoginActivity.class);
+                Intent intent = new Intent(AuthenticationActivity.this, LoginActivity.class);
                 startActivity(intent);
             }
         });
@@ -37,7 +37,7 @@ public class AutenticationActivity extends AppCompatActivity{
         button2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(AutenticationActivity.this, RegistrationActivity.class);
+                Intent intent = new Intent(AuthenticationActivity.this, RegistrationActivity.class);
                 startActivity(intent);
             }
         });
@@ -47,9 +47,9 @@ public class AutenticationActivity extends AppCompatActivity{
 
 
         if (savedInstanceState == null) {
-            AutenticationFragment autenticationFragment =new AutenticationFragment();
+            AuthenticationFragment authenticationFragment =new AuthenticationFragment();
             android.support.v4.app.FragmentManager fm = getSupportFragmentManager();
-            fm.beginTransaction().replace(R.id.autentication_content_pane, autenticationFragment, AutenticationFragment.TAG)
+            fm.beginTransaction().replace(R.id.autentication_content_pane, authenticationFragment, AuthenticationFragment.TAG)
                     .commit();
         }
 
@@ -73,7 +73,7 @@ public class AutenticationActivity extends AppCompatActivity{
 
     @Override
     public void onBackPressed(){
-        final AlertDialog.Builder builder = new AlertDialog.Builder(AutenticationActivity.this);
+        final AlertDialog.Builder builder = new AlertDialog.Builder(AuthenticationActivity.this);
         builder.setMessage("Sei sicuro di voler uscire?");
         builder.setCancelable(true);
         builder.setPositiveButton("Sì", new DialogInterface.OnClickListener() {

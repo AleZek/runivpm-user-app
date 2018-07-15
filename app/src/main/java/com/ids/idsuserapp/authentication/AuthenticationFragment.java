@@ -16,12 +16,12 @@ import com.ids.idsuserapp.percorso.BaseFragment;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement thegit
- * Use the {@link AutenticationFragment#newInstance} factory method to
+ * Use the {@link AuthenticationFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class AutenticationFragment extends Fragment {
+public class AuthenticationFragment extends Fragment {
 
-    public static final String TAG = AutenticationFragment.class.getSimpleName();
+    public static final String TAG = AuthenticationFragment.class.getSimpleName();
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
@@ -29,9 +29,9 @@ public class AutenticationFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    private AutenticationFragment.ViewHolder holder;
+    private AuthenticationFragment.ViewHolder holder;
 
-    public AutenticationFragment() {
+    public AuthenticationFragment() {
         // Required empty public constructor
     }
 
@@ -41,11 +41,11 @@ public class AutenticationFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment AutenticationFragment.
+     * @return A new instance of fragment AuthenticationFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static AutenticationFragment newInstance(String param1, String param2) {
-        AutenticationFragment fragment = new AutenticationFragment();
+    public static AuthenticationFragment newInstance(String param1, String param2) {
+        AuthenticationFragment fragment = new AuthenticationFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);

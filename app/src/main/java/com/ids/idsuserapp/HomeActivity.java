@@ -7,6 +7,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
@@ -70,7 +71,6 @@ public class HomeActivity extends AppCompatActivity implements DataRetriever{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-
         setupViewModels();
         setupDataHandlers();
 //        startLocatorThread();
@@ -79,8 +79,14 @@ public class HomeActivity extends AppCompatActivity implements DataRetriever{
         //controlla se la connessione ad internet è attiva dato l application context,
         //se si allora viene pulita la lista dei beacon e viene aggiornato il dataset
         emergency = checkEmergency();
-        if(emergency)
+        if(emergency) {
             overrideUnlockScreen();
+
+
+
+
+
+        }
         if (!offline && ConnectionChecker.getInstance().isNetworkAvailable(getApplicationContext()) && !getIntent().hasExtra("stop"))
             getDatasetFromServer();
         permissionsUtil = new PermissionsUtil(this);
@@ -88,6 +94,7 @@ public class HomeActivity extends AppCompatActivity implements DataRetriever{
             startLocatorService(LocatorThread.STANDARD_MODE);
         setupMessageReception(savedInstanceState);
     }
+
 
     private void overrideUnlockScreen() {
         //segmento di codice utile all unlock automaitico
@@ -211,6 +218,9 @@ public class HomeActivity extends AppCompatActivity implements DataRetriever{
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                 .addToBackStack(fragment.TAG)
                 .commit();
+        Bundle data = new Bundle();
+        data.putBoolean("emergenza", emergency);
+        fragment.setArguments(data);
     }
 
     @Override
