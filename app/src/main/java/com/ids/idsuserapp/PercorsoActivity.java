@@ -24,6 +24,7 @@ import com.ids.idsuserapp.percorso.Tasks.TaskListener;
 import com.ids.idsuserapp.percorso.views.MapView;
 import com.ids.idsuserapp.percorso.views.exceptions.DestinationNotSettedException;
 import com.ids.idsuserapp.percorso.views.exceptions.OriginNotSettedException;
+import com.ids.idsuserapp.services.LocatorService;
 import com.ids.idsuserapp.threads.LocatorThread;
 import com.ids.idsuserapp.utils.BluetoothLocator;
 import com.ids.idsuserapp.viewmodel.ArcoViewModel;
@@ -79,41 +80,28 @@ public class PercorsoActivity extends AppCompatActivity implements BluetoothLoca
         holder = new ViewHolderPercorso();
         holder.setupMapView();
 
-
+        checkOfflineMode(savedInstanceState);
         overrideUnlockScreen();
         startLocatorThread();
         setBluetoothLocator();
 
     }
 
+    private void checkOfflineMode(Bundle savedInstanceState) {
+           offline = (Boolean) getIntent().getExtras().get("offline");
+    }
+
     private void setupMessageReception(Bundle savedInstanceState) {
-        offline = true;
-
-         /* if (!offline) {
-          // Handle deviceToken for pushNotification
-            // [START handle_device_token]
-            SaveDeviceTokenTask task = new SaveDeviceTokenTask(this, new TaskListener<Void>() {
-                @Override
-                public void onTaskSuccess(Void aVoid) {
-                    Log.d(TAG, "Device key save succesfully");
-                }
-
-                @Override
-                public void onTaskError(Exception e) {
-                    Log.e(TAG, "Save deviceKey error", e);
-                }
-*/
-        emergency = false;
-        if (getIntent().getExtras() != null) {
-            for (String key : getIntent().getExtras().keySet()) {
-                if (key.equals("emergency"))
-                    emergency = true;
+            emergency = false;
+            if (getIntent().getExtras() != null) {
+                for (String key : getIntent().getExtras().keySet()) {
+                    if (key.equals("emergency"))
+                        emergency = true;
 
             }
 
         }
     }
-
 
     private void overrideUnlockScreen() {
         //segmento di codice utile all unlock automaitico
@@ -128,12 +116,14 @@ public class PercorsoActivity extends AppCompatActivity implements BluetoothLoca
     protected void onDestroy() {
         super.onDestroy();
         locatorThread.interrupt();
+        Intent intent = new Intent(this, LocatorService.class);
+        stopService(intent);
     }
 
     private void startLocatorThread() {
         serverUserLocator = new UserRequestHandler(getApplicationContext());
         int mode = emergency ? LocatorThread.EMERGENCY_MODE : LocatorThread.NAVIGATION_MODE;
-        locatorThread = new LocatorThread(this, LocatorThread.NAVIGATION_MODE);
+        locatorThread = new LocatorThread(this, mode);
         locatorThread.start();
     }
 
@@ -173,17 +163,20 @@ public class PercorsoActivity extends AppCompatActivity implements BluetoothLoca
         int index = selectedSolution.indexOf(currentBeacon);
         if (selectedSolution != null) {
             if (currentBeacon.equals(destinazione)) {
-                Toast.makeText(this, "Sei giunto a destinazione", Toast.LENGTH_LONG).show();
                 locatorThread.interrupt();
                 bluetoothLocator.stopScan();
+                indiciNavigazione = new IndiciNavigazione(selectedSolution.size() - 1, selectedSolution.size() - 1);
+                holder.launchSearchPathTask(currentBeacon);
+                holderButtonEnabled("Indietro", true);
+                holderButtonEnabled("Avanti", false);
             } else if (index != -1) {
                 indiciNavigazione = new IndiciNavigazione(selectedSolution.indexOf(currentBeacon), selectedSolution.indexOf(currentBeacon) + 1);
                 holder.launchSearchPathTask(currentBeacon);
             } else {
                 selectedSolution = null;
                 holder.launchSearchPathTask(currentBeacon);
-//            getIndicazioni(userPositionBeacon, nextBeacon);
             }
+
         }
     }
 
@@ -204,34 +197,6 @@ public class PercorsoActivity extends AppCompatActivity implements BluetoothLoca
         }
     }
 
-
-    //segmento di codice utile all unlock automaitico
-//        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
-//                + WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD|
-//                + WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED|
-//                + WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
-
-
-    //questo metodo permette alla app di sottoscriversi al topic emergenza, questo permette a firebase
-    // di mandare messaggi broadcast alle istanze della app
-//    private void subscribeTopic(final String topic){
-//        FirebaseMessaging.getInstance().subscribeToTopic(topic)
-//                .addOnCompleteListener(new OnCompleteListener<Void>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<Void> task) {
-//                        String msg = "Sottoscrizione avvenuta a ";
-//                        if (!task.isSuccessful()) {
-//                            msg = "sottoscrizione fallita a ";
-//                        }
-//                        Log.d(TAG, msg + topic); // sono mostrati dei messaggi nel log e nella app se la sottoscrizione avviene o meno
-//                        Toast.makeText(MainActivity.this, msg + topic, Toast.LENGTH_SHORT).show();
-//                    }
-//                });
-//
-//
-//    }
-
-
     // @TODO Esternalizzare
     private class MinimumPathListener implements TaskListener<List<Percorso>> {
         @Override
@@ -241,16 +206,43 @@ public class PercorsoActivity extends AppCompatActivity implements BluetoothLoca
                 selectedSolution = new Percorso(solutionPaths.get(0));
                 indiciNavigazione = new IndiciNavigazione(0,1);
             }
-            Percorso pathToDraw = new Percorso(selectedSolution.subList(indiciNavigazione.current, selectedSolution.size() - 1));
+            Percorso pathToDraw = new Percorso(selectedSolution.subList(indiciNavigazione.current, selectedSolution.size() ));
             PercorsoMultipiano multiFloorSolution = pathToDraw.toMultiFloorPath();
 
             try {
                 holder.mapView.drawRoute(multiFloorSolution);
+                if (indiciNavigazione.current == selectedSolution.size() -1)
+                    showFinishDialog();
             } catch (OriginNotSettedException | DestinationNotSettedException e) {
                 e.printStackTrace();
             }
 
         }
+
+        private void showFinishDialog() {
+            final AlertDialog.Builder builder = new AlertDialog.Builder(PercorsoActivity.this);
+            builder.setMessage("Sei giunto a destinazione. Clicca OK per tornare alla home");
+            builder.setCancelable(true);
+            builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int i) {
+                    Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
+                    intent.putExtra("offline", offline);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
+                }
+            });
+
+            builder.setNegativeButton("Annulla", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int i) {
+                    dialog.cancel();
+                }
+            });
+            AlertDialog alertDialog = builder.create();
+            alertDialog.show();
+        }
+
 
         @Override
         public void onTaskError(Exception e) {
@@ -340,7 +332,7 @@ public class PercorsoActivity extends AppCompatActivity implements BluetoothLoca
                 if (indiciNavigazione.current == 0) {
                     holderButtonEnabled("Indietro", false);
                 }
-                if (indiciNavigazione.current >= selectedSolution.size() - 2) {
+                if (indiciNavigazione.current >= selectedSolution.size() - 1) {
                     holderButtonEnabled("Avanti", false);
                 }
                 currentBeacon = selectedSolution.get(indiciNavigazione.current);

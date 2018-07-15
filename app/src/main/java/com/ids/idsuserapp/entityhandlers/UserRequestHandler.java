@@ -63,8 +63,9 @@ public class UserRequestHandler {
             @Override
             public void onErrorResponse(VolleyError error) {
                 progressInterface.hideProgressBar();
+                if (error != null) {
                 Log.v("VolleyError", error.toString());
-                int statusCode = error.networkResponse.statusCode;
+                int statusCode = error.networkResponse != null ? error.networkResponse.statusCode : 0;
                 switch (statusCode) {
                     case 400:
                         Toast.makeText(context, "Errore nella richiesta", Toast.LENGTH_SHORT).show();
@@ -74,6 +75,7 @@ public class UserRequestHandler {
                         break;
                 }
                 error.printStackTrace();
+                }
             }
         });
     }
@@ -126,13 +128,15 @@ public class UserRequestHandler {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.v("VolleyError", error.toString());
-                int statusCode = error.networkResponse.statusCode;
-                switch (statusCode) {
-                    case 401:
-                        break;
+                if (error != null) {
+                    Log.v("VolleyError", error.toString());
+                    int statusCode = error.networkResponse != null ? error.networkResponse.statusCode : 0;
+                    switch (statusCode) {
+                        case 401:
+                            break;
+                    }
+                    error.printStackTrace();
                 }
-                error.printStackTrace();
             }
         });
 
@@ -166,8 +170,10 @@ public class UserRequestHandler {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.v("VolleyError", error.toString());
-                int statusCode = error.networkResponse.statusCode;
+                if (error != null) {
+                    Log.v("VolleyError", error.toString());
+
+                int statusCode = error.networkResponse != null ? error.networkResponse.statusCode : 0;
                 switch (statusCode) {
                     case 401:
                         progressInterface.hideProgressBar();
@@ -175,6 +181,7 @@ public class UserRequestHandler {
                         break;
                 }
                 error.printStackTrace();
+                }
             }
         });
     }

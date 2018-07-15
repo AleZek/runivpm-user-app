@@ -18,6 +18,7 @@ public class LocatorService extends Service implements BluetoothLocator.LocatorC
     LocatorThread locatorThread;
     UserRequestHandler serverUserLocator;
     int mode;
+    static String TAG = "LocatorService";
 
     public LocatorService() {
     }
@@ -49,12 +50,13 @@ public class LocatorService extends Service implements BluetoothLocator.LocatorC
         locatorThread.interrupt();
     }
 
+
     @Override
     public void sendCurrentPosition(BluetoothDevice device) {
         if (ConnectionChecker.getInstance().isNetworkAvailable(this))
             serverUserLocator.sendPosition(device.toString());
         savePositionLocally(device.toString());
-        Log.v("locator", "callback chiamata");
+        Log.v(TAG, "callback chiamata");
     }
 
     private void savePositionLocally(String device) {

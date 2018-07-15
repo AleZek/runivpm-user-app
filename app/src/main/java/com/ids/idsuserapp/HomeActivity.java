@@ -1,10 +1,7 @@
 package com.ids.idsuserapp;
 
 import android.content.DialogInterface;
-import android.app.Activity;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
@@ -16,7 +13,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.WindowManager;
-import android.widget.Toast;
 
 import com.ids.idsuserapp.authentication.AuthenticationActivity;
 import com.ids.idsuserapp.db.entity.Tronco;
@@ -29,9 +25,6 @@ import com.ids.idsuserapp.entityhandlers.MappaDataHandler;
 import com.ids.idsuserapp.entityhandlers.UserRequestHandler;
 import com.ids.idsuserapp.percorso.BaseFragment;
 import com.ids.idsuserapp.percorso.HomeFragment;
-import com.ids.idsuserapp.services.LocatorService;
-import com.ids.idsuserapp.threads.LocatorThread;
-import com.ids.idsuserapp.percorso.Tasks.TaskListener;
 import com.ids.idsuserapp.services.LocatorService;
 import com.ids.idsuserapp.services.NodesUpdateService;
 import com.ids.idsuserapp.threads.LocatorThread;
@@ -71,13 +64,11 @@ public class HomeActivity extends AppCompatActivity implements DataRetriever{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
+
         setupViewModels();
         setupDataHandlers();
-//        startLocatorThread();
         checkOfflineMode();
 
-        //controlla se la connessione ad internet è attiva dato l application context,
-        //se si allora viene pulita la lista dei beacon e viene aggiornato il dataset
         emergency = checkEmergency();
         if(emergency) {
             overrideUnlockScreen();
@@ -118,26 +109,11 @@ public class HomeActivity extends AppCompatActivity implements DataRetriever{
     }
 
     private void checkOfflineMode() {
-        offline = getIntent().hasExtra("offline");
+        offline = getIntent().getBooleanExtra("offline", false);
     }
 
     private void setupMessageReception(Bundle savedInstanceState) {
         offline = true;
-
-         /* if (!offline) {
-          // Handle deviceToken for pushNotification
-            // [START handle_device_token]
-            SaveDeviceTokenTask task = new SaveDeviceTokenTask(this, new TaskListener<Void>() {
-                @Override
-                public void onTaskSuccess(Void aVoid) {
-                    Log.d(TAG, "Device key save succesfully");
-                }
-
-                @Override
-                public void onTaskError(Exception e) {
-                    Log.e(TAG, "Save deviceKey error", e);
-                }
-*/
 
         boolean emergency = false;
         if (getIntent().getExtras() != null) {
@@ -151,7 +127,6 @@ public class HomeActivity extends AppCompatActivity implements DataRetriever{
             }
         }
 
-        Log.d(TAG, String.valueOf(emergency));
         if (savedInstanceState == null) {
             HomeFragment homeFragment = HomeFragment.newInstance(emergency, offline);
             FragmentManager fm = getSupportFragmentManager();
@@ -184,7 +159,6 @@ public class HomeActivity extends AppCompatActivity implements DataRetriever{
     @Override
     protected void onDestroy() {
         super.onDestroy();
-//        locatorThread.interrupt();
     }
 
     private void getDatasetFromServer() {

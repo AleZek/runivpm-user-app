@@ -444,6 +444,7 @@ public class HomeFragment extends BaseFragment {
                 public void onClick(View v) {
                     Intent intent = new Intent(getActivity(), PercorsoActivity.class);
                     intent.putExtra("beaconSoloOrigine", SerializationUtils.serialize(origin));
+                    intent.putExtra("offline", offline);
                     startActivity(intent);
                 }
             });
@@ -460,6 +461,7 @@ public class HomeFragment extends BaseFragment {
                     Intent intent = new Intent(getActivity(), PercorsoActivity.class);
                     intent.putExtra("beaconOrigine", SerializationUtils.serialize(origin));
                     intent.putExtra("beaconDestinazione", SerializationUtils.serialize(destination));
+                    intent.putExtra("offline", offline);
                     startActivity(intent);
                 }
             });
