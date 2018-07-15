@@ -12,6 +12,7 @@ import com.ids.idsuserapp.wayfinding.Dijkstra;
 import com.ids.idsuserapp.wayfinding.Grafo;
 import com.ids.idsuserapp.wayfinding.Percorso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MinimumPathTask extends AsyncTask<Beacon, Void, Boolean> {
@@ -44,11 +45,16 @@ public class MinimumPathTask extends AsyncTask<Beacon, Void, Boolean> {
             Beacon destinazione = params[1];
             setDijkstra(origine);
             if(!emergency) {
-                if(destinazione != null) {
+                if(destinazione != null && !origine.equals(destinazione)) {
                     searchResult = dijkstra.searchDoublePath(destinazione);
-                }else {
+                }else if (!origine.equals(destinazione)) {
                     List<Beacon> uscite = beaconViewModel.getUscite();
                     searchResult = dijkstra.searchNearestExits(uscite);
+                }else{
+                    searchResult = new ArrayList<Percorso>();
+                    Percorso fine = new Percorso();
+                    fine.add(destinazione);
+                    searchResult.add(fine);
                 }
             }else {
                 List<Beacon> uscite = beaconViewModel.getUscite();

@@ -25,6 +25,7 @@ import com.ids.idsuserapp.percorso.Tasks.TaskListener;
 import com.ids.idsuserapp.percorso.views.MapView;
 import com.ids.idsuserapp.percorso.views.exceptions.DestinationNotSettedException;
 import com.ids.idsuserapp.percorso.views.exceptions.OriginNotSettedException;
+import com.ids.idsuserapp.services.LocatorService;
 import com.ids.idsuserapp.threads.LocatorThread;
 import com.ids.idsuserapp.utils.BluetoothLocator;
 import com.ids.idsuserapp.viewmodel.ArcoViewModel;
@@ -117,12 +118,14 @@ public class PercorsoActivity extends AppCompatActivity implements BluetoothLoca
     protected void onDestroy() {
         super.onDestroy();
         locatorThread.interrupt();
+        Intent intent = new Intent(this, LocatorService.class);
+        stopService(intent);
     }
 
     private void startLocatorThread() {
         serverUserLocator = new UserRequestHandler(getApplicationContext());
         int mode = emergency ? LocatorThread.EMERGENCY_MODE : LocatorThread.NAVIGATION_MODE;
-        locatorThread = new LocatorThread(this, LocatorThread.NAVIGATION_MODE);
+        locatorThread = new LocatorThread(this, mode);
         locatorThread.start();
     }
 
@@ -162,9 +165,12 @@ public class PercorsoActivity extends AppCompatActivity implements BluetoothLoca
         int index = selectedSolution.indexOf(currentBeacon);
         if (selectedSolution != null) {
             if (currentBeacon.equals(destinazione)) {
-                Toast.makeText(this, "Sei giunto a destinazione", Toast.LENGTH_LONG).show();
                 locatorThread.interrupt();
                 bluetoothLocator.stopScan();
+                indiciNavigazione = new IndiciNavigazione(selectedSolution.size() - 1, selectedSolution.size() - 1);
+                holder.launchSearchPathTask(currentBeacon);
+                holderButtonEnabled("Indietro", true);
+                holderButtonEnabled("Avanti", false);
             } else if (index != -1) {
                 indiciNavigazione = new IndiciNavigazione(selectedSolution.indexOf(currentBeacon), selectedSolution.indexOf(currentBeacon) + 1);
                 holder.launchSearchPathTask(currentBeacon);
@@ -172,6 +178,7 @@ public class PercorsoActivity extends AppCompatActivity implements BluetoothLoca
                 selectedSolution = null;
                 holder.launchSearchPathTask(currentBeacon);
             }
+
         }
     }
 
@@ -201,12 +208,12 @@ public class PercorsoActivity extends AppCompatActivity implements BluetoothLoca
                 selectedSolution = new Percorso(solutionPaths.get(0));
                 indiciNavigazione = new IndiciNavigazione(0,1);
             }
-            Percorso pathToDraw = new Percorso(selectedSolution.subList(indiciNavigazione.current, selectedSolution.size() - 1));
+            Percorso pathToDraw = new Percorso(selectedSolution.subList(indiciNavigazione.current, selectedSolution.size() ));
             PercorsoMultipiano multiFloorSolution = pathToDraw.toMultiFloorPath();
 
             try {
                 holder.mapView.drawRoute(multiFloorSolution);
-                if (indiciNavigazione.current == selectedSolution.size() -2)
+                if (indiciNavigazione.current == selectedSolution.size() -1)
                     showFinishDialog();
             } catch (OriginNotSettedException | DestinationNotSettedException e) {
                 e.printStackTrace();
@@ -315,7 +322,7 @@ public class PercorsoActivity extends AppCompatActivity implements BluetoothLoca
                 if (indiciNavigazione.current == 0) {
                     holderButtonEnabled("Indietro", false);
                 }
-                if (indiciNavigazione.current >= selectedSolution.size() - 2) {
+                if (indiciNavigazione.current >= selectedSolution.size() - 1) {
                     holderButtonEnabled("Avanti", false);
                 }
                 currentBeacon = selectedSolution.get(indiciNavigazione.current);
