@@ -301,6 +301,9 @@ public class PercorsoActivity extends AppCompatActivity implements BluetoothLoca
         public void onClick(View v) {
             Intent intent =  new Intent(getBaseContext(), HomeActivity.class);
             startActivity(intent);
+            origine = null;
+            destinazione = null;
+
         }
     }
 
