@@ -7,6 +7,7 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.speech.tts.TextToSpeech;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -15,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -138,8 +140,11 @@ public class HomeFragment extends BaseFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+
         if (getArguments() != null) {
             offline = getArguments().getBoolean(OFFLINE);
+            //emergenza = getArguments().getBoolean(EMERGENCY);
         }
         setText();
     }
@@ -213,6 +218,9 @@ public class HomeFragment extends BaseFragment {
         public final Button visualizzaPercorsoButton;
         public final Button visualizzaUscitaVicinaButton;
         public TextView infoTextView;
+        public final ImageView emergency_img;
+        public final TextView emergency_txt;
+        public final TextView naviga_txt;
 
         public final Button selezionaOrigineButton;
         public final Button selezionaDestinazioneButton;
@@ -220,11 +228,16 @@ public class HomeFragment extends BaseFragment {
         public BeaconRecyclerAdapter beaconRecyclerAdapter;
 
         public ViewHolder(View v) {
-            toolbar = find(v, (R.id.navigation_toolbar));
-            selezionaMappaOrigineButton = find(v, R.id.scegli_da_mappa_origine_button);
-            selezionaMappaDestinazioneButton = find(v, R.id.scegli_da_mappa_destinazione_button);
-            selezionaBeaconOrigineButton = find(v, R.id.scegli_da_beacon_origine_button);
-            selezionaBeaconDestinazioneButton = find(v, R.id.scegli_da_beacon_destinazione_button);
+            toolbar = find(v,(R.id.navigation_toolbar));
+            selezionaMappaOrigineButton = find(v,R.id.scegli_da_mappa_origine_button);
+            selezionaMappaDestinazioneButton = find(v,R.id.scegli_da_mappa_destinazione_button);
+            selezionaBeaconOrigineButton = find(v,R.id.scegli_da_beacon_origine_button);
+            selezionaBeaconDestinazioneButton = find(v,R.id.scegli_da_beacon_destinazione_button);
+            emergency_img = find(v,R.id.emergenza_img);
+            emergency_txt = find(v,R.id.emergenza);
+            naviga_txt = find(v,R.id.navigation_toolbar_textview_title);
+
+
 
             selezionaMappaOrigineLayout = find(v, R.id.scegli_da_mappa_origine_layout);
             selezionaMappaDestinazioneLayout = find(v, R.id.scegli_da_mappa_destinazione_layout);
@@ -292,9 +305,15 @@ public class HomeFragment extends BaseFragment {
                             setText();
                             toggleOrigine();
                             baseSearchDialogCompat.dismiss();
+
                         }
                     }).show();
+
+
                 }
+
+
+
             });
 
             selezionaBeaconDestinazioneButton.setOnClickListener(new View.OnClickListener() {
@@ -360,9 +379,6 @@ public class HomeFragment extends BaseFragment {
                     .show();
         }
 
-
-
-
         public void toggleOrigine() {
             {
                 if (visible) {
@@ -392,7 +408,20 @@ public class HomeFragment extends BaseFragment {
         }
 
 
+            public void emergencyMode() {
+                emergency_img.setVisibility(View.VISIBLE);
+                emergency_txt.setVisibility(View.VISIBLE);
+                selezionaDestinazioneButton.setVisibility(View.GONE);
+                naviga_txt.setVisibility(View.GONE);
+
+        }
+
+
+
     }
+
+
+
 
     private void disableVisualizzaPercorsoButtonState() {
         holder.visualizzaPercorsoButton.setVisibility(View.GONE);

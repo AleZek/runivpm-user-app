@@ -26,9 +26,7 @@
         android:id="@+id/textView4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="89dp"
+        android:layout_centerInParent="true"
         android:fontFamily="cursive"
         android:text="Emergenza Cessata"
         android:textColor="@color/colorPrimary"
@@ -36,4 +34,13 @@
         android:textStyle="bold"
         tools:layout_editor_absoluteX="23dp"
         tools:layout_editor_absoluteY="129dp" />
+
+    <ImageView
+        android:id="@+id/imageView4"
+        android:layout_width="108dp"
+        android:layout_height="99dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="117dp"
+        app:srcCompat="@drawable/superman" />
 </RelativeLayout>

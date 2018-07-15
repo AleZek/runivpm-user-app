@@ -9,6 +9,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
@@ -17,9 +18,10 @@ import android.util.Log;
 import android.view.WindowManager;
 import android.widget.Toast;
 
-import com.ids.idsuserapp.authentication.AutenticationActivity;
+import com.ids.idsuserapp.authentication.AuthenticationActivity;
 import com.ids.idsuserapp.db.entity.Tronco;
 
+import com.ids.idsuserapp.db.entity.Beacon;
 import com.ids.idsuserapp.entityhandlers.ArcoDataHandler;
 import com.ids.idsuserapp.entityhandlers.BeaconDataHandler;
 import com.ids.idsuserapp.entityhandlers.DataRetriever;
@@ -39,7 +41,12 @@ import com.ids.idsuserapp.viewmodel.ArcoViewModel;
 import com.ids.idsuserapp.viewmodel.BeaconViewModel;
 import com.ids.idsuserapp.viewmodel.MappaViewModel;
 
-public class HomeActivity extends AppCompatActivity implements DataRetriever {
+import org.apache.commons.lang3.SerializationUtils;
+
+import java.time.chrono.HijrahChronology;
+
+
+public class HomeActivity extends AppCompatActivity implements DataRetriever{
     public static final String TAG = HomeActivity.class.getSimpleName();
     private MappaViewModel mappaViewModel;
     private BeaconViewModel beaconViewModel;
@@ -64,19 +71,16 @@ public class HomeActivity extends AppCompatActivity implements DataRetriever {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-
         setupViewModels();
         setupDataHandlers();
 //        startLocatorThread();
         checkOfflineMode();
-//        checkExit();
 
         //controlla se la connessione ad internet è attiva dato l application context,
         //se si allora viene pulita la lista dei beacon e viene aggiornato il dataset
         emergency = checkEmergency();
         if(emergency) {
             overrideUnlockScreen();
-
         }
         if (!offline && ConnectionChecker.getInstance().isNetworkAvailable(getApplicationContext()) && !getIntent().hasExtra("stop"))
             getDatasetFromServer();
@@ -95,7 +99,7 @@ public class HomeActivity extends AppCompatActivity implements DataRetriever {
 
     private void checkExit() {
         if(getIntent().hasExtra("Exit")) {
-            Intent exitIntent = new Intent(this, AutenticationActivity.class);
+            Intent exitIntent = new Intent(this, AuthenticationActivity.class);
             exitIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(exitIntent);
         }
@@ -218,23 +222,26 @@ public class HomeActivity extends AppCompatActivity implements DataRetriever {
     public void changeFragment(BaseFragment fragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        HomeFragment homeFragment = new HomeFragment();
 
         fragmentTransaction.replace(R.id.navigation_content_pane, fragment)
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                 .addToBackStack(fragment.TAG)
                 .commit();
+        Bundle data = new Bundle();
+        data.putBoolean("emergenza", emergency);
+        homeFragment.setArguments(data);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode) {
+        switch (requestCode){
             case BT_ENABLED:
-                if (resultCode == RESULT_OK)
+                if(resultCode == RESULT_OK)
                     startLocatorService(LocatorThread.STANDARD_MODE);
-                else
-                    permissionsUtil.btAlert();
-
+              else
+                permissionsUtil.btAlert();
         }
     }
 
@@ -248,7 +255,7 @@ public class HomeActivity extends AppCompatActivity implements DataRetriever {
             public void onClick(DialogInterface dialog, int i) {
                 UserRequestHandler userRequestHandler = new UserRequestHandler(getApplicationContext());
                 userRequestHandler.logoutUserServer();
-                Intent intent = new Intent(getApplicationContext(), AutenticationActivity.class);
+                Intent intent = new Intent(getApplicationContext(), AuthenticationActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 intent.putExtra("Exit", true);
                 startActivity(intent);
