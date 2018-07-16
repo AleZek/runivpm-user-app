@@ -11,7 +11,7 @@ public class LocatorThread extends Thread {
     boolean running = false;
     private int mode;
     public static int STANDARD_MODE = 300000;
-    public static int NAVIGATION_MODE = 10000;
+    public static int NAVIGATION_MODE = 7000;
     public static int EMERGENCY_MODE = 3000;
     static String TAG = "LocatorThread";
 
@@ -43,6 +43,7 @@ public class LocatorThread extends Thread {
     @Override
     public void interrupt() {
         bluetoothLocator.stopScan();
+        bluetoothLocator.restartBt();
         running = false;
         super.interrupt();
     }

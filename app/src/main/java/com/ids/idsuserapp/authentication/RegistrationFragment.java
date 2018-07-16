@@ -54,12 +54,7 @@ public class RegistrationFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
 
-
-            /*userRequestHandler = new UserRequestHandler(getContext());
-
-            if (ConnectionChecker.getInstance().isNetworkAvailable(getContext()))
-                creaUserServer();
-       */ }
+        }
     }
 
 
@@ -86,9 +81,6 @@ public class RegistrationFragment extends Fragment {
         fragment.setArguments(args);
         return fragment;
     }
-
-
-
 
 
     @Override
@@ -127,24 +119,19 @@ public class RegistrationFragment extends Fragment {
             userRequestHandler = new UserRequestHandler(getContext());
 
 
-
-
-
-
-            registerButton.setOnClickListener(new View.OnClickListener(){
+            registerButton.setOnClickListener(new View.OnClickListener() {
 
                 public void onClick(View v) {
 
-                    String validemail = "[a-zA-Z0-9\\+\\.\\_\\%\\-\\+]{1,256}" +"\\@" +"[a-zA-Z0-9][a-zA-Z0-9\\-]{0,64}" +"(" +"\\." +"[a-zA-Z0-9][a-zA-Z0-9\\-]{0,25}" +")+";
-
+                    String validemail = "[a-zA-Z0-9\\+\\.\\_\\%\\-\\+]{1,256}" + "\\@" + "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,64}" + "(" + "\\." + "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,25}" + ")+";
 
 
                     String mail = email.getText().toString();
 
-                    Matcher matcher= Pattern.compile(validemail).matcher(mail);
+                    Matcher matcher = Pattern.compile(validemail).matcher(mail);
 
 
-                    if (!matcher.matches()){
+                    if (!matcher.matches()) {
                         AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
                         alertDialog.setTitle("oops!");
                         alertDialog.setMessage("Inserire email valida");
@@ -155,8 +142,7 @@ public class RegistrationFragment extends Fragment {
                                     }
                                 });
                         alertDialog.show();
-                    }
-                    else if(password.getText().toString().equals("")){
+                    } else if (password.getText().toString().equals("")) {
 
                         AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
                         alertDialog.setTitle("oops!");
@@ -169,9 +155,7 @@ public class RegistrationFragment extends Fragment {
                                 });
 
                         alertDialog.show();
-                    }
-
-                    else if(!pwd_confirmation.getText().toString().equals(password.getText().toString())){
+                    } else if (!pwd_confirmation.getText().toString().equals(password.getText().toString())) {
                         AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
                         alertDialog.setTitle("oops!");
                         alertDialog.setMessage("Le due password non combaciano");
@@ -182,10 +166,7 @@ public class RegistrationFragment extends Fragment {
                                     }
                                 });
                         alertDialog.show();
-                    }
-
-
-                    else{
+                    } else {
 
                         String new_mail = email.getText().toString();
 
@@ -193,7 +174,9 @@ public class RegistrationFragment extends Fragment {
 
 
                         if (ConnectionChecker.getInstance().isNetworkAvailable(getContext()))
-                            userRequestHandler.creaUserServer(new_mail,pas);
+                            userRequestHandler.creaUserServer(new_mail, pas);
+                        else
+                            showOfflineAlert();
 
 
                     }
@@ -201,12 +184,20 @@ public class RegistrationFragment extends Fragment {
                 }
             });
 
+        }
 
+        private void showOfflineAlert() {
+            AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
+            alertDialog.setTitle("oops!");
+            alertDialog.setMessage("Nessuna connessione a Internet. Connettersi a una rete e riprovare");
+            alertDialog.setButton("Ok",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            //dismiss the dialog
+                        }
+                    });
 
-
-
-
-
+            alertDialog.show();
         }
     }
 

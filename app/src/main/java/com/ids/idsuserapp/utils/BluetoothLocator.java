@@ -1,5 +1,6 @@
 package com.ids.idsuserapp.utils;
 
+import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothGatt;
@@ -12,6 +13,8 @@ import android.content.Context;
 import android.util.Log;
 
 import com.ids.idsuserapp.db.entity.Beacon;
+import com.ids.idsuserapp.entityhandlers.UserRequestHandler;
+import com.ids.idsuserapp.percorso.animation.ShowProgressAnimation;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -43,17 +46,24 @@ public class BluetoothLocator {
         Log.v(TAG,scanner.toString());
     }
 
-    private void enableBTAndWait() {
+    public void enableBTAndWait() {
         if (!mBluetoothAdapter.isEnabled()) {
             mBluetoothAdapter.enable();
             while(!mBluetoothAdapter.isEnabled()){
-                try {
-                    sleep(300);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
             }
         }
+    }
+
+    public void disableBTAndWait(){
+        mBluetoothAdapter.disable();
+        while(mBluetoothAdapter.isEnabled()){
+        }
+
+    }
+
+    public void restartBt(){
+        disableBTAndWait();
+        enableBTAndWait();
     }
 
     private void setBtManager() {

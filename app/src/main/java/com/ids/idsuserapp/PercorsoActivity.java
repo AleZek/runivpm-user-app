@@ -1,5 +1,6 @@
 package com.ids.idsuserapp;
 
+import android.app.ProgressDialog;
 import android.bluetooth.BluetoothDevice;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -114,11 +115,11 @@ public class PercorsoActivity extends AppCompatActivity implements BluetoothLoca
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
+        ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.show();
         locatorThread.interrupt();
-
-        bluetoothLocator.getmBluetoothAdapter().disable();
-        bluetoothLocator.getmBluetoothAdapter().enable();
+        progressDialog.dismiss();
+        super.onDestroy();
     }
 
     private void startLocatorThread() {
@@ -231,10 +232,7 @@ public class PercorsoActivity extends AppCompatActivity implements BluetoothLoca
             builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int i) {
-                    Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
-                    intent.putExtra("offline", offline);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(intent);
+                    goHome();
                 }
             });
 
@@ -306,8 +304,7 @@ public class PercorsoActivity extends AppCompatActivity implements BluetoothLoca
 
         @Override
         public void onClick(View v) {
-            origine = null;
-            destinazione = null;
+
             goHome();
         }
     }
@@ -339,9 +336,11 @@ public class PercorsoActivity extends AppCompatActivity implements BluetoothLoca
             if (selectedSolution != null) {
                 if (indiciNavigazione.current == 0) {
                     holderButtonEnabled("Indietro", false);
+                    holderButtonEnabled("Avanti", true);
                 }
                 if (indiciNavigazione.current >= selectedSolution.size() - 1) {
                     holderButtonEnabled("Avanti", false);
+                    holderButtonEnabled("Indietro", true);
                 }
                 currentBeacon = selectedSolution.get(indiciNavigazione.current);
                 if (currentBeacon != destinazione)
@@ -369,6 +368,8 @@ public class PercorsoActivity extends AppCompatActivity implements BluetoothLoca
     }
 
     public void goHome(){
+        origine = null;
+        destinazione = null;
         Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.putExtra("offline", offline);
