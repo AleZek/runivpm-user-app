@@ -1,5 +1,6 @@
 package com.ids.idsuserapp.percorso;
 
+import android.app.ProgressDialog;
 import android.arch.lifecycle.LifecycleOwner;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
@@ -445,7 +446,12 @@ public class HomeFragment extends BaseFragment {
                     Intent intent = new Intent(getActivity(), PercorsoActivity.class);
                     intent.putExtra("beaconSoloOrigine", SerializationUtils.serialize(origin));
                     intent.putExtra("offline", offline);
+                    ProgressDialog progressDialog = new ProgressDialog(getContext());
+                    progressDialog.setTitle("Bluetooth");
+                    progressDialog.setMessage("Attendo il bluetooth...");
+                    progressDialog.show();
                     startActivity(intent);
+
                 }
             });
         } else if (origin.equals(destination)) {
@@ -462,6 +468,10 @@ public class HomeFragment extends BaseFragment {
                     intent.putExtra("beaconOrigine", SerializationUtils.serialize(origin));
                     intent.putExtra("beaconDestinazione", SerializationUtils.serialize(destination));
                     intent.putExtra("offline", offline);
+                    ProgressDialog progressDialog = new ProgressDialog(getContext());
+                    progressDialog.setTitle("Bluetooth");
+                    progressDialog.setMessage("Attendo il bluetooth...");
+                    progressDialog.show();
                     startActivity(intent);
                 }
             });

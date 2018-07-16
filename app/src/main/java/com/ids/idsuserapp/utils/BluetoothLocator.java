@@ -12,6 +12,7 @@ import android.bluetooth.le.ScanSettings;
 import android.content.Context;
 import android.util.Log;
 
+import com.ids.idsuserapp.HomeActivity;
 import com.ids.idsuserapp.db.entity.Beacon;
 import com.ids.idsuserapp.entityhandlers.UserRequestHandler;
 import com.ids.idsuserapp.percorso.animation.ShowProgressAnimation;
@@ -56,7 +57,14 @@ public class BluetoothLocator {
 
     public void disableBTAndWait(){
         mBluetoothAdapter.disable();
-        while(mBluetoothAdapter.isEnabled()){
+        if (context instanceof HomeActivity) {
+            ProgressDialog progressDialog = new ProgressDialog(context);
+            progressDialog.show();
+            while (mBluetoothAdapter.isEnabled()) {
+            }
+            progressDialog.dismiss();
+        }
+        while (mBluetoothAdapter.isEnabled()) {
         }
 
     }

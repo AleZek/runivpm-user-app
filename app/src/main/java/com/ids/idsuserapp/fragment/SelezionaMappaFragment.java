@@ -97,7 +97,7 @@ public class SelezionaMappaFragment extends BaseFragment {
         if(offline) {
             mapsTask = new MappaStaticaTask(getContext(), new MapsDownloaderListener());
         } else {
-           // mapsTask = new MapsDownloaderTask(getContext(), new MapsDownloaderListener());
+            mapsTask = new MappaStaticaTask(getContext(), new MapsDownloaderListener());
         }
 
         mapsTask.execute(STARTING_FLOOR);

@@ -85,6 +85,8 @@ public class PercorsoActivity extends AppCompatActivity implements BluetoothLoca
         overrideUnlockScreen();
         startLocatorThread();
         setBluetoothLocator();
+        bluetoothLocator.restartBt();
+
 
     }
 
@@ -115,10 +117,7 @@ public class PercorsoActivity extends AppCompatActivity implements BluetoothLoca
 
     @Override
     protected void onDestroy() {
-        ProgressDialog progressDialog = new ProgressDialog(this);
-        progressDialog.show();
         locatorThread.interrupt();
-        progressDialog.dismiss();
         super.onDestroy();
     }
 
@@ -198,7 +197,6 @@ public class PercorsoActivity extends AppCompatActivity implements BluetoothLoca
         serverUserLocator.sendPosition(device.toString());
         }
         setCurrentPosition(device.toString());
-        Log.v(TAG, "callback");
         bluetoothLocator.getStrongestBeacon().put("scanNumber", 0);
 
     }

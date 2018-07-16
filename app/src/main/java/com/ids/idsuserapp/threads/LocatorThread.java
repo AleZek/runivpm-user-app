@@ -43,7 +43,6 @@ public class LocatorThread extends Thread {
     @Override
     public void interrupt() {
         bluetoothLocator.stopScan();
-        bluetoothLocator.restartBt();
         running = false;
         super.interrupt();
     }

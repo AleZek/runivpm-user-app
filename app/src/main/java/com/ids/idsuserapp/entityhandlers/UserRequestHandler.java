@@ -165,6 +165,7 @@ public class UserRequestHandler {
                         }
                         Log.v("TOKEN", sharedPref.getString("token", ""));
                         Intent intent = new Intent(context, HomeActivity.class);
+                        intent.putExtra("offline", false);
                         context.startActivity(intent);
 
                     }

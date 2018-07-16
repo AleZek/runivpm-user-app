@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.nfc.Tag;
 import android.os.PowerManager;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
@@ -58,14 +59,14 @@ public class RunivpmFirebaseMessagingService extends FirebaseMessagingService {
 
     private Intent getStopEmergencyIntent() {
         Intent intent = new Intent(getApplicationContext(), StopEmergencyActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra("stop", true);
         return intent;
     }
 
     private Intent getScegliOrigineIntent() {
         Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra("emergency", true);
         intent.putExtra("offline", false);
         return intent;
@@ -73,7 +74,7 @@ public class RunivpmFirebaseMessagingService extends FirebaseMessagingService {
 
     private Intent GetPercorsoIntent() {
         Intent intent = new Intent(getApplicationContext(), PercorsoActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra("emergency", true);
         intent.putExtra("offline", false);
         return intent;

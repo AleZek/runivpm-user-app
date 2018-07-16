@@ -1,5 +1,6 @@
 package com.ids.idsuserapp;
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
@@ -28,6 +29,7 @@ import com.ids.idsuserapp.percorso.HomeFragment;
 import com.ids.idsuserapp.services.LocatorService;
 import com.ids.idsuserapp.services.NodesUpdateService;
 import com.ids.idsuserapp.threads.LocatorThread;
+import com.ids.idsuserapp.utils.BluetoothLocator;
 import com.ids.idsuserapp.utils.ConnectionChecker;
 import com.ids.idsuserapp.utils.PermissionsUtil;
 import com.ids.idsuserapp.viewmodel.ArcoViewModel;
@@ -48,14 +50,10 @@ public class HomeActivity extends AppCompatActivity implements DataRetriever{
     private MappaDataHandler mappaDataHandler;
     private ArcoDataHandler arcoDataHandler;
     private PermissionsUtil permissionsUtil;
-    private LocatorThread locatorThread;
     private boolean emergency;
     private static final int PERMISSION_REQUEST_COARSE_LOCATION = 124;
     private static final int BT_ENABLED = 1;
     private boolean offline;
-    public static final String OFFLINE_USAGE = "offline_usage";
-
-
 
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -67,12 +65,13 @@ public class HomeActivity extends AppCompatActivity implements DataRetriever{
 
         setupViewModels();
         setupDataHandlers();
-        checkOfflineMode();
+//        checkOfflineMode();
 
         emergency = checkEmergency();
         if(emergency) {
             overrideUnlockScreen();
         }
+
         if (!offline && ConnectionChecker.getInstance().isNetworkAvailable(getApplicationContext()) && !getIntent().hasExtra("stop"))
             getDatasetFromServer();
         permissionsUtil = new PermissionsUtil(this);
@@ -86,6 +85,7 @@ public class HomeActivity extends AppCompatActivity implements DataRetriever{
             fm.beginTransaction().replace(R.id.navigation_content_pane, homeFragment, HomeFragment.TAG)
                     .commit();
         }
+
     }
 
     private void checkExit() {
@@ -109,12 +109,10 @@ public class HomeActivity extends AppCompatActivity implements DataRetriever{
     }
 
     private void checkOfflineMode() {
-        offline = getIntent().getBooleanExtra("offline", false);
+        offline = (Boolean) getIntent().getExtras().get("offline");
     }
 
     private void setupMessageReception(Bundle savedInstanceState) {
-        offline = true;
-
         boolean emergency = false;
         if (getIntent().getExtras() != null) {
             for (String key : getIntent().getExtras().keySet()) {
